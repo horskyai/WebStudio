@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Stylů - Část 1: H-01 až T-01</title>
+    <!-- GSAP pro fyzikální interpolace a kaskády -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & CSS VARIABLES --- */
+        :root {
+            /* Výchozí motiv (Linear / Dark Minimal) */
+            --bg-base: #030712;
+            --bg-card: #0b0f19;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --color-accent: #10b981;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --font-serif: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Motiv: Stripe (Světlý / Fluidní gradienty) */
+        .theme-stripe {
+            --bg-base: #0a0e1a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --color-primary: #635bff; /* Stripe Purple */
+            --color-secondary: #00d4ff;
+            --color-accent: #30cdff;
+            --text-main: #ffffff;
+            --text-muted: #adbdcc;
+        }
+
+        /* Motiv: Apple (Premium editorial / Space) */
+        .theme-apple {
+            --bg-base: #000000;
+            --bg-card: #111111;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --color-primary: #ffffff;
+            --color-secondary: #86868b;
+            --color-accent: #0071e3;
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DASHBOARD OVLÁDACÍ PANEL --- */
+        .style-switcher {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .switch-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .switch-btn.active, .switch-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+        /* ==========================================================
+           T-01 & L-01: DIAGONAL WIPE TRANSITION & PRELOADER
+           ========================================================== */
+        #transition-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--color-primary);
+            z-index: 9998;
+            transform: translateY(100%) skewY(0deg);
+            transform-origin: top;
+            pointer-events: none;
+        }
+
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #030712;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .loader-center {
+            text-align: center;
+            position: relative;
+        }
+
+        .loader-ring {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.02);
+            border-top-color: var(--color-primary);
+            border-bottom-color: var(--color-secondary);
+            animation: spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 2rem;
+        }
+
+        .loader-percentage {
+            position: absolute;
+            top: 52px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+
+        /* ==========================================================
+           VÝSTAVNÍ PLOCHA HERO SEKCÍ (H-01, H-02, H-03)
+           ========================================================== */
+        #hero-showcase {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            z-index: 1;
+        }
+
+        /* Ambientní Aurora na pozadí (Stripe H-01) */
+        .aurora-mesh {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--m-x, 50%) var(--m-y, 50%), rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.05) 50%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* Jemný technický Grid na pozadí (Linear H-02) */
+        .linear-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -2;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* TYPOGRAFIE HERO */
+        .hero-meta {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .title-container {
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 850;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+            transform: translateY(110%);
+            background: linear-gradient(to bottom, #ffffff 40%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 3.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: color 0.5s ease;
+        }
+
+        /* CTA TLAČÍTKO */
+        .cta-btn {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1rem 2.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--color-primary), transparent 35%);
+            animation: rotateBeam 4s linear infinite;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-btn:hover::before { opacity: 1; }
+
+        @keyframes rotateBeam { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="theme-linear">
+
+    <!-- STYLE SWITCHER PANEL -->
+    <div class="style-switcher">
+        <button class="switch-btn active" onclick="switchStyle('linear')">H-02: LINEAR</button>
+        <button class="switch-btn" onclick="switchStyle('stripe')">H-01: STRIPE</button>
+        <button class="switch-btn" onclick="switchStyle('apple')">H-03: APPLE</button>
+    </div>
+
+    <!-- T-01: DIAGONAL WIPE OVERLAY -->
+    <div id="transition-overlay"></div>
+
+    <!-- L-01: PRELOADER -->
+    <div id="preloader">
+        <div class="loader-center">
+            <div class="loader-ring"></div>
+            <div class="loader-percentage" id="load-num">0%</div>
+            <div class="loader-label">SYNCING CORE ASSETS</div>
+        </div>
+    </div>
+
+    <!-- MAIN HERO SHOWCASE -->
+    <main id="hero-showcase">
+        <!-- Reaktivní pozadí na základě stylu -->
+        <div class="aurora-mesh" id="aurora-el"></div>
+        <div class="linear-grid" id="grid-el"></div>
+
+        <span class="hero-meta" id="meta-el">SYSTEM STABLE // RELEASE v2.6</span>
+
+        <div class="title-container">
+            <h1 class="hero-title" id="title-el">Navrhujeme budoucnost rozhraní.</h1>
+        </div>
+
+        <p class="hero-desc" id="desc-el">Kombinace plynulých časových os, subpixelových transformací a přísného minimalismu. Navrženo pro technologické lídry.</p>
+
+        <button class="cta-btn" id="btn-el">INITIALIZE CONSOLE</button>
+    </main>
+
+    <!-- --- SCRIPTS & TIMING CONTROL --- -->
+    <script>
+        let activeTheme = 'linear';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializace výchozího stylu (Linear)
+            document.getElementById('grid-el').style.display = 'block';
+            runPreloader();
+        });
+
+        // --- L-01: PRELOADER LOGIKA ---
+        function runPreloader() {
+            const loadNum = document.getElementById('load-num');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 8) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    revealPage(); // Odstranění preloaderu
+                }
+                loadNum.innerText = progress + '%';
+            }, 30);
+        }
+
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            // Výjezd preloaderu nahoru
+            preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+
+            // Spuštění kaskády animací prvků
+            animateHero();
+        }
+
+        // --- GSAP STAGING TIMELINE ---
+        function animateHero() {
+            const tl = gsap.timeline();
+
+            // Reset poloh pro novou animaci
+            gsap.set(["#meta-el", "#desc-el", "#btn-el"], { opacity: 0, y: 20 });
+            gsap.set("#title-el", { y: "110%" });
+
+            tl.to("#meta-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.2, ease: "power4.out" }, "-=0.6")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.8")
+              .to("#btn-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
+        }
+
+        // --- T-01: DIAGONAL TRANSITION SWITCHER ---
+        function switchStyle(styleName) {
+            if (styleName === activeTheme) return;
+
+            const overlay = document.getElementById('transition-overlay');
+            const btns = document.querySelectorAll('.switch-btn');
+
+            // Aktualizace aktivního tlačítka v menu
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(styleName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // T-01: Diagonální přejezd clony (Wipe)
+            gsap.timeline()
+                .set(overlay, { transformOrigin: "bottom" })
+                .to(overlay, { transform: "translateY(0%) skewY(-5deg)", duration: 0.6, ease: "power4.in" })
+                .call(() => {
+                    // Bod zlomu (clona zakrývá celý viewport) - provedeme změnu obsahu/stylu
+                    applyThemeChanges(styleName);
+                })
+                .set(overlay, { transformOrigin: "top" })
+                .to(overlay, { transform: "translateY(-100%) skewY(0deg)", duration: 0.6, ease: "power4.out", delay: 0.1 });
+        }
+
+        // Změna konfigurace textů a stylů na základě zvoleného motivu
+        function applyThemeChanges(theme) {
+            const body = document.body;
+            const gridEl = document.getElementById('grid-el');
+            const auroraEl = document.getElementById('aurora-el');
+
+            const meta = document.getElementById('meta-el');
+            const title = document.getElementById('title-el');
+            const desc = document.getElementById('desc-el');
+            const btn = document.getElementById('btn-el');
+
+            // Reset zobrazení pozadí
+            gridEl.style.display = 'none';
+            auroraEl.style.display = 'none';
+            body.className = '';
+
+            if (theme === 'linear') {
+                body.className = 'theme-linear';
+                gridEl.style.display = 'block';
+
+                meta.innerText = "SYSTEM STABLE // RELEASE v2.6";
+                title.innerText = "Navrhujeme budoucnost rozhraní.";
+                desc.innerText = "Kombinace plynulých časových os, subpixelových transformací a přísného minimalismu. Navrženo pro technologické lídry.";
+                btn.innerText = "INITIALIZE CONSOLE";
+                title.style.fontFamily = "var(--font-sans)";
+                title.style.fontWeight = "850";
+
+            } else if (theme === 'stripe') {
+                body.className = 'theme-stripe';
+                auroraEl.style.display = 'block';
+
+                meta.innerText = "STRIPE SESSIONS // 2026";
+                title.innerText = "Finanční infrastruktura pro internet.";
+                desc.innerText = "Miliony firem všech velikostí – od startupů po nadnárodní korporace – používají Stripe k přijímání plateb a správě svého podnikání online.";
+                btn.innerText = "ZAHÁJIT INTEGRACI ➔";
+                title.style.fontFamily = "var(--font-sans)";
+                title.style.fontWeight = "800";
+
+            } else if (theme === 'apple') {
+                body.className = 'theme-apple';
+
+                meta.innerText = "VISION PRO // COMPUTING";
+                title.innerText = "Vítejte v éře prostorového designu.";
+                desc.innerText = "Neuvěřitelně jemná typografie kombinovaná s absolutní černou. Zážitek, který překračuje hranice běžného displeje.";
+                btn.innerText = "Koupit";
+                title.style.fontFamily = "var(--font-serif)";
+                title.style.fontWeight = "300";
+            }
+
+            activeTheme = theme;
+
+            // Spuštění kaskádové animace pro nový styl
+            animateHero();
+        }
+
+        // --- H-01: AURORA SLEDOVÁNÍ CURSORU ---
+        const heroViewport = document.getElementById('hero-showcase');
+        const auroraEl = document.getElementById('aurora-el');
+
+        if (heroViewport && auroraEl) {
+            heroViewport.addEventListener('mousemove', (e) => {
+                if (activeTheme !== 'stripe') return; // Sledování aktivní pouze pro Stripe motiv
+
+                const rect = heroViewport.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                gsap.to(auroraEl, {
+                    style: {
+                        '--m-x': `${x}px`,
+                        '--m-y': `${y}px`
+                    },
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+            });
+        }
+    </script>
+</body>
+</html>
