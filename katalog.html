@@ -2932,6 +2932,145 @@
         .split-cinema-card:hover .sccp-bottom { transform: translateY(10px); }
         .split-cinema-card:hover .scc-info { opacity: 1; }
 
+        /* F: Showcase sekce */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .showcase-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .showcase-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 8px 32px rgba(99,102,241,0.08);
+        }
+
+        .showcase-iframe-wrap {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #0a0a0f;
+        }
+
+        .showcase-iframe-wrap iframe {
+            width: 200%;
+            height: 200%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+
+        .showcase-iframe-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            cursor: pointer;
+        }
+
+        .showcase-info {
+            padding: 1.2rem 1.5rem;
+        }
+
+        .showcase-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .showcase-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .showcase-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .showcase-btn {
+            flex: 1;
+            padding: 0.5rem 0;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .showcase-btn-open {
+            background: var(--color-primary);
+            color: #fff;
+            border: 1px solid var(--color-primary);
+        }
+
+        .showcase-btn-open:hover {
+            opacity: 0.85;
+        }
+
+        .showcase-btn-code {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .showcase-btn-code:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .showcase-code-panel {
+            display: none;
+            background: #040408;
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            position: relative;
+        }
+
+        .showcase-code-panel.open {
+            display: block;
+        }
+
+        .showcase-code-panel pre {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .showcase-copy-btn {
+            position: absolute;
+            top: 0.8rem; right: 0.8rem;
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.3rem 0.7rem;
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            cursor: pointer;
+        }
+
+        .showcase-copy-btn:hover { opacity: 0.8; }
+
         /* E1: Efekt ohybu stránky (Page peel) */
         .peel-box {
             width: 150px;
@@ -2978,6 +3117,7 @@
             <button class="cat-btn" onclick="scrollToSection('cat-c')">C. Typografie</button>
             <button class="cat-btn" onclick="scrollToSection('cat-d')">D. Navigace & Layout</button>
             <button class="cat-btn" onclick="scrollToSection('cat-e')">E. Kreativní Efekty</button>
+            <button class="cat-btn" onclick="scrollToSection('cat-f')">F. Showcase Stránky</button>
         </div>
     </nav>
 
@@ -5195,6 +5335,344 @@
             </div>
         </section>
 
+        <!-- ==================== KATEGORIE F ==================== -->
+        <section id="cat-f" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE F</span>
+                <h2 class="section-title">Showcase Stránky</h2>
+            </div>
+            <div class="showcase-grid">
+
+                <!-- F-01: Cinematic Hero -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="cinematic-hero.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('cinematic-hero.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Cinematic Hero</div>
+                        <div class="showcase-desc">Preloader s procenty, clip-path odhalení a GSAP kaskáda vstupu prvků. Aurora pozadí sledující myš.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="cinematic-hero.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- cinematic-hero.html --&gt;
+&lt;!-- Preloader --&gt;
+&lt;div id="preloader"&gt;
+  &lt;div class="loader-center"&gt;
+    &lt;div class="loader-ring"&gt;&lt;/div&gt;
+    &lt;div class="loader-percentage" id="load-val"&gt;0%&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- Hero --&gt;
+&lt;main id="hero-section"&gt;
+  &lt;div class="ambient-glow" id="ambient-bg"&gt;&lt;/div&gt;
+  &lt;span class="hero-meta" id="entry-meta"&gt;ENTERPRISE PLATFORM&lt;/span&gt;
+  &lt;div class="hero-title-wrap"&gt;
+    &lt;h1 class="hero-title" id="entry-title"&gt;Navrhujeme budoucnost rozhraní.&lt;/h1&gt;
+  &lt;/div&gt;
+  &lt;p class="hero-desc" id="entry-desc"&gt;Popis...&lt;/p&gt;
+  &lt;button class="hero-cta-btn" id="entry-btn"&gt;Zahájit integraci&lt;/button&gt;
+&lt;/main&gt;
+&lt;!-- Viz cinematic-hero.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-02: Agency Engine -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="agency-engine.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('agency-engine.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Agency Engine Hero</div>
+                        <div class="showcase-desc">Preloader s procenty, tech grid pozadí a aurora mlhovina sledující kurzor. GSAP timeline vstup.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="agency-engine.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- agency-engine.html --&gt;
+&lt;div id="preloader"&gt;
+  &lt;div class="loader-wrap"&gt;
+    &lt;div class="loader-ring"&gt;&lt;/div&gt;
+    &lt;div class="loader-counter" id="loader-num"&gt;0%&lt;/div&gt;
+    &lt;div class="loader-label"&gt;SYNCING CORE ASSETS&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;main id="hero-viewport"&gt;
+  &lt;div class="aurora-bg" id="aurora-element"&gt;&lt;/div&gt;
+  &lt;div class="tech-grid"&gt;&lt;/div&gt;
+  &lt;span class="hero-tag" id="hero-tag-el"&gt;SYSTEM STATUS // OPTIMAL&lt;/span&gt;
+  &lt;div class="title-mask"&gt;
+    &lt;h1 class="title-main" id="hero-title-el"&gt;Moderní standard rozhraní.&lt;/h1&gt;
+  &lt;/div&gt;
+  &lt;button class="cta-action-btn" id="hero-btn-el"&gt;INITIALIZE INTEGRATION&lt;/button&gt;
+&lt;/main&gt;
+&lt;!-- Viz agency-engine.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-03: Bento Grid -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="bento-grid.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('bento-grid.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Bento Grid GSAP</div>
+                        <div class="showcase-desc">4 interaktivní buňky: analytický graf, before/after slider, 3D gyro karta, status node. GSAP animace.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="bento-grid.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- bento-grid.html --&gt;
+&lt;div class="bento-grid"&gt;
+  &lt;div class="cell cell-analytics"&gt;...&lt;/div&gt;
+  &lt;div class="cell cell-slider"&gt;...&lt;/div&gt;
+  &lt;div class="cell cell-gyro"&gt;...&lt;/div&gt;
+  &lt;div class="cell cell-status"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- Viz bento-grid.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-04: Style Catalog Part 1 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part1.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part1.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 1</div>
+                        <div class="showcase-desc">3 motivy: Linear (tech grid), Stripe (aurora), Apple (serif editorial). Diagonal wipe přechod.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part1.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part1.html --&gt;
+&lt;!-- Motivy: Linear / Stripe / Apple --&gt;
+&lt;div class="style-switcher"&gt;
+  &lt;button onclick="switchStyle('linear')"&gt;H-02: LINEAR&lt;/button&gt;
+  &lt;button onclick="switchStyle('stripe')"&gt;H-01: STRIPE&lt;/button&gt;
+  &lt;button onclick="switchStyle('apple')"&gt;H-03: APPLE&lt;/button&gt;
+&lt;/div&gt;
+&lt;main id="hero-showcase"&gt;
+  &lt;div class="aurora-mesh" id="aurora-el"&gt;&lt;/div&gt;
+  &lt;div class="linear-grid" id="grid-el"&gt;&lt;/div&gt;
+  &lt;span class="hero-meta" id="meta-el"&gt;...&lt;/span&gt;
+  &lt;h1 class="hero-title" id="title-el"&gt;...&lt;/h1&gt;
+  &lt;button class="cta-btn" id="btn-el"&gt;...&lt;/button&gt;
+&lt;/main&gt;
+&lt;!-- Viz style-catalog-part1.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-05: Style Catalog Part 2 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part2.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part2.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 2</div>
+                        <div class="showcase-desc">Tesla Cyber (neon grid) vs Framer Elastic (skleněné karty s paralaxem). Multi-curtain přechod.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part2.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part2.html --&gt;
+&lt;!-- Motivy: Tesla Cyber / Framer --&gt;
+&lt;!-- T-02: Třívrstvá clona --&gt;
+&lt;div class="curtain-layer cl-1" id="curtain-1"&gt;&lt;/div&gt;
+&lt;div class="curtain-layer cl-2" id="curtain-2"&gt;&lt;/div&gt;
+&lt;div class="curtain-layer cl-3" id="curtain-3"&gt;&lt;/div&gt;
+&lt;!-- L-03: Circular Path Preloader --&gt;
+&lt;svg&gt;&lt;circle class="loader-fill" id="loader-circle"&gt;&lt;/circle&gt;&lt;/svg&gt;
+&lt;!-- Viz style-catalog-part2.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-06: Style Catalog Part 3 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part3.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part3.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 3</div>
+                        <div class="showcase-desc">Editorial Noir (spotlight maska) vs Bento Tech (asymetrický grid). Kruhový ripple přechod z kurzoru.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part3.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part3.html --&gt;
+&lt;!-- L-09: Cyber Decrypt Preloader --&gt;
+&lt;div class="decrypt-box" id="decrypt-val"&gt;000000&lt;/div&gt;
+&lt;!-- T-05: Circular Ripple Expander --&gt;
+&lt;div id="transition-circle"&gt;&lt;/div&gt;
+&lt;!-- H-06: Noir Spotlight --&gt;
+&lt;div class="noir-reveal-text" id="noir-text-el"&gt;NOIR CONTEXT&lt;/div&gt;
+&lt;!-- Viz style-catalog-part3.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-07: Style Catalog Part 4 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part4.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part4.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 4</div>
+                        <div class="showcase-desc">Cinematic Letterbox (filmový ořez) vs Chronicle Typography (paralaxní vrstvy textu). 3D spatial přechod.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part4.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part4.html --&gt;
+&lt;!-- L-05: Blur Out Matrix Preloader --&gt;
+&lt;div class="blur-box" id="blur-text-el"&gt;CHRONICLE TECHNOLOGY&lt;/div&gt;
+&lt;!-- T-03: Spatial 3D Viewport Scale --&gt;
+&lt;!-- H-08: Cinematic Letterbox --&gt;
+&lt;div class="cinema-background" id="cinema-bg-el"&gt;&lt;/div&gt;
+&lt;!-- H-10: Chronicle Parallax Layers --&gt;
+&lt;div class="chronicle-layer cl-top"&gt;CHRONICLE STRUCTURE&lt;/div&gt;
+&lt;!-- Viz style-catalog-part4.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-08: Style Catalog Part 5 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part5.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part5.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 5</div>
+                        <div class="showcase-desc">Bento Hub (metriky s count-up) vs Liquid Mask (světlomet sledující myš). Glassmorphic blur přechod.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part5.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part5.html --&gt;
+&lt;!-- L-04: Gooey Fluid Preloader --&gt;
+&lt;div class="gooey-wrap" style="filter: url('#loader-gooey')"&gt;
+  &lt;div class="goo-ball gb-1"&gt;&lt;/div&gt;
+  &lt;div class="goo-ball gb-2"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- T-04: Glassmorphic Blur Dissolve --&gt;
+&lt;div id="transition-blur"&gt;&lt;/div&gt;
+&lt;!-- Viz style-catalog-part5.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-09: Style Catalog Part 6 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part6.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part6.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 6</div>
+                        <div class="showcase-desc">Terminal Boot (konzolový preloader + mřížka) vs Royal Gold (zlatý foil efekt). Sequential skew wipe.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part6.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part6.html --&gt;
+&lt;!-- L-09: Terminal Boot Loader --&gt;
+&lt;div class="console-line"&gt;SYS_INIT: Spouštění jádra... OK&lt;/div&gt;
+&lt;!-- T-02: Sequential Skew Wipe --&gt;
+&lt;div class="skew-curtain sc-1"&gt;&lt;/div&gt;
+&lt;div class="skew-curtain sc-2"&gt;&lt;/div&gt;
+&lt;div class="skew-curtain sc-3"&gt;&lt;/div&gt;
+&lt;!-- H-06: Gold Foil Text --&gt;
+&lt;span class="gold-foil-text"&gt;Zlatá ražba.&lt;/span&gt;
+&lt;!-- Viz style-catalog-part6.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-10: Style Catalog Part 7 -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="style-catalog-part7.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part7.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Style Catalog — Part 7</div>
+                        <div class="showcase-desc">Kinetic Type (deformace textu myší) vs Spatial Layers (paralaxní skleněné karty). Cinematic zoom přechod.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="style-catalog-part7.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- style-catalog-part7.html --&gt;
+&lt;!-- L-06: Mono Counter Preloader --&gt;
+&lt;div class="huge-counter"&gt;00
+  &lt;div class="huge-counter-fill"&gt;00&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- T-09: Cinematic Zoom Fade --&gt;
+&lt;!-- H-15: Kinetic Display Title --&gt;
+&lt;h1 class="kinetic-display-title"&gt;EXPANSION&lt;/h1&gt;
+&lt;!-- Viz style-catalog-part7.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+                <!-- F-11: Typography Catalog -->
+                <div class="showcase-card">
+                    <div class="showcase-iframe-wrap">
+                        <iframe src="typography_catalog.html" loading="lazy"></iframe>
+                        <div class="showcase-iframe-overlay" onclick="window.open('typography_catalog.html')"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <div class="showcase-title">Typography Catalog</div>
+                        <div class="showcase-desc">50 prémiových typografických stylů — gradient text, glitch, editorial serif, monospace, animované nadpisy.</div>
+                        <div class="showcase-actions">
+                            <a class="showcase-btn showcase-btn-open" href="typography_catalog.html" target="_blank">Otevřít</a>
+                            <button class="showcase-btn showcase-btn-code" onclick="toggleCode(this)">Kód</button>
+                        </div>
+                    </div>
+                    <div class="showcase-code-panel">
+                        <button class="showcase-copy-btn" onclick="copyCode(this)">Kopírovat</button>
+                        <pre>&lt;!-- typography_catalog.html --&gt;
+&lt;!-- 50 typografických stylů --&gt;
+&lt;!-- Gradient text, glitch, editorial, mono... --&gt;
+&lt;!-- Viz typography_catalog.html pro kompletní kód --&gt;</pre>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
     <!-- --- SCRIPTS & INTERACTIONS --- -->
@@ -5550,6 +6028,21 @@
                 lensGlass.style.display = 'none';
             });
         }
+        // --- F: Showcase toggle kódu ---
+        function toggleCode(btn) {
+            const panel = btn.closest('.showcase-card').querySelector('.showcase-code-panel');
+            panel.classList.toggle('open');
+            btn.textContent = panel.classList.contains('open') ? 'Skrýt' : 'Kód';
+        }
+
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Zkopírováno!';
+                setTimeout(() => { btn.textContent = 'Kopírovat'; }, 2000);
+            });
+        }
+
         // --- B-05: Terminal Code Inject ---
         function injectCode() {
             const btn = document.getElementById('terminal-inject-js');
