@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Stylů - Část 4: H-08 až T-03</title>
+    <!-- GSAP pro prostorové 3D transformace a plynulé interpolace -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & THEMES --- */
+        :root {
+            --bg-base: #02040a;
+            --bg-card: #080c14;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #f59e0b; /* Amber */
+            --color-secondary: #ef4444; /* Red */
+            --text-main: #f8fafc;
+            --text-muted: #4b5563;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Motiv: Cinematic Letterbox (Filmová prezentace) */
+        .theme-cinema {
+            --bg-base: #050505;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --color-primary: #e2e8f0;
+            --color-secondary: #64748b;
+            --text-main: #ffffff;
+            --text-muted: #64748b;
+        }
+
+        /* Motiv: Chronicle Typography (Kinetická typografie) */
+        .theme-chronicle {
+            --bg-base: #080808;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --color-primary: #8b5cf6;
+            --color-secondary: #ec4899;
+            --text-main: #f1f5f9;
+            --text-muted: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100%; width: 100%;
+            overflow: hidden;
+            perspective: 1000px; /* Vyžadováno pro 3D prostorový přechod */
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DASHBOARD CONTROL --- */
+        .dashboard-nav {
+            position: fixed;
+            top: 2rem; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 15, 0.6);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            display: flex; gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: border-color 0.5s ease;
+        }
+
+        .nav-btn {
+            background: transparent; border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem; font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+
+        /* ==========================================================
+           L-05: BLUR OUT MATRIX PRELOADER (Dynamické zaostření)
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #030303;
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .loader-center {
+            text-align: center;
+        }
+
+        .blur-box {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: #fff;
+            filter: blur(24px); /* Výchozí maximální rozmazání */
+            opacity: 0.1;
+            transition: filter 0.1s linear, opacity 0.1s linear;
+            margin-bottom: 1.5rem;
+        }
+
+        .loader-percentage {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            color: #4b5563;
+            letter-spacing: 0.1em;
+        }
+
+
+        /* ==========================================================
+           T-03: SPATIAL VIEWPORT SCALE TRANSITION (3D Odsunutí)
+           ========================================================== */
+        /* Tento efekt animuje přímo celý element #hero-viewport */
+        .spatial-animating {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+        }
+
+
+        /* ==========================================================
+           HERO PLOCHA (H-08 a H-10)
+           ========================================================== */
+        #hero-viewport {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            transform-style: preserve-3d;
+        }
+
+        /* H-08: Cinematic Letterbox (Změna filmového formátu) */
+        .cinema-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://picsum.photos/1200/800?blur=1') center/cover;
+            z-index: -1;
+            border-top: 0px solid #000;
+            border-bottom: 0px solid #000;
+            transition: border-width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
+            display: none;
+        }
+
+        .cinema-active .cinema-background {
+            border-width: 60px 0; /* Formát 21:9 pomocí okrajů */
+        }
+
+        .cinema-background::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65);
+        }
+
+        /* H-10: Chronicle Typography (Kinetické protnutí) */
+        .chronicle-container {
+            position: relative;
+            width: 100%; max-width: 1000px;
+            height: 300px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: -2;
+            display: none;
+        }
+
+        .chronicle-layer {
+            font-size: 5rem; font-weight: 900;
+            letter-spacing: -0.05em; text-transform: uppercase;
+            white-space: nowrap;
+            position: absolute;
+            transition: transform 0.1s ease;
+            user-select: none;
+        }
+
+        .cl-top {
+            color: rgba(255, 255, 255, 0.05);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+            transform: translateY(-50px) translateX(-50px);
+        }
+
+        .cl-middle {
+            color: #fff;
+            z-index: 2;
+            transform: translateY(0px) translateX(0px);
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .cl-bottom {
+            color: var(--color-primary);
+            opacity: 0.3;
+            transform: translateY(50px) translateX(50px);
+        }
+
+        /* TYPOGRAFIE A TEXTY */
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem; color: var(--color-primary);
+            letter-spacing: 0.3em; text-transform: uppercase;
+            margin-bottom: 1.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .title-mask {
+            overflow: hidden; margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 4rem; font-weight: 850;
+            letter-spacing: -0.04em; line-height: 1.1;
+            transform: translateY(110%);
+            font-family: var(--font-sans);
+        }
+
+        .hero-desc {
+            font-size: 1.15rem; color: var(--text-muted);
+            max-width: 580px; line-height: 1.6;
+            margin-bottom: 3.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+    </style>
+</head>
+<body class="theme-cinema cinema-active">
+
+    <!-- NAVIGATION SWITCHER -->
+    <div class="dashboard-nav" id="dash-nav">
+        <button class="nav-btn active" onclick="switchTheme('cinema')">H-08: CINEMATIC FORM</button>
+        <button class="nav-btn" onclick="switchTheme('chronicle')">H-10: CHRONICLE TYPE</button>
+    </div>
+
+    <!-- L-05: BLUR OUT MATRIX PRELOADER -->
+    <div id="preloader">
+        <div class="loader-center">
+            <div class="blur-box" id="blur-text-el">CHRONICLE TECHNOLOGY</div>
+            <div class="loader-percentage" id="load-num">0%</div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="hero-viewport" class="spatial-animating">
+        <!-- Pozadí na základě motivu -->
+        <div class="cinema-background" id="cinema-bg-el"></div>
+
+        <div class="chronicle-container" id="chronicle-el">
+            <div class="chronicle-layer cl-top" id="ch-top">CHRONICLE STRUCTURE</div>
+            <div class="chronicle-layer cl-middle" id="ch-mid">CHRONICLE STRUCTURE</div>
+            <div class="chronicle-layer cl-bottom" id="ch-bot">CHRONICLE STRUCTURE</div>
+        </div>
+
+        <span class="hero-tag" id="tag-el">CINEMATIC SCREEN SIZE</span>
+
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Širokoúhlý střih scény.</h1>
+        </div>
+
+        <p class="hero-desc" id="desc-el">Formátování obsahu přizpůsobené filmovému ořezu s plynulým kaskádovým doostřením textových rovin.</p>
+    </main>
+
+    <!-- --- SCRIPTS & STAGING CONTROL --- -->
+    <script>
+        let currentTheme = 'cinema';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializace výchozího stavu
+            document.getElementById('cinema-bg-el').style.display = 'block';
+            runPreloader();
+        });
+
+        // --- L-05: BLUR OUT MATRIX PRELOADER ---
+        function runPreloader() {
+            const loadNum = document.getElementById('load-num');
+            const blurText = document.getElementById('blur-text-el');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    revealPage(); // Dokončení načítání
+                }
+                loadNum.innerText = progress + '%';
+
+                // Přepočet doostření: z 24px (0%) na 0px (100%)
+                const currentBlur = 24 - (progress / 100) * 24;
+                const currentOpacity = 0.1 + (progress / 100) * 0.9;
+
+                blurText.style.filter = `blur(${currentBlur}px)`;
+                blurText.style.opacity = currentOpacity;
+            }, 35);
+        }
+
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            // Výjezd preloaderu nahoru
+            preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            animateHero();
+        }
+
+        // --- GSAP HERO STAGING ANIMATION ---
+        function animateHero() {
+            const tl = gsap.timeline();
+
+            // Reset poloh
+            gsap.set(["#tag-el", "#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7");
+        }
+
+        // --- T-03: SPATIAL VIEWPORT SCALE TRANSITION ---
+        function switchTheme(themeName) {
+            if (themeName === currentTheme) return;
+
+            const viewport = document.getElementById('hero-viewport');
+            const btns = document.querySelectorAll('.nav-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(themeName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // T-03: Spatial 3D Transition (Odsunutí do pozadí)
+            gsap.timeline()
+                .to(viewport, {
+                    transform: "scale(0.8) translateZ(-150px)",
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: "power3.in"
+                })
+                .call(() => {
+                    // Bod změny obsahu/stylu
+                    applyThemeChanges(themeName);
+                })
+                .set(viewport, { transform: "scale(1.2) translateZ(150px)" }) // Připravíme novou stránku v popředí
+                .to(viewport, {
+                    transform: "scale(1) translateZ(0px)",
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power4.out"
+                });
+        }
+
+        function applyThemeChanges(theme) {
+            const body = document.body;
+            const cinemaBg = document.getElementById('cinema-bg-el');
+            const chronicleEl = document.getElementById('chronicle-el');
+            const nav = document.getElementById('dash-nav');
+
+            const tag = document.getElementById('tag-el');
+            const title = document.getElementById('title-el');
+            const desc = document.getElementById('desc-el');
+
+            // Reset zobrazení pozadí
+            cinemaBg.style.display = 'none';
+            chronicleEl.style.display = 'none';
+            body.className = '';
+
+            if (theme === 'cinema') {
+                body.className = 'theme-cinema cinema-active';
+                cinemaBg.style.display = 'block';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+
+                tag.innerText = "CINEMATIC SCREEN SIZE";
+                title.innerText = "Širokoúhlý střih scény.";
+                desc.innerText = "Formátování obsahu přizpůsobené filmovému ořezu s plynulým kaskádovým doostřením textových rovin.";
+                title.style.fontFamily = "var(--font-sans)";
+
+            } else if (theme === 'chronicle') {
+                body.className = 'theme-chronicle';
+                chronicleEl.style.display = 'flex';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.04)';
+
+                tag.innerText = "KINETIC TYPOGRAPHY";
+                title.innerText = "Křížové paralaxní posuny.";
+                desc.innerText = "Písmo rozdělené do hloubkových vrstev reagujících asynchronně na pozici kurzoru.";
+                title.style.fontFamily = "var(--font-serif)";
+                title.style.fontWeight = "300";
+                title.style.fontStyle = "italic";
+            }
+
+            currentTheme = theme;
+            animateHero();
+        }
+
+        // --- H-10: CHRONICLE TYPOGRAPHY (PROTISPRUDNÝ PARALLAX) ---
+        const heroViewport = document.getElementById('hero-viewport');
+        const chTop = document.getElementById('ch-top');
+        const chMid = document.getElementById('ch-mid');
+        const chBot = document.getElementById('ch-bot');
+
+        if (heroViewport && chTop && chMid && chBot) {
+            heroViewport.addEventListener('mousemove', (e) => {
+                if (currentTheme !== 'chronicle') return;
+
+                const rect = heroViewport.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+
+                // Horní vrstva letí doleva-nahoru
+                gsap.to(chTop, {
+                    x: -50 + (x * 0.1),
+                    y: -50 + (y * 0.1),
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+
+                // Prostřední vrstva reaguje minimálně (středový bod stability)
+                gsap.to(chMid, {
+                    x: x * 0.03,
+                    y: y * 0.03,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+
+                // Spodní vrstva letí doprava-dolů (opačný směr k horní)
+                gsap.to(chBot, {
+                    x: 50 + (-x * 0.12),
+                    y: 50 + (-y * 0.12),
+                    duration: 1,
+                    ease: "power2.out"
+                });
+            });
+        }
+    </script>
+</body>
+</html>
