@@ -2953,27 +2953,30 @@
             box-shadow: 0 8px 32px rgba(99,102,241,0.08);
         }
 
-        .showcase-iframe-wrap {
-            position: relative;
+        .showcase-thumb {
             width: 100%;
-            height: 220px;
-            overflow: hidden;
-            background: #0a0a0f;
-        }
-
-        .showcase-iframe-wrap iframe {
-            width: 200%;
-            height: 200%;
-            border: none;
-            transform: scale(0.5);
-            transform-origin: top left;
-            pointer-events: none;
-        }
-
-        .showcase-iframe-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #0a0c14 0%, #0f1220 100%);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        .showcase-thumb:hover {
+            background: linear-gradient(135deg, #10142a 0%, #181d35 100%);
+        }
+        .showcase-thumb span {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-primary);
+            letter-spacing: 0.15em;
+        }
+        .showcase-thumb svg {
+            color: var(--text-muted);
         }
 
         .showcase-info {
@@ -5345,10 +5348,7 @@
 
                 <!-- F-01: Cinematic Hero -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="cinematic-hero.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('cinematic-hero.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('cinematic-hero.html')" title="Otevřít cinematic-hero.html"><span>CINEMATIC HERO</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Cinematic Hero</div>
                         <div class="showcase-desc">Preloader s procenty, clip-path odhalení a GSAP kaskáda vstupu prvků. Aurora pozadí sledující myš.</div>
@@ -5383,10 +5383,7 @@
 
                 <!-- F-02: Agency Engine -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="agency-engine.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('agency-engine.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('agency-engine.html')" title="Otevřít agency-engine.html"><span>AGENCY ENGINE</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Agency Engine Hero</div>
                         <div class="showcase-desc">Preloader s procenty, tech grid pozadí a aurora mlhovina sledující kurzor. GSAP timeline vstup.</div>
@@ -5420,10 +5417,7 @@
 
                 <!-- F-03: Bento Grid -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="bento-grid.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('bento-grid.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('bento-grid.html')" title="Otevřít bento-grid.html"><span>BENTO GRID</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Bento Grid GSAP</div>
                         <div class="showcase-desc">4 interaktivní buňky: analytický graf, before/after slider, 3D gyro karta, status node. GSAP animace.</div>
@@ -5447,10 +5441,7 @@
 
                 <!-- F-04: Style Catalog Part 1 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part1.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part1.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part1.html')" title="Otevřít style-catalog-part1.html"><span>STYLE CATALOG PART1</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 1</div>
                         <div class="showcase-desc">3 motivy: Linear (tech grid), Stripe (aurora), Apple (serif editorial). Diagonal wipe přechod.</div>
@@ -5481,10 +5472,7 @@
 
                 <!-- F-05: Style Catalog Part 2 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part2.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part2.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part2.html')" title="Otevřít style-catalog-part2.html"><span>STYLE CATALOG PART2</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 2</div>
                         <div class="showcase-desc">Tesla Cyber (neon grid) vs Framer Elastic (skleněné karty s paralaxem). Multi-curtain přechod.</div>
@@ -5509,10 +5497,7 @@
 
                 <!-- F-06: Style Catalog Part 3 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part3.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part3.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part3.html')" title="Otevřít style-catalog-part3.html"><span>STYLE CATALOG PART3</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 3</div>
                         <div class="showcase-desc">Editorial Noir (spotlight maska) vs Bento Tech (asymetrický grid). Kruhový ripple přechod z kurzoru.</div>
@@ -5536,10 +5521,7 @@
 
                 <!-- F-07: Style Catalog Part 4 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part4.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part4.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part4.html')" title="Otevřít style-catalog-part4.html"><span>STYLE CATALOG PART4</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 4</div>
                         <div class="showcase-desc">Cinematic Letterbox (filmový ořez) vs Chronicle Typography (paralaxní vrstvy textu). 3D spatial přechod.</div>
@@ -5564,10 +5546,7 @@
 
                 <!-- F-08: Style Catalog Part 5 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part5.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part5.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part5.html')" title="Otevřít style-catalog-part5.html"><span>STYLE CATALOG PART5</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 5</div>
                         <div class="showcase-desc">Bento Hub (metriky s count-up) vs Liquid Mask (světlomet sledující myš). Glassmorphic blur přechod.</div>
@@ -5592,10 +5571,7 @@
 
                 <!-- F-09: Style Catalog Part 6 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part6.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part6.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part6.html')" title="Otevřít style-catalog-part6.html"><span>STYLE CATALOG PART6</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 6</div>
                         <div class="showcase-desc">Terminal Boot (konzolový preloader + mřížka) vs Royal Gold (zlatý foil efekt). Sequential skew wipe.</div>
@@ -5621,10 +5597,7 @@
 
                 <!-- F-10: Style Catalog Part 7 -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="style-catalog-part7.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('style-catalog-part7.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('style-catalog-part7.html')" title="Otevřít style-catalog-part7.html"><span>STYLE CATALOG PART7</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Style Catalog — Part 7</div>
                         <div class="showcase-desc">Kinetic Type (deformace textu myší) vs Spatial Layers (paralaxní skleněné karty). Cinematic zoom přechod.</div>
@@ -5649,10 +5622,7 @@
 
                 <!-- F-11: Typography Catalog -->
                 <div class="showcase-card">
-                    <div class="showcase-iframe-wrap">
-                        <iframe src="typography_catalog.html" loading="lazy"></iframe>
-                        <div class="showcase-iframe-overlay" onclick="window.open('typography_catalog.html')"></div>
-                    </div>
+                    <div class="showcase-thumb" onclick="window.open('typography_catalog.html')" title="Otevřít typography_catalog.html"><span>TYPOGRAPHY CATALOG</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
                     <div class="showcase-info">
                         <div class="showcase-title">Typography Catalog</div>
                         <div class="showcase-desc">50 prémiových typografických stylů — gradient text, glitch, editorial serif, monospace, animované nadpisy.</div>
