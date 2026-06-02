@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Grid - Agency Standard 2026</title>
+    <!-- GSAP pro plynulé animace a interpolace -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & CSS VARIABLES --- */
+        :root {
+            --bg-dark: #060813;
+            --bg-card: #0c1020;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --color-accent: #10b981;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            font-family: var(--font-sans);
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 4rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #64748b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* --- BENTO GRID ARCHITEKTURA --- */
+        .bento-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 240px;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        /* Základní buňka */
+        .bento-item {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Globální Spotlight stín sledující myš */
+        .bento-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(99, 102, 241, 0.06), transparent 40%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Velikosti buněk */
+        .bi-large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .bi-tall {
+            grid-row: span 2;
+        }
+
+        .bi-wide {
+            grid-column: span 2;
+        }
+
+        /* Informační texty uvnitř buněk */
+        .cell-info {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cell-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .cell-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .cell-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+            max-width: 320px;
+        }
+
+        /* --- BUŇKA 1: DYNAMICKÝ GRAF (SVG) --- */
+        .chart-visual-area {
+            width: 100%;
+            height: 220px;
+            position: relative;
+            z-index: 2;
+            margin-top: 1rem;
+        }
+
+        .interactive-svg-chart {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: url(#chart-gradient);
+            stroke-width: 3;
+            transition: stroke-dasharray 0.5s ease;
+        }
+
+        .chart-glow-line {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 6;
+            opacity: 0.3;
+            filter: blur(8px);
+        }
+
+        .chart-pointer {
+            fill: #fff;
+            stroke: var(--color-primary);
+            stroke-width: 3;
+            r: 6;
+            display: none;
+        }
+
+        /* --- BUŇKA 2: BEFORE/AFTER SLIDER --- */
+        .slider-visual-area {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 2;
+        }
+
+        .image-container {
+            width: 100%; height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img-before, .img-after {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            pointer-events: none;
+        }
+
+        .img-before {
+            background-image: url('https://picsum.photos/800/800?grayscale');
+        }
+
+        .img-after {
+            background-image: url('https://picsum.photos/800/800');
+            clip-path: inset(0 0 0 50%);
+        }
+
+        /* Táhlo slideru */
+        .slider-handle {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 2px; height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: ew-resize;
+            z-index: 10;
+            transform: translateX(-50%);
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 40px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 0.8rem;
+            color: #fff;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* --- BUŇKA 3: 3D GYRO UZEL --- */
+        .gyro-visual-area {
+            width: 100%; height: 160px;
+            perspective: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .gyro-node {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, var(--color-secondary) 0%, transparent 70%);
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+        }
+
+        .gyro-ring {
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: rotateX(45deg) rotateY(45deg);
+            animation: rotateRing 8s linear infinite;
+        }
+
+        @keyframes rotateRing {
+            100% { transform: rotateX(45deg) rotateY(45deg) rotateZ(360deg); }
+        }
+
+        /* --- BUŇKA 4: STATUS UZEL --- */
+        .status-visual-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 2rem;
+            z-index: 2;
+        }
+
+        .status-pulse {
+            width: 12px; height: 12px;
+            background-color: var(--color-accent);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-pulse::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background-color: var(--color-accent);
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .status-text {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--color-accent);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>BENTO INTEGRATION HUB</h1>
+        <p>Prezentace komplexního, asymetrického rozhraní s fluidním chováním a plynulými JS interpolacemi.</p>
+    </div>
+
+    <!-- BENTO GRID -->
+    <div class="bento-container" id="bento-grid">
+
+        <!-- Buňka 1: Analytický graf (Velká buňka) -->
+        <div class="bento-item bi-large">
+            <div class="cell-info">
+                <span class="cell-tag">Realtime Analytics</span>
+                <h3 class="cell-title">Interpolovaný datový uzel</h3>
+                <p class="cell-desc">Přejeďte kurzorem přes graf. Křivka se plynule dopočítává podle vertikální pozice myši.</p>
+            </div>
+
+            <div class="chart-visual-area" id="chart-area">
+                <svg class="interactive-svg-chart" id="svg-chart" viewBox="0 0 600 220" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="chart-gradient" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#6366f1" />
+                            <stop offset="100%" stop-color="#ec4899" />
+                        </linearGradient>
+                    </defs>
+                    <path class="chart-glow-line" id="chart-glow" d="M0,110 Q150,110 300,110 T600,110" />
+                    <path class="chart-line" id="chart-path" d="M0,110 Q150,110 300,110 T600,110" />
+                    <circle class="chart-pointer" id="chart-pointer-dot"></circle>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Buňka 2: Before/After Slider (Vysoká buňka) -->
+        <div class="bento-item bi-tall" style="padding: 0;" id="slider-area">
+            <div class="slider-visual-area">
+                <div class="image-container">
+                    <div class="img-before"></div>
+                    <div class="img-after" id="slide-after"></div>
+                    <div class="slider-handle" id="slide-handle">
+                        <div class="slider-button">⇄</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Překrytí informací dole pro čitelnost -->
+            <div class="cell-info" style="margin-top: auto; padding: 2rem; background: linear-gradient(to top, #060813 30%, transparent); width: 100%; z-index: 5;">
+                <span class="cell-tag" style="color: #fff;">Render Comparison</span>
+                <h3 class="cell-title">Fluid Masking</h3>
+                <p class="cell-desc" style="color: #94a3b8;">Tahem za slider porovnáte surová a renderovaná data.</p>
+            </div>
+        </div>
+
+        <!-- Buňka 3: 3D Gyroskopický uzel (Standardní buňka) -->
+        <div class="bento-item" id="gyro-card">
+            <div class="gyro-visual-area">
+                <div class="gyro-node" id="gyro-node">
+                    <div class="gyro-ring"></div>
+                </div>
+            </div>
+            <div class="cell-info">
+                <span class="cell-tag">Security</span>
+                <h3 class="cell-title">3D Šifrovací jádro</h3>
+                <p class="cell-desc">Karta s plynulým náklonem a vnitřní rotací uzlu.</p>
+            </div>
+        </div>
+
+        <!-- Buňka 4: Status uzel (Široká buňka) -->
+        <div class="bento-item bi-wide">
+            <div class="cell-info">
+                <span class="cell-tag">System status</span>
+                <h3 class="cell-title">Enterprise Node Operational</h3>
+                <p class="cell-desc">Globální servery běží v optimálním zatížení. Odezva uzlu je stabilně pod 8ms.</p>
+            </div>
+            <div class="status-visual-area">
+                <div class="status-pulse"></div>
+                <span class="status-text">LATENCY: 4.2ms // SECURE</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- --- SCRIPTS & INTERACTION LOGIC --- -->
+    <script>
+        // --- 1. GLOBÁLNÍ SPOTLIGHT PRO VŠECHNY BUŇKY ---
+        const bentoItems = document.querySelectorAll('.bento-item');
+
+        bentoItems.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Nastavení lokálních CSS proměnných pro spotlight stín
+                item.style.setProperty('--mouse-x', `${x}px`);
+                item.style.setProperty('--mouse-y', `${y}px`);
+                item.style.borderColor = 'rgba(99, 102, 241, 0.2)';
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.style.borderColor = 'var(--border-color)';
+            });
+        });
+
+
+        // --- 2. BUŇKA 1: DYNAMICKÝ GRAF S INTERPOLACÍ ---
+        const chartArea = document.getElementById('chart-area');
+        const chartPath = document.getElementById('chart-path');
+        const chartGlow = document.getElementById('chart-glow');
+        const chartPointer = document.getElementById('chart-pointer-dot');
+
+        if (chartArea && chartPath) {
+            chartArea.addEventListener('mousemove', (e) => {
+                const rect = chartArea.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                // Bezpečné ořezání hodnot do výšky grafu
+                const targetY = Math.max(20, Math.min(200, mouseY));
+
+                // Matematická konstrukce plynulého SVG Pathu (Bézierova křivka)
+                // Křivka se dynamicky prohýbá podle vertikální pozice myši
+                const newD = `M0,110 Q150,${targetY} 300,${targetY} T600,110`;
+
+                // GSAP plynule animuje změnu tvaru křivky bez trhání
+                gsap.to([chartPath, chartGlow], {
+                    attr: { d: newD },
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+
+                // Pozicování bodu na křivce (pro jednoduchost na středu X)
+                chartPointer.style.display = 'block';
+                gsap.to(chartPointer, {
+                    attr: { cx: 300, cy: targetY },
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            chartArea.addEventListener('mouseleave', () => {
+                // Návrat do výchozí rovné polohy
+                const defaultD = "M0,110 Q150,110 300,110 T600,110";
+                gsap.to([chartPath, chartGlow], {
+                    attr: { d: defaultD },
+                    duration: 0.6,
+                    ease: "elastic.out(1, 0.5)"
+                });
+                chartPointer.style.display = 'none';
+            });
+        }
+
+
+        // --- 3. BUŇKA 2: BEFORE/AFTER SLIDER ---
+        const sliderArea = document.getElementById('slider-area');
+        const slideAfter = document.getElementById('slide-after');
+        const slideHandle = document.getElementById('slide-handle');
+
+        if (sliderArea && slideAfter && slideHandle) {
+            let isDragging = false;
+
+            const moveSlider = (clientX) => {
+                const rect = sliderArea.getBoundingClientRect();
+                const x = clientX - rect.left;
+
+                // Omezení posunu v rozmezí šířky karty
+                const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+
+                // GSAP interpolace pro hladký pohyb masky
+                gsap.to(slideHandle, { left: `${percentage}%`, duration: 0.1 });
+                gsap.to(slideAfter, { clipPath: `inset(0 0 0 ${percentage}%)`, duration: 0.1 });
+            };
+
+            // Eventy pro myš
+            sliderArea.addEventListener('mousedown', () => isDragging = true);
+            window.addEventListener('mouseup', () => isDragging = false);
+
+            sliderArea.addEventListener('mousemove', (e) => {
+                if (!isDragging) {
+                    // Pohyb reaguje i na prostý hover bez stisku
+                    moveSlider(e.clientX);
+                } else {
+                    moveSlider(e.clientX);
+                }
+            });
+
+            // Podpora pro dotyková zařízení
+            sliderArea.addEventListener('touchstart', () => isDragging = true);
+            window.addEventListener('touchend', () => isDragging = false);
+            sliderArea.addEventListener('touchmove', (e) => {
+                if (isDragging) moveSlider(e.touches[0].clientX);
+            });
+        }
+
+
+        // --- 4. BUŇKA 3: 3D GYRO KARTA ---
+        const gyroCard = document.getElementById('gyro-card');
+        const gyroNode = document.getElementById('gyro-node');
+
+        if (gyroCard && gyroNode) {
+            gyroCard.addEventListener('mousemove', (e) => {
+                const rect = gyroCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+
+                // Výpočet úhlů náklonu
+                const angleX = (yc - y) / 8;
+                const angleY = (x - xc) / 8;
+
+                // Rotace celé karty a vnitřního uzlu v opačném směru pro paralaxní efekt
+                gsap.to(gyroCard, {
+                    rotateX: angleX,
+                    rotateY: angleY,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+
+                gsap.to(gyroNode, {
+                    x: (x - xc) * 0.2,
+                    y: (y - yc) * 0.2,
+                    transform: `rotateX(${-angleX * 1.5}deg) rotateY(${-angleY * 1.5}deg)`,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            gyroCard.addEventListener('mouseleave', () => {
+                // Plynulý návrat do výchozího stavu
+                gsap.to([gyroCard, gyroNode], {
+                    rotateX: 0,
+                    rotateY: 0,
+                    x: 0,
+                    y: 0,
+                    transform: "rotateX(0deg) rotateY(0deg)",
+                    duration: 0.6,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>
