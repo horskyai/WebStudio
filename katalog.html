@@ -2652,6 +2652,286 @@
             transform: translateY(4px);
         }
 
+        /* ==========================================================
+           PRÉMIOVÁ TLAČÍTKA (BUTTONS)
+           ========================================================== */
+
+        /* B-01: Holographic Foil Button */
+        .holo-btn {
+            background: #000;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .holo-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(115deg,
+                transparent 20%,
+                rgba(99, 102, 241, 0.3) 40%,
+                rgba(236, 72, 153, 0.3) 60%,
+                transparent 80%
+            );
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+            transform: translate(-30%, -30%) rotate(0deg);
+        }
+        .holo-btn:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+        .holo-btn:hover::before {
+            transform: translate(10%, 10%) rotate(180deg);
+        }
+
+        /* B-02: Liquid Morphing Button */
+        .liquid-morph-btn {
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            font-weight: 600;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            animation: liquidMorph 6s ease-in-out infinite;
+        }
+        .liquid-morph-btn:hover {
+            background: var(--color-secondary);
+            border-radius: 30% 70% 40% 60% / 50% 60% 40% 50%;
+        }
+        @keyframes liquidMorph {
+            0%, 100% { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+            50% { border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; }
+        }
+
+        /* B-03: Laser Border Sweep Button */
+        .laser-sweep-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.6rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .laser-sweep-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+            transition: 0.5s;
+        }
+        .laser-sweep-btn:hover::before {
+            left: 150%;
+        }
+
+        /* B-04: Apple-style Elastic Press */
+        .apple-elastic-btn {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .apple-elastic-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* B-05: Terminal Code Injection Button */
+        .terminal-inject-btn {
+            background: #000;
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+            padding: 0.8rem 1.6rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* B-06: Chromatic Aberration Button */
+        .aberration-btn {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0.8rem 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+        }
+        .aberration-btn:hover {
+            animation: glitchPulse 0.3s linear infinite;
+        }
+        @keyframes glitchPulse {
+            0% { transform: translate(0); text-shadow: none; }
+            33% { transform: translate(-2px, 2px); text-shadow: 2px 0 var(--color-secondary); }
+            66% { transform: translate(2px, -2px); text-shadow: -2px 0 var(--color-accent); }
+            100% { transform: translate(0); }
+        }
+
+        /* ==========================================================
+           PRÉMIOVÉ KARTY (CARDS)
+           ========================================================== */
+
+        /* C-01: 3D Depth Parallax Card */
+        .parallax-3d-card-wrap {
+            perspective: 1000px;
+        }
+        .parallax-3d-card {
+            width: 240px; height: 140px;
+            background: linear-gradient(135deg, #111524 0%, #080a12 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+        .parallax-3d-card-inner {
+            transform: translateZ(40px);
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: #fff;
+        }
+
+        /* C-02: Border Beam Glowing Grid Card */
+        .border-beam-card {
+            width: 240px; height: 140px;
+            background: #060913;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .border-beam-line {
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--color-primary), transparent 30%);
+            animation: rotateCardBeam 4s linear infinite;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .border-beam-card-inner {
+            position: absolute;
+            top: 1px; left: 1px; right: 1px; bottom: 1px;
+            background: #0b0f19;
+            border-radius: 11px;
+            z-index: 2;
+        }
+        .border-beam-card:hover .border-beam-line {
+            opacity: 1;
+        }
+        @keyframes rotateCardBeam {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* C-03: Frosted Glass Noise Panel */
+        .frosted-noise-card {
+            width: 240px; height: 140px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .frosted-noise-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.12;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* C-04: Bento Expandable Detail Card */
+        .bento-expand-card {
+            width: 240px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .bento-expand-hidden {
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+        }
+        .bento-expand-card:hover .bento-expand-hidden {
+            height: 40px;
+            opacity: 1;
+        }
+
+        /* C-05: Neumorphic Cyber-Glow Card */
+        .cyber-glow-card {
+            width: 240px; height: 140px;
+            background: #020205;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .cyber-glow-card:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        /* C-06: Split Cinematic Image Card */
+        .split-cinema-card {
+            width: 240px; height: 140px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .scc-part {
+            position: absolute; width: 100%; height: 50%;
+            background: url('https://picsum.photos/400/200?blur=1') center/cover;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .sccp-top { top: 0; background-position: top center; }
+        .sccp-bottom { bottom: 0; background-position: bottom center; }
+        .scc-info {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem; font-weight: bold;
+            color: var(--color-accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .split-cinema-card:hover .sccp-top { transform: translateY(-10px); }
+        .split-cinema-card:hover .sccp-bottom { transform: translateY(10px); }
+        .split-cinema-card:hover .scc-info { opacity: 1; }
+
         /* E1: Efekt ohybu stránky (Page peel) */
         .peel-box {
             width: 150px;
@@ -3866,6 +4146,96 @@
                     </div>
                 </div>
 
+                <!-- Tlačítko B-01 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="holo-btn">Hologram</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-01</span>
+                            <span>Holographic</span>
+                        </div>
+                        <h3 class="card-title">Holographic Foil</h3>
+                        <p class="card-desc">Tlačítko s duhovým metalickým odleskem měnícím se podle úhlu najetí myši.</p>
+                    </div>
+                </div>
+
+                <!-- Tlačítko B-02 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="liquid-morph-btn">Liquid</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-02</span>
+                            <span>Morphing</span>
+                        </div>
+                        <h3 class="card-title">Liquid Morphing Button</h3>
+                        <p class="card-desc">Tekuté organické tlačítko, které se na hover deformuje a mění barvu.</p>
+                    </div>
+                </div>
+
+                <!-- Tlačítko B-03 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="laser-sweep-btn">LASER_CORE</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-03</span>
+                            <span>Laser Sweep</span>
+                        </div>
+                        <h3 class="card-title">Laser Border Sweep</h3>
+                        <p class="card-desc">Tlačítko s lineárním paprskem světla, který při najetí projede rámečkem.</p>
+                    </div>
+                </div>
+
+                <!-- Tlačítko B-04 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="apple-elastic-btn">Apple Easing</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-04</span>
+                            <span>Elastic Press</span>
+                        </div>
+                        <h3 class="card-title">Apple Elastic Button</h3>
+                        <p class="card-desc">Minimalistický styl s mimořádně citlivým fyzikálním smrštěním na stisk.</p>
+                    </div>
+                </div>
+
+                <!-- Tlačítko B-05 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="terminal-inject-btn" id="terminal-inject-js" onclick="injectCode()">COMPILE</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-05</span>
+                            <span>Terminal Inject</span>
+                        </div>
+                        <h3 class="card-title">Terminal Code Inject</h3>
+                        <p class="card-desc">Kliknutím spustíte dešifrovací efekt — text se rozpadne na znaky a znovu složí.</p>
+                    </div>
+                </div>
+
+                <!-- Tlačítko B-06 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="aberration-btn">GLITCH</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-06</span>
+                            <span>Chromatic Glitch</span>
+                        </div>
+                        <h3 class="card-title">Chromatic Aberration</h3>
+                        <p class="card-desc">Na hover se text rozštěpí do barevných RGB kanálů s glitch pulzací.</p>
+                    </div>
+                </div>
+
                 <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (B-03 až B-100) -->
 
             </div>
@@ -4130,6 +4500,112 @@
                         </div>
                         <h3 class="card-title">Cipher Tooltip Box</h3>
                         <p class="card-desc">Decentní popisek s dešifrovacím efektem nad kritickými daty.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-01 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="parallax-3d-card-wrap" id="parallax-3d-wrap">
+                            <div class="parallax-3d-card" id="parallax-3d-js">
+                                <div class="parallax-3d-card-inner">DEPTH</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-01</span>
+                            <span>3D Parallax</span>
+                        </div>
+                        <h3 class="card-title">Depth 3D Parallax</h3>
+                        <p class="card-desc">Karta s reálným náklonem a vnitřní vrstvou posouvající se v odlišné ose.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-02 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="border-beam-card">
+                            <div class="border-beam-line"></div>
+                            <div class="border-beam-card-inner"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-02</span>
+                            <span>Border Beam</span>
+                        </div>
+                        <h3 class="card-title">Border Glow Beam</h3>
+                        <p class="card-desc">Tmavý panel s fialovým kuželem světla obíhajícím po obvodu při najetí.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-03 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="frosted-noise-card"></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-03</span>
+                            <span>Frosted Noise</span>
+                        </div>
+                        <h3 class="card-title">Frosted Noise Card</h3>
+                        <p class="card-desc">Mléčné sklo s vysokou mírou rozostření pozadí doplněné o SVG mikro-šum.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-04 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="bento-expand-card">
+                            <span style="font-weight: bold; font-size: 0.95rem;">Bento Card</span>
+                            <div class="bento-expand-hidden">
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Fluidní posun vnitřního layoutu.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-04</span>
+                            <span>Bento Expand</span>
+                        </div>
+                        <h3 class="card-title">Bento Expandable Card</h3>
+                        <p class="card-desc">Dlaždice, která při najetí plynule uvolní prostor pro zobrazení detailů.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-05 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="cyber-glow-card"></div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-05</span>
+                            <span>Cyber Glow</span>
+                        </div>
+                        <h3 class="card-title">Neumorphic Cyber Glow</h3>
+                        <p class="card-desc">Brutalistická karta se saturačním zeleným svitem na rozích vyvolaným najetím.</p>
+                    </div>
+                </div>
+
+                <!-- Karta C-06 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="split-cinema-card">
+                            <div class="scc-part sccp-top"></div>
+                            <div class="scc-part sccp-bottom"></div>
+                            <div class="scc-info">VIEWPORT</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-06</span>
+                            <span>Split Cinema</span>
+                        </div>
+                        <h3 class="card-title">Cinematic Split Card</h3>
+                        <p class="card-desc">Náhled se v polovině rozdělí a odhalí skryté systémové souřadnice.</p>
                     </div>
                 </div>
 
@@ -5072,6 +5548,49 @@
 
             lensBox.addEventListener('mouseleave', () => {
                 lensGlass.style.display = 'none';
+            });
+        }
+        // --- B-05: Terminal Code Inject ---
+        function injectCode() {
+            const btn = document.getElementById('terminal-inject-js');
+            const originalText = "COMPILE";
+            const chars = "10XYZ#@$%&*";
+            let iterations = 0;
+
+            const interval = setInterval(() => {
+                btn.innerText = originalText.split("").map((char, index) => {
+                    if (index < iterations) return originalText[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
+
+                if (iterations >= originalText.length) {
+                    clearInterval(interval);
+                }
+                iterations += 1/3;
+            }, 40);
+        }
+
+        // --- C-01: 3D Depth Parallax Card ---
+        const parallaxWrap = document.getElementById('parallax-3d-wrap');
+        const parallaxJs = document.getElementById('parallax-3d-js');
+
+        if (parallaxWrap && parallaxJs) {
+            parallaxWrap.addEventListener('mousemove', (e) => {
+                const rect = parallaxWrap.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+
+                const angleX = (yc - y) / 6;
+                const angleY = (x - xc) / 6;
+
+                parallaxJs.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+            });
+
+            parallaxWrap.addEventListener('mouseleave', () => {
+                parallaxJs.style.transform = 'rotateX(0deg) rotateY(0deg)';
             });
         }
     </script>
