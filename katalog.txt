@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Interaktivity - Profesionální Knihovna</title>
+    <style>
+        /* --- DESIGN SYSTEM & CSS VARIABLES --- */
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151d30;
+            --bg-card-hover: #1e2942;
+            --border-color: #24355a;
+            
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --color-accent: #10b981;
+            --color-warn: #f59e0b;
+            
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- GLOBAL RESET & STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.5;
+            padding-bottom: 100px;
+            cursor: none; /* Skrytí výchozího kurzoru pro custom cursor */
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-meta {
+            font-family: var(--font-mono);
+            color: var(--color-accent);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .desc {
+            color: var(--text-muted);
+            max-width: 600px;
+            font-size: 1.1rem;
+        }
+
+        /* --- CATEGORY NAVIGATION --- */
+        .cat-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .cat-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            padding: 0 2rem;
+            overflow-x: auto;
+        }
+
+        .cat-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: var(--transition-smooth);
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            border-color: var(--color-primary);
+            color: #fff;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* --- CONTAINER & GRID --- */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-category {
+            margin-top: 6rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-num {
+            font-family: var(--font-mono);
+            color: var(--color-secondary);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        /* --- BASE CARD DESIGN --- */
+        .element-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-smooth);
+        }
+
+        .element-card:hover {
+            border-color: var(--color-primary);
+            transform: translateY(-4px);
+            background-color: var(--bg-card-hover);
+        }
+
+        .card-preview {
+            height: 220px;
+            background-color: #0e1321;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+        }
+
+        .card-info {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        #custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--color-accent);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Hover stav kurzoru */
+        body.cursor-active #custom-cursor {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(99, 102, 241, 0.1);
+            border-color: var(--color-secondary);
+        }
+
+
+        /* ==========================================
+           IMPLEMENTACE PRVKŮ (UKÁZKY INTERAKTIVITY)
+           ========================================== */
+
+        /* --- KATEGORIE A: MIKROINTERAKCE --- */
+
+        /* A1: Magnetické tlačítko */
+        .magnetic-wrap {
+            display: inline-block;
+            padding: 20px;
+        }
+        .magnetic-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        /* A2: Tekutý hover vstup (Form Input) */
+        .input-group {
+            position: relative;
+            width: 100%;
+            max-width: 260px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border-color);
+            color: #fff;
+            outline: none;
+            font-size: 1rem;
+        }
+        .input-group label {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            color: var(--text-muted);
+            transition: 0.3s ease all;
+            pointer-events: none;
+        }
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -15px;
+            font-size: 0.8rem;
+            color: var(--color-accent);
+        }
+        .input-group .input-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-accent);
+            transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+        .input-group input:focus ~ .input-bar {
+            width: 100%;
+        }
+
+        /* --- KATEGORIE B: SCROLL-DRIVEN & SPATIAL --- */
+
+        /* B1: Parallax Card Trigger */
+        .parallax-scene {
+            perspective: 800px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .parallax-card {
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 10px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .parallax-card div {
+            transform: translateZ(30px);
+            font-family: var(--font-mono);
+        }
+
+        /* B2: Indikátor průběhu */
+        .scroll-mock {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .scroll-mock-bar {
+            height: 100%;
+            width: 0;
+            background: var(--color-accent);
+            animation: mockScroll 3s infinite ease-in-out;
+        }
+        @keyframes mockScroll {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        /* --- KATEGORIE C: TYPOGRAFIE --- */
+
+        /* C1: Detekce kurzoru na textu (Split hover) */
+        .kinetic-text {
+            font-size: 2rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .kinetic-text span {
+            display: inline-block;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .kinetic-text:hover span {
+            transform: translateY(-10px) scale(1.1);
+            color: var(--color-secondary);
+        }
+        .kinetic-text span:nth-child(even):hover {
+            color: var(--color-accent);
+        }
+
+        /* C2: Záření textu (Neon reveal) */
+        .neon-reveal {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            position: relative;
+            cursor: pointer;
+        }
+        .neon-reveal::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0; top: 0;
+            width: 0;
+            color: var(--color-primary);
+            overflow: hidden;
+            transition: width 0.5s ease;
+            -webkit-text-stroke: 1px var(--color-primary);
+            filter: drop-shadow(0 0 8px var(--color-primary));
+        }
+        .neon-reveal:hover::after {
+            width: 100%;
+        }
+
+        /* --- KATEGORIE D: NAVIGACE & LAYOUTS --- */
+
+        /* D1: 3D Tilt Grid Card */
+        .tilt-box {
+            width: 220px;
+            height: 120px;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .tilt-box:hover {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        /* D2: Elastický Trigger */
+        .elastic-trigger {
+            background: none;
+            border: 2px solid var(--color-secondary);
+            color: var(--color-secondary);
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .elastic-trigger:active {
+            transform: scale(0.9) skewX(-10deg);
+        }
+
+        /* --- KATEGORIE E: KREATIVNÍ EFEKTY --- */
+
+        /* E1: Efekt ohybu stránky (Page peel) */
+        .peel-box {
+            width: 150px;
+            height: 100px;
+            background: var(--color-primary);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .peel-corner {
+            position: absolute;
+            top: 0; right: 0;
+            width: 0; height: 0;
+            background: linear-gradient(135deg, var(--bg-card) 45%, #fff 50%, var(--bg-card-hover) 56%);
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.5);
+            transition: 0.4s ease;
+        }
+        .peel-box:hover .peel-corner {
+            width: 40px;
+            height: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div id="custom-cursor"></div>
+    <div id="custom-cursor-dot"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-meta">SKILL.MD // INTERACTIVE CATALOG v1.0</div>
+        <h1>KATALOG INTERAKTIVNÍCH PRVKŮ</h1>
+        <p class="desc">Modulární, samostatná knihovna efektů a rozhraní. Vyberte prvek a integrujte jej přímo do požadovaného projektu.</p>
+    </header>
+
+    <!-- STICKY NAVIGATION -->
+    <nav class="cat-nav">
+        <div class="cat-nav-inner">
+            <button class="cat-btn active" onclick="scrollToSection('cat-a')">A. Mikrointerakce</button>
+            <button class="cat-btn" onclick="scrollToSection('cat-b')">B. Scroll & Prostor</button>
+            <button class="cat-btn" onclick="scrollToSection('cat-c')">C. Typografie</button>
+            <button class="cat-btn" onclick="scrollToSection('cat-d')">D. Navigace & Layout</button>
+            <button class="cat-btn" onclick="scrollToSection('cat-e')">E. Kreativní Efekty</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="main-content">
+
+        <!-- ==================== KATEGORIE A ==================== -->
+        <section id="cat-a" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE A</span>
+                <h2 class="section-title">Mikrointerakce a stavy prvků</h2>
+            </div>
+            <div class="elements-grid">
+                
+                <!-- Prvek A1 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="magnetic-wrap" id="magnetic-area">
+                            <button class="magnetic-btn" id="magnetic-btn">Magnet</button>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: A-01</span>
+                            <span>Vanilla JS</span>
+                        </div>
+                        <h3 class="card-title">Magnetické tlačítko</h3>
+                        <p class="card-desc">Tlačítko, které se v určitém okruhu přitahuje k pozici kurzoru myši.</p>
+                    </div>
+                </div>
+
+                <!-- Prvek A2 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="input-group">
+                            <input type="text" required>
+                            <span class="input-bar"></span>
+                            <label>Uživatelské jméno</label>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: A-02</span>
+                            <span>CSS-only</span>
+                        </div>
+                        <h3 class="card-title">Elastický label vstupu</h3>
+                        <p class="card-desc">Plovoucí popisek s animovanou spodní linkou reagující na focus.</p>
+                    </div>
+                </div>
+
+                <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (A-03 až A-100) -->
+
+            </div>
+        </section>
+
+
+        <!-- ==================== KATEGORIE B ==================== -->
+        <section id="cat-b" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE B</span>
+                <h2 class="section-title">Scroll-driven interakce a prostorové efekty</h2>
+            </div>
+            <div class="elements-grid">
+                
+                <!-- Prvek B1 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="parallax-scene" id="tilt-scene">
+                            <div class="parallax-card" id="tilt-card">
+                                <div>3D HOVER</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-01</span>
+                            <span>Vanilla JS</span>
+                        </div>
+                        <h3 class="card-title">Spatial 3D Card</h3>
+                        <p class="card-desc">Karta s plynulým náklonem ve 3D prostoru na základě souřadnic myši.</p>
+                    </div>
+                </div>
+
+                <!-- Prvek B2 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="scroll-mock">
+                            <div class="scroll-mock-bar"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: B-02</span>
+                            <span>CSS Animation</span>
+                        </div>
+                        <h3 class="card-title">Indikátor průběhu</h3>
+                        <p class="card-desc">Simulace indikátoru načtení nebo průchodu stránkou pro dlouhé weby.</p>
+                    </div>
+                </div>
+
+                <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (B-03 až B-100) -->
+
+            </div>
+        </section>
+
+
+        <!-- ==================== KATEGORIE C ==================== -->
+        <section id="cat-c" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE C</span>
+                <h2 class="section-title">Typografie a textové efekty</h2>
+            </div>
+            <div class="elements-grid">
+                
+                <!-- Prvek C1 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="kinetic-text">
+                            <span>K</span><span>I</span><span>N</span><span>E</span><span>T</span><span>I</span><span>C</span>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-01</span>
+                            <span>CSS-only</span>
+                        </div>
+                        <h3 class="card-title">Kinetické písmo</h3>
+                        <p class="card-desc">Efekt, kde každé písmeno reaguje samostatně na přejetí kurzorem.</p>
+                    </div>
+                </div>
+
+                <!-- Prvek C2 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="neon-reveal" data-text="REVEAL">REVEAL</div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: C-02</span>
+                            <span>CSS-only</span>
+                        </div>
+                        <h3 class="card-title">Neonový průsak</h3>
+                        <p class="card-desc">Odkrývání barvy textu a vyzařování záře při najetí kurzoru.</p>
+                    </div>
+                </div>
+
+                <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (C-03 až C-100) -->
+
+            </div>
+        </section>
+
+
+        <!-- ==================== KATEGORIE D ==================== -->
+        <section id="cat-d" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE D</span>
+                <h2 class="section-title">Navigační systémy a layouty</h2>
+            </div>
+            <div class="elements-grid">
+                
+                <!-- Prvek D1 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="tilt-box">MENU ITEM</div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: D-01</span>
+                            <span>CSS/JS</span>
+                        </div>
+                        <h3 class="card-title">Glow Grid Item</h3>
+                        <p class="card-desc">Navigační dlaždice s reaktivním stínem a zářením na okraji.</p>
+                    </div>
+                </div>
+
+                <!-- Prvek D2 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <button class="elastic-trigger">SKEW INTERACTION</button>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: D-02</span>
+                            <span>CSS Transform</span>
+                        </div>
+                        <h3 class="card-title">Elastický stisk</h3>
+                        <p class="card-desc">Tlačítko imitující fyzické promáčknutí s deformací zkosení (skew) při kliknutí.</p>
+                    </div>
+                </div>
+
+                <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (D-03 až D-100) -->
+
+            </div>
+        </section>
+
+
+        <!-- ==================== KATEGORIE E ==================== -->
+        <section id="cat-e" class="section-category">
+            <div class="section-header">
+                <span class="section-num">KATEGORIE E</span>
+                <h2 class="section-title">Pokročilé kreativní efekty</h2>
+            </div>
+            <div class="elements-grid">
+                
+                <!-- Prvek E1 -->
+                <div class="element-card">
+                    <div class="card-preview">
+                        <div class="peel-box">
+                            <div class="peel-corner"></div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-meta">
+                            <span>ID: E-01</span>
+                            <span>CSS Transition</span>
+                        </div>
+                        <h3 class="card-title">Ohyb rohu stránky</h3>
+                        <p class="card-desc">Imitace ohybu rohu (page peel) s plynulým stínováním při přiblížení kurzoru.</p>
+                    </div>
+                </div>
+
+                <!-- ZDE MŮŽETE POKRAČOVAT DO 100 POLOŽEK (E-03 až E-100) -->
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- --- SCRIPTS & INTERACTIONS --- -->
+    <script>
+        // --- 1. GLOBÁLNÍ SELEKTORY & STRUKTURA ---
+        const cursor = document.getElementById('custom-cursor');
+        const cursorDot = document.getElementById('custom-cursor-dot');
+        const cards = document.querySelectorAll('.element-card, .cat-btn, button, input');
+
+        // --- 2. CUSTOM CURSOR LOGIKA ---
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                document.body.classList.add('cursor-active');
+            });
+            card.addEventListener('mouseleave', () => {
+                document.body.classList.remove('cursor-active');
+            });
+        });
+
+        // --- 3. SCROLL NAVIGATION LOGIKA ---
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = 120; // Výška sticky menu
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = element.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Aktivace tlačítek při scrollu
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section-category');
+            const navButtons = document.querySelectorAll('.cat-btn');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 180) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(current)) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+
+        // --- 4. A1: MAGNETICKÝ EFFECT ---
+        const magneticArea = document.getElementById('magnetic-area');
+        const magneticBtn = document.getElementById('magnetic-btn');
+
+        if(magneticArea && magneticBtn) {
+            magneticArea.addEventListener('mousemove', (e) => {
+                const rect = magneticArea.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+                
+                // Přitáhnutí tlačítka s koeficientem 0.4
+                magneticBtn.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px)`;
+            });
+
+            magneticArea.addEventListener('mouseleave', () => {
+                magneticBtn.style.transform = 'translate(0px, 0px)';
+            });
+        }
+
+        // --- 5. B1: 3D CARD PARALLAX EFFECT ---
+        const tiltScene = document.getElementById('tilt-scene');
+        const tiltCard = document.getElementById('tilt-card');
+
+        if(tiltScene && tiltCard) {
+            tiltScene.addEventListener('mousemove', (e) => {
+                const rect = tiltScene.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                
+                const angleX = (yc - y) / 5; // citlivost
+                const angleY = (x - xc) / 5; // citlivost
+                
+                tiltCard.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+            });
+
+            tiltScene.addEventListener('mouseleave', () => {
+                tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            });
+        }
+    </script>
+</body>
+</html>

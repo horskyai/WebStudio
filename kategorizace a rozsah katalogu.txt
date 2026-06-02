@@ -1,0 +1,25 @@
+3. Kategorizace a rozsah katalogu
+A. Mikrointerakce a stavy prvků (Micro-interactions)
+Tlačítka a odkazy: Magnetické efekty (magnetic buttons), tekuté hover efekty, animace ikon při aktivaci, gradientové přechody na hranicích.
+Vstupy formulářů: Plovoucí labely s elastickou animací, interaktivní validace polí v reálném čase, animované checkboxy a přepínače.
+B. Scroll-driven interakce a prostorové efekty
+Scroll-triggered animace: Postupné odkrývání obsahu (reveal), paralaxní posuny vrstev, fixace sekcí s horizontálním posunem.
+Indikátory a lišty: Pokročilé indikátory průchodu stránkou, animované scrollovací výzvy.
+C. Typografie a textové efekty
+Vstupní animace: Efekt psacího stroje (typewriter), postupné vykreslování písmen (character splitting), dekonstrukce a opětovné složení textu při scrollu.
+Hover nad textem: Zvýraznění slov s kinetickým efektem, odhalení obrázku na pozadí při hoveru.
+D. Navigační systémy a layouty
+Menu rozhraní: Fullscreen překryvy s plynulým stagingem položek, off-canvas menu s elastickým chováním, plovoucí kontextové doky.
+Karty a gridy: Tilt efekty (3D náklon podle pohybu myši), expanze karet do detailu (shared layout transitions).
+E. Pokročilé kreativní efekty
+Vlastní kurzory: Kurzory reagující na interaktivní prvky (zvětšení, invertování barev, magnetické přitahování).
+Přechody stránek: Efekt imitující otáčení stránek knihy, gelové/kapalné deformace obrazovky při změně routy.
+4. Výběrová a integrační metodika (Rozhodovací proces)
+Při návrhu interaktivity pro konkrétní projekt se postupuje podle třífázového rozhodovacího stromu:
+Analýza kontextu: Definování technických omezení cílového webu (použitý framework, výkonnostní rozpočet, cílová skupina uživatelů).
+Selektivní filtrace: Výběr prvků, které mají minimální dopad na CLS (Cumulative Layout Shift) a nezpůsobují nadbytečné překreslování (repaint).
+Adaptace: Extrakce vybraného kódu z katalogu, nahrazení barev a písem podle lokálního design systému a následné nasazení.
+5. Technické a kvalitativní standardy katalogu
+Optimalizace vykreslování: Preferování CSS transformací (transform: translate3d/scale) a průhlednosti (opacity) před vlastnostmi, které spouští layout (např. animování height nebo top). Využití will-change pouze u kritických GPU-akcelerovaných prvků.
+Respektování uživatele: Povinná implementace mediálního dotazu prefers-reduced-motion pro uživatele s vestavěnými systémovými preferencemi omezujícími pohyb.
+Fallbacky: Zajištění funkčnosti prvků i v případě selhání nebo zakázání JavaScriptu (progressive enhancement).

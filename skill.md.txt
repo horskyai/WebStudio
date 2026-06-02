@@ -1,0 +1,25 @@
+# Skill: Správa a kontextuální integrace katalogu interaktivních komponent
+
+## 1. Účel a architektonické cíle
+Tento skill definuje standardy pro správu, rozšiřování a aplikaci nezávislé knihovny (katalogu) interaktivních rozhraní, mikrointerakcí a animací. Hlavním cílem je striktní separace kreativního kódu od produkčního prostředí projektu až do momentu cílené integrace. Tím se předchází znečištění codebase, zvyšuje se znovupoužitelnost kódu a zajišťuje se stabilní výkon aplikací.
+
+---
+
+## 2. Metadatová struktura položky katalogu
+Každý prvek zařazený do katalogu musí obsahovat následující strukturu metadat pro snadnou přenositelnost:
+
+```yaml
+id: [unikátní-identifikátor]
+název: [Název komponenty]
+kategorie: [např. navigace / typografie / scroll-efekty]
+technologie: [např. Vanilla JS, CSS-only, GSAP, Tailwind, React]
+náročnost-na-výkon: [Nízká / Střední / Vysoká (popis vlivu na CPU/GPU)]
+přístupnost-a11y: [Stav kompatibility, podpora prefers-reduced-motion, ARIA atributy]
+závislosti: [Seznam externích knihoven nebo assetů]
+kódový-základ:
+  html: |
+    # HTML struktura
+  css: |
+    # Stylování (včetně custom properties pro snadný branding)
+  js: |
+    # Inicializace a event-handling (pokud je vyžadován)

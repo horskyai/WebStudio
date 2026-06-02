@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Interaktivity - 50 Typografických Stylů</title>
+    <style>
+        /* --- Globální nastavení a reset --- */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-dark: #0f172a;
+            --text-light: #f1f5f9;
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #10b981;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font-sans);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .catalog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-title {
+            font-size: 2rem;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+            text-align: center;
+            position: relative;
+        }
+
+        .card::before {
+            content: attr(data-id);
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            color: #64748b;
+        }
+
+        /* --- SKUPINA 1: VSTUPNÍ A KINETICKÉ ANIMACE (1-10) --- */
+        
+        /* 1. Postupné odhalení zespodu */
+        .typo-1 {
+            font-size: 2rem;
+            overflow: hidden;
+        }
+        .typo-1 span {
+            display: inline-block;
+            animation: revealUp 1s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+            transform: translateY(100%);
+        }
+        @keyframes revealUp {
+            to { transform: translateY(0); }
+        }
+
+        /* 2. Rozmazané zaostření */
+        .typo-2 {
+            font-size: 2rem;
+            animation: blurFocus 1.5s ease-out forwards;
+        }
+        @keyframes blurFocus {
+            0% { filter: blur(12px); opacity: 0; }
+            100% { filter: blur(0); opacity: 1; }
+        }
+
+        /* 3. Roztažení mezer mezi písmeny */
+        .typo-3 {
+            font-size: 1.8rem;
+            letter-spacing: -0.2em;
+            animation: trackingOut 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        @keyframes trackingOut {
+            0% { letter-spacing: -0.2em; opacity: 0; }
+            100% { letter-spacing: 0.1em; opacity: 1; }
+        }
+
+        /* 4. Typ psacího stroje */
+        .typo-4 {
+            font-size: 1.5rem;
+            font-family: var(--font-mono);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--primary);
+            width: 0;
+            animation: typing 3s steps(15, end) forwards, blink 0.75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--primary); } }
+
+        /* 5. Odhalení pomocí krycí masky (Slide-in Block) */
+        .typo-5 {
+            font-size: 2rem;
+            position: relative;
+            color: transparent;
+            animation: revealColor 0.1s 1s forwards;
+        }
+        .typo-5::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 100%;
+            background: var(--primary);
+            animation: slideBlock 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes revealColor { to { color: var(--text-light); } }
+        @keyframes slideBlock {
+            0% { left: 0; width: 0; }
+            50% { left: 0; width: 100%; }
+            100% { left: 100%; width: 0; }
+        }
+
+        /* 6. Skákající znaky (Bounce bounce) */
+        .typo-6 span {
+            display: inline-block;
+            font-size: 2rem;
+            animation: bounceLetter 0.6s ease infinite alternate;
+        }
+        .typo-6 span:nth-child(2) { animation-delay: 0.1s; }
+        .typo-6 span:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes bounceLetter {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-15px); }
+        }
+
+        /* 7. Kinetické rolování slov */
+        .typo-7 {
+            font-size: 2rem;
+            height: 2.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .typo-7 ul {
+            list-style: none;
+            padding: 0; margin: 0;
+            animation: scrollWords 6s infinite ease-in-out;
+        }
+        @keyframes scrollWords {
+            0%, 20% { transform: translateY(0); }
+            25%, 45% { transform: translateY(-2.5rem); }
+            50%, 70% { transform: translateY(-5rem); }
+            75%, 95% { transform: translateY(-7.5rem); }
+            100% { transform: translateY(0); }
+        }
+
+        /* 8. Pulsace rozměru (Breathing text) */
+        .typo-8 {
+            font-size: 2rem;
+            animation: breathe 3s ease-in-out infinite alternate;
+        }
+        @keyframes breathe {
+            0% { transform: scale(0.95); letter-spacing: -0.05em; opacity: 0.8; }
+            100% { transform: scale(1.05); letter-spacing: 0.05em; opacity: 1; }
+        }
+
+        /* 9. Rotace po 3D ose */
+        .typo-9 {
+            font-size: 2rem;
+            perspective: 400px;
+        }
+        .typo-9 span {
+            display: inline-block;
+            transform-origin: 50% 50% -10px;
+            animation: rotate3d 2s infinite ease-in-out;
+        }
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg); }
+            100% { transform: rotateX(360deg); }
+        }
+
+        /* 10. Glitch efekt (vstupní cyklus) */
+        .typo-10 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(255,0,0,.75), -0.025em -0.05em 0 rgba(0,255,0,.75), 0.025em 0.05em 0 rgba(0,0,255,.75);
+            animation: glitch 1s infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 1px 0 0 red, -1px -1px 0 blue; }
+            50% { text-shadow: -2px 1px 0 red, 2px -1px 0 green; }
+            100% { text-shadow: 1px -2px 0 blue, -1px 2px 0 red; }
+        }
+
+        /* --- SKUPINA 2: INTERAKTIVNÍ A HOVER EFEKTY (11-20) --- */
+
+        /* 11. Magnetické zvětšení mezer při hoveru */
+        .typo-11 {
+            font-size: 2rem;
+            transition: letter-spacing 0.4s ease;
+            cursor: pointer;
+        }
+        .typo-11:hover {
+            letter-spacing: 0.2em;
+        }
+
+        /* 12. Vyplnění textu zespodu */
+        .typo-12 {
+            font-size: 2rem;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-light);
+            background: linear-gradient(to top, var(--primary) 50%, transparent 50%);
+            background-size: 100% 200%;
+            background-position: 0 0;
+            transition: background-position 0.5s ease, color 0.5s ease;
+            cursor: pointer;
+        }
+        .typo-12:hover {
+            background-position: 0 100%;
+            color: var(--text-light);
+        }
+
+        /* 13. Zvlnění podtržení */
+        .typo-13 {
+            font-size: 2rem;
+            position: relative;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        .typo-13::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: -5px; width: 100%; height: 2px;
+            background: var(--secondary);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+        .typo-13:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* 14. 3D Náklon stínu (Hover Depth) */
+        .typo-14 {
+            font-size: 2rem;
+            font-weight: bold;
+            transition: transform 0.3s ease, text-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .typo-14:hover {
+            transform: translateY(-5px) rotateX(10deg);
+            text-shadow: 0 15px 10px rgba(0,0,0,0.5);
+        }
+
+        /* 15. Změna tloušťky (Variable Font Hover) */
+        .typo-15 {
+            font-size: 2rem;
+            font-weight: 300;
+            transition: font-weight 0.4s ease;
+            cursor: pointer;
+        }
+        .typo-15:hover {
+            font-weight: 900;
+        }
+
+        /* 16. Rozostření okolních znaků při hoveru */
+        .typo-16 {
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .typo-16 span {
+            transition: filter 0.3s ease;
+        }
+        .typo-16:hover span:not(:hover) {
+            filter: blur(4px);
+        }
+
+        /* 17. Duální text s posunem */
+        .typo-17 {
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            height: 2.4rem;
+        }
+        .typo-17 span {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .typo-17::after {
+            content: attr(data-hover);
+            position: absolute;
+            left: 0; top: 100%;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+        .typo-17:hover span { transform: translateY(-100%); }
+        .typo-17:hover::after { transform: translateY(-100%); }
+
+        /* 18. Efekt zářící stopky (Glow hover) */
+        .typo-18 {
+            font-size: 2rem;
+            transition: text-shadow 0.4s ease, color 0.4s ease;
+            cursor: pointer;
+        }
+        .typo-18:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 40px var(--primary);
+        }
+
+        /* 19. Odhození stínu stranou */
+        .typo-19 {
+            font-size: 2rem;
+            font-weight: bold;
+            transition: text-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .typo-19:hover {
+            text-shadow: 8px 8px 0px var(--secondary);
+        }
+
+        /* 20. Skrytý překlad / Odhalení popisku */
+        .typo-20 {
+            font-size: 1.8rem;
+            position: relative;
+            cursor: pointer;
+        }
+        .typo-20 .original {
+            transition: opacity 0.3s ease;
+        }
+        .typo-20 .translation {
+            position: absolute;
+            left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            color: var(--accent);
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .typo-20:hover .original { opacity: 0; }
+        .typo-20:hover .translation { opacity: 1; }
+
+
+        /* --- SKUPINA 3: RETRO, 3D A NEO-BRUTALISMUS (21-30) --- */
+
+        /* 21. Klasický pop-artový 3D stín */
+        .typo-21 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000, 2px 2px 0 #000, 3px 3px 0 #000, 4px 4px 0 #000, 5px 5px 0 #000;
+        }
+
+        /* 22. Neo-brutalistické ohraničení (Stroked Solid) */
+        .typo-22 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #fde047;
+            -webkit-text-stroke: 2px #000;
+            text-shadow: 4px 4px 0px #000;
+        }
+
+        /* 23. Anaglyph 3D (Stereoskopický efekt) */
+        .typo-23 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            position: relative;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: -2px -2px 0px #ff004f, 2px 2px 0px #00f2fe;
+        }
+
+        /* 24. Vintage zkosené vrstvení (Beveled) */
+        .typo-24 {
+            font-size: 2.5rem;
+            font-family: var(--font-serif);
+            color: #f59e0b;
+            text-shadow: 0 1px 0 #ccc, 0 2px 0 #c5c5c5, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25);
+        }
+
+        /* 25. Cyberpunk neonová trubice */
+        .typo-25 {
+            font-size: 2rem;
+            font-family: var(--font-mono);
+            color: #03e9f4;
+            text-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
+            box-shadow: none;
+        }
+
+        /* 26. Skleněná ražba (Debossed / Inner shadow effect) */
+        .typo-26 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1e293b;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.2), -1px -1px 1px rgba(0,0,0,0.7);
+        }
+
+        /* 27. Pruhovaný stín (Striped shadow) */
+        .typo-27 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #e2e8f0;
+            background: repeating-linear-gradient(45deg, #334155, #334155 2px, transparent 2px, transparent 4px);
+            -webkit-background-clip: text;
+            -webkit-text-shadow: 4px 4px 0px #0f172a;
+        }
+
+        /* 28. Retro vlnová deformace */
+        .typo-28 {
+            font-size: 2.2rem;
+            font-family: var(--font-serif);
+            font-style: italic;
+            background: linear-gradient(to right, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-color: transparent;
+            color: transparent;
+            transform: skewY(-5deg);
+        }
+
+        /* 29. ASCII-art styl ohraničení */
+        .typo-29 {
+            font-size: 1.5rem;
+            font-family: var(--font-mono);
+            border: 2px dashed var(--accent);
+            padding: 0.5rem;
+            background-color: #000;
+        }
+
+        /* 30. Vrstvené barevné bloky (Isometric) */
+        .typo-30 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 2px 2px 0px var(--secondary), 4px 4px 0px var(--accent), 6px 6px 0px #000;
+        }
+
+
+        /* --- SKUPINA 4: MINIMALISTICKÁ REDAKČNÍ TYPOGRAFIE (31-40) --- */
+
+        /* 31. Klasická patková elegance s tenkým řezem */
+        .typo-31 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        /* 32. Ultra-kondenzovaný modernismus */
+        .typo-32 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            text-transform: uppercase;
+        }
+
+        /* 33. Široká rozteč sans-serif (High-fashion label) */
+        .typo-33 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+        }
+
+        /* 34. Kurzivní vložení (Editorial Accent) */
+        .typo-34 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+        }
+        .typo-34 em {
+            font-style: italic;
+            color: var(--primary);
+            font-weight: 300;
+        }
+
+        /* 35. Monospace minimalistická tabulková data */
+        .typo-35 {
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: #94a3b8;
+        }
+
+        /* 36. Brutalistická asymetrická velikost */
+        .typo-36 {
+            font-size: 2.5rem;
+            font-weight: 900;
+        }
+        .typo-36::first-letter {
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 0.2rem;
+            color: var(--secondary);
+        }
+
+        /* 37. Elegantní podtržení tenkou linkou */
+        .typo-37 {
+            font-size: 1.8rem;
+            border-bottom: 1px solid #64748b;
+            padding-bottom: 0.3rem;
+            display: inline-block;
+        }
+
+        /* 38. Výrazný kontrast velikostí v jednom bloku */
+        .typo-38 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .typo-38 span:first-child {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+        }
+        .typo-38 span:last-child {
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        /* 39. Drsný industriální nápis */
+        .typo-39 {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            transform: scaleY(1.3);
+        }
+
+        /* 40. Závorkový akcent */
+        .typo-40 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            color: #cbd5e1;
+        }
+        .typo-40::before { content: "[ "; color: var(--primary); }
+        .typo-40::after { content: " ]"; color: var(--primary); }
+
+
+        /* --- SKUPINA 5: GRADIENTY, MASKY A BLEND MÓDY (41-50) --- */
+
+        /* 41. Klasický metalický gradient */
+        .typo-41 {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #cbd5e1 0%, #475569 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 42. Neonový duhový přechod */
+        .typo-42 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #f43f5e, #f97316, #eab308, #10b981, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 43. Obrázková maska (Text Clipping) */
+        .typo-43 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            background-image: url('https://picsum.photos/400/200?blur=1');
+            background-size: cover;
+            background-position: center;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 44. Průhledný text s mix-blend-mode (vhodný na světlé/tmavé rozhraní) */
+        .typo-44 {
+            font-size: 2rem;
+            font-weight: 900;
+            mix-blend-mode: difference;
+            color: #fff;
+        }
+
+        /* 45. Aurora zářící pozadí textu */
+        .typo-45 {
+            font-size: 2rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        .typo-45::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%; height: 60%;
+            background: radial-gradient(circle, rgba(99,102,241,0.6) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(5px);
+        }
+
+        /* 46. Skleněný efekt (Glassmorphic border mask) */
+        .typo-46 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+        }
+
+        /* 47. Animovaný vlnící se gradient */
+        .typo-47 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(270deg, #ec4899, #8b5cf6, #3b82f6);
+            background-size: 600% 600%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 8s ease infinite;
+        }
+        @keyframes gradientMove {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+        }
+
+        /* 48. Textura papíru / kouřový šum */
+        .typo-48 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f1f5f9;
+            mask-image: radial-gradient(circle, transparent 20%, black 60%);
+            -webkit-mask-image: radial-gradient(circle, transparent 10%, black 80%);
+        }
+
+        /* 49. Radiální záře ze středu (Text Glow mask) */
+        .typo-49 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5), 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        /* 50. Tekutý přechod do průhledna */
+        .typo-50 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #ffffff 30%, rgba(255,255,255,0));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="catalog-container">
+        <h1>KATALOG INTERAKTIVNÍ TYPOGRAFIE</h1>
+        <p>Knihovna stylů určených k přímému přenosu do projektů.</p>
+
+        <!-- KATEGORIE 1 -->
+        <h2 class="category-title">01. Vstupní a kinetické animace</h2>
+        <div class="grid">
+            <div class="card" data-id="01"><div class="typo-1"><span>Odhalení zespodu</span></div></div>
+            <div class="card" data-id="02"><div class="typo-2">Zaostření</div></div>
+            <div class="card" data-id="03"><div class="typo-3">Roztažení mezer</div></div>
+            <div class="card" data-id="04"><div class="typo-4">Psací stroj...</div></div>
+            <div class="card" data-id="05"><div class="typo-5">Krycí maska</div></div>
+            <div class="card" data-id="06"><div class="typo-6"><span>B</span><span>O</span><span>X</span></div></div>
+            <div class="card" data-id="07">
+                <div class="typo-7">
+                    <ul>
+                        <li>Rychle</li>
+                        <li>Efektivně</li>
+                        <li>Plynule</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card" data-id="08"><div class="typo-8">Pulsace rozměru</div></div>
+            <div class="card" data-id="09"><div class="typo-9"><span>Rotace 3D</span></div></div>
+            <div class="card" data-id="10"><div class="typo-10">GLITCH</div></div>
+        </div>
+
+        <!-- KATEGORIE 2 -->
+        <h2 class="category-title">02. Interaktivní a Hover efekty</h2>
+        <div class="grid">
+            <div class="card" data-id="11"><div class="typo-11">Rozestoupení</div></div>
+            <div class="card" data-id="12"><div class="typo-12">Výplň vlnou</div></div>
+            <div class="card" data-id="13"><a href="#" class="typo-13">Linkování</a></div>
+            <div class="card" data-id="14"><div class="typo-14">Hloubka stínu</div></div>
+            <div class="card" data-id="15"><div class="typo-15">Zesílení řezu</div></div>
+            <div class="card" data-id="16"><div class="typo-16"><span>S</span><span>E</span><span>L</span><span>E</span><span>C</span><span>T</span></div></div>
+            <div class="card" data-id="17"><div class="typo-17" data-hover="NOVÝ STAV"><span>PŮVODNÍ</span></div></div>
+            <div class="card" data-id="18"><div class="typo-18">Záření stopky</div></div>
+            <div class="card" data-id="19"><div class="typo-19">Odhozený stín</div></div>
+            <div class="card" data-id="20"><div class="typo-20"><span class="original">English</span><span class="translation">Česky</span></div></div>
+        </div>
+
+        <!-- KATEGORIE 3 -->
+        <h2 class="category-title">03. Retro, 3D a Neo-brutalisus</h2>
+        <div class="grid">
+            <div class="card" data-id="21"><div class="typo-21">POP ART</div></div>
+            <div class="card" data-id="22"><div class="typo-22">BRUTALIST</div></div>
+            <div class="card" data-id="23"><div class="typo-23">ANAGLYPH</div></div>
+            <div class="card" data-id="24"><div class="typo-24">VINTAGE</div></div>
+            <div class="card" data-id="25"><div class="typo-25">CYBER</div></div>
+            <div class="card" data-id="26"><div class="typo-26">RAŽENÝ</div></div>
+            <div class="card" data-id="27"><div class="typo-27">STRIPED</div></div>
+            <div class="card" data-id="28"><div class="typo-28">WAVE FORM</div></div>
+            <div class="card" data-id="29"><div class="typo-29">ASCII.TXT</div></div>
+            <div class="card" data-id="30"><div class="typo-30">ISOMETRIC</div></div>
+        </div>
+
+        <!-- KATEGORIE 4 -->
+        <h2 class="category-title">04. Minimalistická redakční typografie</h2>
+        <div class="grid">
+            <div class="card" data-id="31"><div class="typo-31">Editorial thin</div></div>
+            <div class="card" data-id="32"><div class="typo-32">KONDENZ</div></div>
+            <div class="card" data-id="33"><div class="typo-33">LABEL</div></div>
+            <div class="card" data-id="34"><div class="typo-34">Změna <em>akcentu</em></div></div>
+            <div class="card" data-id="35"><div class="typo-35">192.168.1.1</div></div>
+            <div class="card" data-id="36"><div class="typo-36">Iniciála</div></div>
+            <div class="card" data-id="37"><div class="typo-37">Underlined</div></div>
+            <div class="card" data-id="38"><div class="typo-38"><span>PODNADPIS</span><span>HLAVNÍ</span></div></div>
+            <div class="card" data-id="39"><div class="typo-39">INDUSTRIAL</div></div>
+            <div class="card" data-id="40"><div class="typo-40">ZÁVORKA</div></div>
+        </div>
+
+        <!-- KATEGORIE 5 -->
+        <h2 class="category-title">05. Gradienty, masky a blend módy</h2>
+        <div class="grid">
+            <div class="card" data-id="41"><div class="typo-41">Kovový přechod</div></div>
+            <div class="card" data-id="42"><div class="typo-42">NEON DUHA</div></div>
+            <div class="card" data-id="43"><div class="typo-43">MASKA</div></div>
+            <div class="card" data-id="44" style="background: #fff;"><div class="typo-44">INVERT</div></div>
+            <div class="card" data-id="45"><div class="typo-45">AURORA</div></div>
+            <div class="card" data-id="46"><div class="typo-46">GLASS</div></div>
+            <div class="card" data-id="47"><div class="typo-47">TEKUTÝ</div></div>
+            <div class="card" data-id="48"><div class="typo-48">Mizení do šumu</div></div>
+            <div class="card" data-id="49"><div class="typo-49">EMERALD GLOW</div></div>
+            <div class="card" data-id="50"><div class="typo-50">FADE-OUT</div></div>
+        </div>
+    </div>
+
+</body>
+</html>
