@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Entrance & Hero - Stripe/Linear Standard</title>
+    <!-- GSAP pro dokonalé časování vstupních křivek -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-black: #030712;
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            background-color: var(--bg-black);
+            color: #fff;
+            font-family: var(--font-sans);
+            overflow: hidden; /* Zabrání scrollování během načítání */
+            height: 100%;
+            width: 100%;
+        }
+
+        /* ==========================================================
+           1. INTERAKTIVNÍ PRELOADER (CELOSTRÁNKOVÝ)
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: #030712;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Zakřivená maska pro efektní odrolování nahoru */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .loader-center {
+            text-align: center;
+            position: relative;
+        }
+
+        /* Neonový rotující prstenec */
+        .loader-ring {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.03);
+            border-top-color: var(--color-primary);
+            border-bottom-color: var(--color-secondary);
+            animation: spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Procentuální ukazatel */
+        .loader-percentage {
+            position: absolute;
+            top: 45px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: -0.05em;
+        }
+
+        .loader-status {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #4b5563;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+
+        /* ==========================================================
+           2. CINEMATIC HERO SEKCE
+           ========================================================== */
+        #hero-section {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            z-index: 1;
+            opacity: 0; /* Spustí se až po načtení */
+        }
+
+        /* Ambientní mlhovina na pozadí sledující myš */
+        .ambient-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.05) 50%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-meta {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--color-primary);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* Split-text efekt pro nadpis */
+        .hero-title-wrap {
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            height: auto;
+        }
+
+        h1.hero-title {
+            font-size: 4.5rem;
+            font-weight: 850;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            transform: translateY(100%);
+            background: linear-gradient(to bottom, #fff 40%, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* CTA tlačítko s efektem laseru na okraji (Linear style) */
+        .hero-cta-btn {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2.2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .hero-cta-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--color-primary), transparent 30%);
+            animation: rotateBeam 4s linear infinite;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .hero-cta-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-cta-btn:hover::before { opacity: 1; }
+
+        @keyframes rotateBeam {
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. PRELOADER -->
+    <div id="preloader">
+        <div class="loader-center">
+            <div class="loader-ring"></div>
+            <div class="loader-percentage" id="load-val">0%</div>
+            <div class="loader-status">Inicilizace systému</div>
+        </div>
+    </div>
+
+    <!-- 2. CINEMATIC HERO SEKCE -->
+    <main id="hero-section">
+        <div class="ambient-glow" id="ambient-bg"></div>
+
+        <span class="hero-meta" id="entry-meta">ENTERPRISE PLATFORM</span>
+
+        <div class="hero-title-wrap">
+            <h1 class="hero-title" id="entry-title">Navrhujeme budoucnost rozhraní.</h1>
+        </div>
+
+        <p class="hero-desc" id="entry-desc">Spojení nekompromisního minimalismu, fyzikálních animací a špičkového výkonu pro příští generaci webových aplikací.</p>
+
+        <button class="hero-cta-btn" id="entry-btn">Zahájit integraci</button>
+    </main>
+
+    <!-- --- SCRIPTS & TIMING --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. SIMULACE NABÍHÁNÍ PROCENT PRELOADERU ---
+            const loadVal = document.getElementById('load-val');
+            let count = 0;
+
+            const interval = setInterval(() => {
+                count += Math.floor(Math.random() * 8) + 2; // Náhodné přičítání pro přirozenější load
+                if (count >= 100) {
+                    count = 100;
+                    clearInterval(interval);
+                    triggerPageReveal(); // Spuštění odhalení stránky
+                }
+                loadVal.innerText = count + '%';
+            }, 50);
+
+            // --- 2. ODROLOVÁNÍ PRELOADERU A SPUŠTĚNÍ HERO ANIMACÍ ---
+            function triggerPageReveal() {
+                const preloader = document.getElementById('preloader');
+                const heroSection = document.getElementById('hero-section');
+
+                // Odrolování clony nahoru pomocí clip-path
+                preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+
+                // Aktivace hero sekce
+                heroSection.style.opacity = '1';
+
+                // GSAP Kaskáda (Staging) - plynulé, navazující odhalení prvků
+                const tl = gsap.timeline();
+
+                tl.to("#entry-meta", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" })
+                  .to("#entry-title", { y: 0, duration: 1.2, ease: "power4.out" }, "-=0.6")
+                  .to("#entry-desc", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.8")
+                  .to("#entry-btn", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
+            }
+
+            // --- 3. AMBIENTNÍ MLHOVINA (SLEDOVÁNÍ CURSORU) ---
+            const heroSection = document.getElementById('hero-section');
+            const ambientBg = document.getElementById('ambient-bg');
+
+            if (heroSection && ambientBg) {
+                heroSection.addEventListener('mousemove', (e) => {
+                    const rect = heroSection.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // Nastavení pozice záře s plynulým GSAP tlumením
+                    gsap.to(ambientBg, {
+                        style: {
+                            '--mouse-x': `${x}px`,
+                            '--mouse-y': `${y}px`
+                        },
+                        duration: 0.6,
+                        ease: "power2.out"
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
