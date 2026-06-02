@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-11: Spatial Layers Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #05060b;
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; perspective: 1200px; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030303; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .huge-counter { font-family: var(--font-mono); font-size: 8rem; font-weight: 900; letter-spacing: -0.05em; color: rgba(255,255,255,0.02); -webkit-text-stroke: 1px rgba(255,255,255,0.1); line-height: 1; position: relative; }
+        .huge-counter-fill { position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: var(--color-primary); clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); transition: clip-path 0.1s linear; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transform-style: preserve-3d; }
+        .spatial-scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; }
+        .spatial-layer { position: absolute; border-radius: 16px; pointer-events: none; }
+        .sl-card-1 { width: 320px; height: 180px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); top: 15%; left: 15%; }
+        .sl-card-2 { width: 240px; height: 140px; background: rgba(99, 102, 241, 0.02); border: 1px solid rgba(99, 102, 241, 0.1); bottom: 20%; right: 15%; }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; display: block; opacity: 0; transform: translateY(15px); }
+        .hero-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; line-height: 1.6; margin-bottom: 3.5rem; opacity: 0; transform: translateY(15px); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="huge-counter" id="loader-parent">
+            00
+            <div class="huge-counter-fill" id="loader-fill-el">00</div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="spatial-scene">
+            <div class="spatial-layer sl-card-1" id="sl-c1"></div>
+            <div class="spatial-layer sl-card-2" id="sl-c2"></div>
+        </div>
+        <span class="hero-tag" id="tag-el">SPATIAL COORDINATE LAYERS</span>
+        <p class="hero-desc" id="desc-el">Mléčné skleněné plochy a typografické roviny rozdělené do hloubkových vrstev s asynchronním posunem.</p>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fillEl = document.getElementById('loader-fill-el');
+            const parentEl = document.getElementById('loader-parent');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                const formatted = progress < 10 ? '0' + progress : progress;
+                parentEl.childNodes[0].nodeValue = formatted;
+                fillEl.innerText = formatted;
+                fillEl.style.clipPath = `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0% 100%)`;
+            }, 35);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el","#desc-el"], { opacity: 0, y: 15 });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5");
+        }
+        const hero = document.getElementById('hero');
+        const slC1 = document.getElementById('sl-c1');
+        const slC2 = document.getElementById('sl-c2');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width/2;
+            const y = e.clientY - rect.top - rect.height/2;
+            gsap.to(slC1, { x: x * 0.12, y: y * 0.12, rotate: (x * 0.01), duration: 1, ease: "power2.out" });
+            gsap.to(slC2, { x: -x * 0.08, y: -y * 0.08, rotate: (-x * 0.01), duration: 1.4, ease: "power2.out" });
+        });
+    </script>
+</body>
+</html>

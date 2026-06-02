@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-15: Condensed Kinetic Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #030303;
+            --bg-card: #080808;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #ffffff;
+            --color-secondary: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #555555;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030303; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .huge-counter { font-family: var(--font-mono); font-size: 8rem; font-weight: 900; letter-spacing: -0.05em; color: rgba(255,255,255,0.02); -webkit-text-stroke: 1px rgba(255,255,255,0.1); line-height: 1; position: relative; }
+        .huge-counter-fill { position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: #fff; clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); transition: clip-path 0.1s linear; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .kinetic-text-wrap { width: 100%; overflow: hidden; user-select: none; }
+        .kinetic-display-title { font-size: 8rem; font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -0.04em; transition: letter-spacing 0.1s ease, transform 0.1s ease; cursor: pointer; }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-secondary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; display: block; opacity: 0; transform: translateY(15px); margin-top: 2rem; }
+        .hero-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; line-height: 1.6; opacity: 0; transform: translateY(15px); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="huge-counter" id="loader-parent">
+            00
+            <div class="huge-counter-fill" id="loader-fill-el">00</div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="kinetic-text-wrap">
+            <h1 class="kinetic-display-title" id="kinetic-title-js">EXPANSION</h1>
+        </div>
+        <span class="hero-tag" id="tag-el">VARIABLE MOTION DYNAMICS</span>
+        <p class="hero-desc" id="desc-el">Vysoce kondenzovaná typografie měnící šířku a rozteč na základě interaktivní souřadnicové mřížky.</p>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fillEl = document.getElementById('loader-fill-el');
+            const parentEl = document.getElementById('loader-parent');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                const formatted = progress < 10 ? '0' + progress : progress;
+                parentEl.childNodes[0].nodeValue = formatted;
+                fillEl.innerText = formatted;
+                fillEl.style.clipPath = `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0% 100%)`;
+            }, 35);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el","#desc-el"], { opacity: 0, y: 15 });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5");
+        }
+        const hero = document.getElementById('hero');
+        const kineticTitle = document.getElementById('kinetic-title-js');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width/2;
+            const y = e.clientY - rect.top - rect.height/2;
+            const factorX = Math.abs(x) / (rect.width / 2);
+            const letterSpacing = -0.05 + (factorX * 0.15);
+            const scaleY = 1 + (Math.abs(y) / (rect.height / 2) * 0.3);
+            gsap.to(kineticTitle, { letterSpacing: `${letterSpacing}em`, scaleY: scaleY, duration: 0.6, ease: "power2.out" });
+        });
+        hero.addEventListener('mouseleave', () => {
+            gsap.to(kineticTitle, { letterSpacing: "-0.04em", scaleY: 1, duration: 0.8, ease: "elastic.out(1, 0.5)" });
+        });
+    </script>
+</body>
+</html>

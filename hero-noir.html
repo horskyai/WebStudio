@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-06: Editorial Noir Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #000000;
+            --bg-card: #0a0a0a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --color-primary: #ffffff;
+            --color-secondary: #888888;
+            --text-main: #ffffff;
+            --text-muted: #555555;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .loader-center { text-align: center; }
+        .decrypt-box { font-family: var(--font-mono); font-size: 1.8rem; font-weight: bold; color: #fff; letter-spacing: -0.05em; margin-bottom: 1rem; }
+        .loader-bar-bg { width: 200px; height: 1px; background: rgba(255,255,255,0.05); position: relative; overflow: hidden; margin: 0 auto; }
+        .loader-bar-fill { position: absolute; top: 0; left: 0; width: 0; height: 100%; background: #fff; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; cursor: crosshair; }
+        .noir-lens-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #050505; z-index: -1; }
+        .noir-reveal-text { font-family: var(--font-serif); font-size: 5rem; font-style: italic; font-weight: 300; color: rgba(255,255,255,0.02); position: relative; user-select: none; }
+        .noir-reveal-text::after { content: 'NOIR CONTEXT'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: #fff; clip-path: circle(40px at var(--lx, 0px) var(--ly, 0px)); transition: clip-path 0.1s ease; text-shadow: 0 0 15px rgba(255,255,255,0.4); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-center">
+            <div class="decrypt-box" id="decrypt-val">000000</div>
+            <div class="loader-bar-bg">
+                <div class="loader-bar-fill" id="loader-fill-el"></div>
+            </div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="noir-lens-bg"></div>
+        <div class="noir-reveal-text" id="noir-text-el">NOIR CONTEXT</div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const decryptVal = document.getElementById('decrypt-val');
+            const loaderFill = document.getElementById('loader-fill-el');
+            const targetWord = "SYSTEM";
+            const chars = "10XYZ#@$%&*";
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 1;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                loaderFill.style.width = progress + '%';
+                const iterations = (progress / 100) * targetWord.length;
+                decryptVal.innerText = targetWord.split("").map((char, index) => {
+                    if (index < iterations) return targetWord[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
+            }, 40);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+        }
+        const hero = document.getElementById('hero');
+        const noirText = document.getElementById('noir-text-el');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = noirText.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            noirText.style.setProperty('--lx', `${x}px`);
+            noirText.style.setProperty('--ly', `${y}px`);
+        });
+    </script>
+</body>
+</html>

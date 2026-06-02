@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-04: Tesla Cyber Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #050505;
+            --border-color: #22c55e;
+            --color-primary: #22c55e;
+            --color-secondary: #ef4444;
+            --color-accent: #10b981;
+            --text-main: #ffffff;
+            --text-muted: #4b5563;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030408; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: circle(100% at 50% 50%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .loader-center { position: relative; width: 150px; height: 150px; }
+        .loader-svg { transform: rotate(-90deg); }
+        .loader-track { fill: none; stroke: rgba(255,255,255,0.02); stroke-width: 4; }
+        .loader-fill { fill: none; stroke: var(--color-primary); stroke-width: 4; stroke-dasharray: 440; stroke-dashoffset: 440; transition: stroke-dashoffset 0.05s linear; }
+        .loader-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-mono); font-size: 1.3rem; font-weight: bold; color: var(--color-primary); }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 2rem; }
+        .cyber-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 197, 94, 0.05) 1px, transparent 1px); background-size: 40px 40px; transform: perspective(500px) rotateX(60deg) translateY(-100px); transform-origin: top; z-index: -1; pointer-events: none; }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; transform: translateY(15px); }
+        .title-mask { overflow: hidden; margin-bottom: 1.5rem; }
+        .hero-title { font-size: 4.5rem; font-weight: 850; letter-spacing: -0.04em; line-height: 1.05; transform: translateY(110%); background: linear-gradient(to bottom, #ffffff 40%, var(--text-muted) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; line-height: 1.6; margin-bottom: 3.5rem; opacity: 0; transform: translateY(15px); }
+        .cta-btn { background: rgba(34, 197, 94, 0.05); color: #fff; border: 1px solid var(--color-primary); padding: 1rem 2.2rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; border-radius: 0; cursor: pointer; backdrop-filter: blur(10px); opacity: 0; transform: translateY(15px); transition: background 0.3s, box-shadow 0.3s; font-family: var(--font-mono); }
+        .cta-btn:hover { background: rgba(34, 197, 94, 0.1); box-shadow: 0 0 20px rgba(34, 197, 94, 0.2); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-center">
+            <svg class="loader-svg" width="150" height="150" viewBox="0 0 150 150">
+                <circle class="loader-track" cx="75" cy="75" r="70"></circle>
+                <circle class="loader-fill" id="loader-circle" cx="75" cy="75" r="70"></circle>
+            </svg>
+            <div class="loader-text" id="load-num">0%</div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="cyber-grid"></div>
+        <span class="hero-tag" id="tag-el">INITIALIZING NEURAL NET</span>
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Brutalistická čistota kódu.</h1>
+        </div>
+        <p class="hero-desc" id="desc-el">Vysoce optimalizované řezané rozvržení navržené pro maximální výkon a vizuální ostrost v ultra rozlišení.</p>
+        <button class="cta-btn" id="btn-el">EXECUTE COMMAND</button>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadNum = document.getElementById('load-num');
+            const loaderCircle = document.getElementById('loader-circle');
+            let progress = 0;
+            const maxOffset = 440;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                loadNum.innerText = progress + '%';
+                loaderCircle.style.strokeDashoffset = maxOffset - (progress / 100) * maxOffset;
+            }, 35);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'circle(0% at 50% 50%)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el","#desc-el","#btn-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7")
+              .to("#btn-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5");
+        }
+    </script>
+</body>
+</html>

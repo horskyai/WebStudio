@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-10: Chronicle Typography Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #080808;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --color-primary: #8b5cf6;
+            --color-secondary: #ec4899;
+            --text-main: #f1f5f9;
+            --text-muted: #475569;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; perspective: 1000px; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030303; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .blur-box { font-family: var(--font-serif); font-style: italic; font-size: 2.5rem; font-weight: 300; color: #fff; filter: blur(24px); opacity: 0.1; transition: filter 0.1s linear, opacity 0.1s linear; margin-bottom: 1.5rem; }
+        .loader-percentage { font-family: var(--font-mono); font-size: 1rem; color: #4b5563; letter-spacing: 0.1em; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transform-style: preserve-3d; }
+        .chronicle-container { position: relative; width: 100%; max-width: 1000px; height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .chronicle-layer { font-size: 5rem; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase; white-space: nowrap; position: absolute; transition: transform 0.1s ease; user-select: none; }
+        .cl-top { color: rgba(255,255,255,0.05); -webkit-text-stroke: 1px rgba(255,255,255,0.2); transform: translateY(-50px) translateX(-50px); }
+        .cl-middle { color: #fff; z-index: 2; transform: translateY(0px) translateX(0px); text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .cl-bottom { color: var(--color-primary); opacity: 0.3; transform: translateY(50px) translateX(50px); }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; display: block; opacity: 0; transform: translateY(15px); }
+        .title-mask { overflow: hidden; margin-bottom: 1.5rem; }
+        .hero-title { font-size: 4rem; font-weight: 300; font-style: italic; font-family: var(--font-serif); letter-spacing: -0.02em; line-height: 1.1; transform: translateY(110%); }
+        .hero-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; line-height: 1.6; margin-bottom: 3.5rem; opacity: 0; transform: translateY(15px); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div>
+            <div class="blur-box" id="blur-text-el">CHRONICLE TECHNOLOGY</div>
+            <div class="loader-percentage" id="load-num">0%</div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="chronicle-container">
+            <div class="chronicle-layer cl-top" id="ch-top">CHRONICLE STRUCTURE</div>
+            <div class="chronicle-layer cl-middle" id="ch-mid">CHRONICLE STRUCTURE</div>
+            <div class="chronicle-layer cl-bottom" id="ch-bot">CHRONICLE STRUCTURE</div>
+        </div>
+        <span class="hero-tag" id="tag-el">KINETIC TYPOGRAPHY</span>
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Křížové paralaxní posuny.</h1>
+        </div>
+        <p class="hero-desc" id="desc-el">Písmo rozdělené do hloubkových vrstev reagujících asynchronně na pozici kurzoru.</p>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadNum = document.getElementById('load-num');
+            const blurText = document.getElementById('blur-text-el');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                loadNum.innerText = progress + '%';
+                blurText.style.filter = `blur(${24 - (progress / 100) * 24}px)`;
+                blurText.style.opacity = 0.1 + (progress / 100) * 0.9;
+            }, 35);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el","#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7");
+        }
+        const hero = document.getElementById('hero');
+        const chTop = document.getElementById('ch-top');
+        const chMid = document.getElementById('ch-mid');
+        const chBot = document.getElementById('ch-bot');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width/2;
+            const y = e.clientY - rect.top - rect.height/2;
+            gsap.to(chTop, { x: -50 + (x * 0.1), y: -50 + (y * 0.1), duration: 0.8, ease: "power2.out" });
+            gsap.to(chMid, { x: x * 0.03, y: y * 0.03, duration: 0.5, ease: "power2.out" });
+            gsap.to(chBot, { x: 50 + (-x * 0.12), y: 50 + (-y * 0.12), duration: 1, ease: "power2.out" });
+        });
+    </script>
+</body>
+</html>

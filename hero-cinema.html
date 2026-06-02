@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-08: Cinematic Letterbox Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #050505;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --color-primary: #e2e8f0;
+            --color-secondary: #64748b;
+            --text-main: #ffffff;
+            --text-muted: #64748b;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-sans); height: 100%; width: 100%; overflow: hidden; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #030303; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .loader-center { text-align: center; }
+        .blur-box { font-family: var(--font-serif); font-style: italic; font-size: 2.5rem; font-weight: 300; color: #fff; filter: blur(24px); opacity: 0.1; transition: filter 0.1s linear, opacity 0.1s linear; margin-bottom: 1.5rem; }
+        .loader-percentage { font-family: var(--font-mono); font-size: 1rem; color: #4b5563; letter-spacing: 0.1em; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .cinema-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://picsum.photos/1200/800?blur=1') center/cover; z-index: -1; border-top: 60px solid #000; border-bottom: 60px solid #000; box-sizing: border-box; }
+        .cinema-background::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary); letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; transform: translateY(15px); }
+        .title-mask { overflow: hidden; margin-bottom: 1.5rem; }
+        .hero-title { font-size: 4rem; font-weight: 850; letter-spacing: -0.04em; line-height: 1.1; transform: translateY(110%); }
+        .hero-desc { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; line-height: 1.6; margin-bottom: 3.5rem; opacity: 0; transform: translateY(15px); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-center">
+            <div class="blur-box" id="blur-text-el">CHRONICLE TECHNOLOGY</div>
+            <div class="loader-percentage" id="load-num">0%</div>
+        </div>
+    </div>
+    <main id="hero">
+        <div class="cinema-background"></div>
+        <span class="hero-tag" id="tag-el">CINEMATIC SCREEN SIZE</span>
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Širokoúhlý střih scény.</h1>
+        </div>
+        <p class="hero-desc" id="desc-el">Formátování obsahu přizpůsobené filmovému ořezu s plynulým kaskádovým doostřením textových rovin.</p>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadNum = document.getElementById('load-num');
+            const blurText = document.getElementById('blur-text-el');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2;
+                if (progress >= 100) { progress = 100; clearInterval(interval); revealPage(); }
+                loadNum.innerText = progress + '%';
+                blurText.style.filter = `blur(${24 - (progress / 100) * 24}px)`;
+                blurText.style.opacity = 0.1 + (progress / 100) * 0.9;
+            }, 35);
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el","#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7");
+        }
+    </script>
+</body>
+</html>

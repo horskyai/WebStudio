@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-10: Cyberpunk Terminal Hero</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #010302;
+            --bg-card: #040805;
+            --border-color: rgba(16, 185, 129, 0.1);
+            --color-primary: #10b981;
+            --color-secondary: #34d399;
+            --text-main: #ffffff;
+            --text-muted: #1e291b;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        body, html { background-color: var(--bg-base); color: var(--text-main); font-family: var(--font-mono); height: 100%; width: 100%; overflow: hidden; }
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #010302; z-index: 9999; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding: 3rem; font-family: var(--font-mono); font-size: 0.85rem; color: #10b981; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+        .console-line { opacity: 0; margin-bottom: 0.4rem; line-height: 1.4; }
+        #hero { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .terminal-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px); background-size: 50px 50px; z-index: -1; }
+        .terminal-logs { position: absolute; bottom: 2rem; left: 2rem; text-align: left; font-family: var(--font-mono); font-size: 0.75rem; color: #1e291b; user-select: none; }
+        .hero-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 1.5rem; display: block; opacity: 0; transform: translateY(15px); }
+        .title-mask { overflow: hidden; margin-bottom: 1.5rem; }
+        .hero-title { font-size: 4rem; font-weight: 850; letter-spacing: -0.04em; line-height: 1.1; transform: translateY(110%); font-family: var(--font-sans); }
+        .hero-desc { font-size: 1.15rem; color: rgba(255,255,255,0.5); max-width: 580px; line-height: 1.6; opacity: 0; transform: translateY(15px); }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="console-line">SYS_INIT: Spouštění jádra... OK</div>
+        <div class="console-line">CORE_LOAD: Načítání síťových protokolů... OK</div>
+        <div class="console-line">MEM_SYNC: Kontrola integrity paměti... OK</div>
+        <div class="console-line">GRAPH_DRV: Inicializace vykreslovacího motoru... OK</div>
+        <div class="console-line">SYS_BOOT: Systém je připraven. Vstupuji do rozhraní.</div>
+    </div>
+    <main id="hero">
+        <div class="terminal-grid"></div>
+        <div class="terminal-logs">
+            <p>> SYS_STABLE_UPTIME: 100%</p>
+            <p>> PORT: 8080 // SECURE CONNECTION</p>
+        </div>
+        <span class="hero-tag" id="tag-el">SECURE CONSOLE TERMINAL</span>
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Kryptografický dekodér.</h1>
+        </div>
+        <p class="hero-desc" id="desc-el">Vysoce sofistikovaná mikro-geometrie navržená pro absolutní čitelnost a okamžitou interaktivní zpětnou vazbu.</p>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lines = document.querySelectorAll('.console-line');
+            const tl = gsap.timeline();
+            tl.to(lines, { opacity: 1, duration: 0.1, stagger: 0.25, ease: "power1.out" })
+              .call(() => { revealPage(); }, null, "+=0.3");
+        });
+        function revealPage() {
+            document.getElementById('preloader').style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            const tl = gsap.timeline();
+            gsap.set(["#tag-el", "#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.0, ease: "power4.out" }, "-=0.4")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.6");
+        }
+    </script>
+</body>
+</html>
