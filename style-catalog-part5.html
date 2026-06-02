@@ -165,6 +165,7 @@
             z-index: -1;
             display: none;
             overflow: hidden;
+            pointer-events: none;
         }
 
         .glow-mask-light {
@@ -174,14 +175,24 @@
             border-radius: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
-            z-index: -1;
+        }
+
+        .mask-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            cursor: crosshair;
+            z-index: 1;
         }
 
         .mask-headline {
             font-size: 4rem; font-weight: 900;
             letter-spacing: -0.05em; text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.03);
-            position: relative; cursor: crosshair;
+            color: rgba(255, 255, 255, 0.06);
+            position: relative;
+            user-select: none;
         }
 
         .mask-headline::before {
@@ -189,8 +200,17 @@
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
             color: #fff;
-            clip-path: circle(80px at var(--mx, 0px) var(--my, 0px));
+            clip-path: circle(80px at var(--mx, -200px) var(--my, -200px));
             text-shadow: 0 0 20px var(--color-primary);
+        }
+
+        .mask-sub {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-primary);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0.7;
         }
 
         /* H-07: Bento Tech Hub (Asymetrický grid) */
@@ -290,6 +310,10 @@
         <!-- Pozadí na základě motivu -->
         <div class="glow-mask-bg" id="glow-mask-el">
             <div class="glow-mask-light" id="mask-light-el"></div>
+        </div>
+
+        <div class="mask-content" id="mask-content-el">
+            <div class="mask-sub">H-09 // POHYBUJ MYŠÍ</div>
             <div class="mask-headline" id="mask-text-el">LIQUID REVEAL</div>
         </div>
 
@@ -423,8 +447,11 @@
             const glowMask = document.getElementById('glow-mask-el');
             const nav = document.getElementById('dash-nav');
 
+            const maskContent = document.getElementById('mask-content-el');
+
             bentoGrid.style.display = 'none';
             glowMask.style.display = 'none';
+            maskContent.style.display = 'none';
             body.className = '';
 
             if (theme === 'bento') {
@@ -435,6 +462,7 @@
             } else if (theme === 'mask') {
                 body.className = 'theme-mask';
                 glowMask.style.display = 'block';
+                maskContent.style.display = 'flex';
                 nav.style.borderColor = 'rgba(255, 255, 255, 0.04)';
             }
 
@@ -443,12 +471,13 @@
         }
 
         // --- H-09: LIQUID MASK GLOW (POHYB SVĚTLOMETU) ---
-        const glowMask = document.getElementById('glow-mask-el');
+        const heroVp = document.getElementById('hero-viewport');
         const maskText = document.getElementById('mask-text-el');
         const maskLight = document.getElementById('mask-light-el');
+        const glowMaskBg = document.getElementById('glow-mask-el');
 
-        if (glowMask && maskText && maskLight) {
-            glowMask.addEventListener('mousemove', (e) => {
+        if (heroVp && maskText && maskLight) {
+            heroVp.addEventListener('mousemove', (e) => {
                 if (activeTheme !== 'mask') return;
 
                 const rect = maskText.getBoundingClientRect();
@@ -460,7 +489,7 @@
                 maskText.style.setProperty('--my', `${y}px`);
 
                 // Pozicování ambientního světla na pozadí
-                const parentRect = glowMask.getBoundingClientRect();
+                const parentRect = glowMaskBg.getBoundingClientRect();
                 gsap.to(maskLight, {
                     left: e.clientX - parentRect.left,
                     top: e.clientY - parentRect.top,
