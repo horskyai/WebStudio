@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agency Engine - Premium Cinematic Showcase</title>
+    <!-- GSAP pro pokročilé fázování animací -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM (Apple / Stripe / Linear Standard) --- */
+        :root {
+            --bg-black: #05070f;
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --color-accent: #10b981;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --font-serif: 'Playfair Display', Georgia, serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body, html {
+            background-color: var(--bg-black);
+            color: #fff;
+            font-family: var(--font-sans);
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* ==========================================================
+           L-01: GLASSMORPHIC PRELOADER (CELOSTRÁNKOVÝ)
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg-black);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .loader-wrap {
+            text-align: center;
+            position: relative;
+        }
+
+        /* L-03: Circular Path Sweep Loader */
+        .loader-ring {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.02);
+            border-top-color: var(--color-primary);
+            border-bottom-color: var(--color-secondary);
+            animation: spin 1.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.05);
+        }
+
+        .loader-counter {
+            position: absolute;
+            top: 55px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .loader-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #475569;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+
+        /* ==========================================================
+           H-01: CINEMATIC HERO SECTION
+           ========================================================== */
+        #hero-viewport {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            z-index: 1;
+            opacity: 0; /* Zviditelní se po odrolování preloaderu */
+        }
+
+        /* H-01: Fluid Aurora background sledující myš */
+        .aurora-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--m-x, 50%) var(--m-y, 50%), rgba(99, 102, 241, 0.12) 0%, rgba(236, 72, 153, 0.04) 40%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* H-02: Fine Grid (Mřížka pro Linear/Stripe design) */
+        .tech-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        /* H-05: Typografický split-text container */
+        .title-mask {
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .title-main {
+            font-size: 5rem;
+            font-weight: 850;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+            transform: translateY(110%);
+            background: linear-gradient(to bottom, #ffffff 40%, #64748b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            max-width: 620px;
+            line-height: 1.6;
+            margin-bottom: 3.5rem;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        /* H-02: Border-Beam Call to Action Button */
+        .cta-action-btn {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.1rem 2.4rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: translateY(15px);
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
+
+        /* Rotující paprsek po obvodu tlačítka (Border Beam) */
+        .cta-action-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--color-primary), transparent 35%);
+            animation: rotateBeam 4s linear infinite;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cta-action-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .cta-action-btn:hover::before { opacity: 1; }
+
+        @keyframes rotateBeam {
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- L-01: PRELOADER -->
+    <div id="preloader">
+        <div class="loader-wrap">
+            <div class="loader-ring"></div>
+            <div class="loader-counter" id="loader-num">0%</div>
+            <div class="loader-label">SYNCING CORE ASSETS</div>
+        </div>
+    </div>
+
+    <!-- H-01 & H-02: HERO SECTION -->
+    <main id="hero-viewport">
+        <!-- Pozadí sledující myš -->
+        <div class="aurora-bg" id="aurora-element"></div>
+        <div class="tech-grid"></div>
+
+        <span class="hero-tag" id="hero-tag-el">SYSTEM STATUS // OPTIMAL</span>
+
+        <div class="title-mask">
+            <h1 class="title-main" id="hero-title-el">Moderní standard rozhraní.</h1>
+        </div>
+
+        <p class="hero-description" id="hero-desc-el">Kombinace plynulých časových os, subpixelových transformací a přísného minimalismu. Navrženo pro technologické lídry.</p>
+
+        <button class="cta-action-btn" id="hero-btn-el">INITIALIZE INTEGRATION</button>
+    </main>
+
+    <!-- --- SCRIPTS & TIMELINE ENGINE --- -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. SIMULACE PRELOADERU (L-01) ---
+            const loaderNum = document.getElementById('loader-num');
+            let progress = 0;
+
+            const loadInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2; // Přirozený posun procent
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadInterval);
+                    triggerSystemReveal(); // Spuštění přechodu T-01
+                }
+                loaderNum.innerText = progress + '%';
+            }, 40);
+
+            // --- 2. T-01: PAGE REVEAL TRANSITION & HERO STAGING ---
+            function triggerSystemReveal() {
+                const preloader = document.getElementById('preloader');
+                const heroViewport = document.getElementById('hero-viewport');
+
+                // Odrolování preloaderu nahoru přes clip-path masku
+                preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+
+                // Zviditelnění hero sekce
+                heroViewport.style.opacity = '1';
+
+                // GSAP Časová osa (Timeline) pro perfektní kaskádu (Staging)
+                const tl = gsap.timeline();
+
+                tl.to("#hero-tag-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" })
+                  .to("#hero-title-el", { y: 0, duration: 1.2, ease: "power4.out" }, "-=0.6")
+                  .to("#hero-desc-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.8")
+                  .to("#hero-btn-el", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
+            }
+
+            // --- 3. AMBIENTNÍ AURORA (SLEDOVÁNÍ CURSORU) ---
+            const heroViewport = document.getElementById('hero-viewport');
+            const auroraElement = document.getElementById('aurora-element');
+
+            if (heroViewport && auroraElement) {
+                heroViewport.addEventListener('mousemove', (e) => {
+                    const rect = heroViewport.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    // GSAP tlumí pohyb světla za kurzorem pro organický dojezd
+                    gsap.to(auroraElement, {
+                        style: {
+                            '--m-x': `${x}px`,
+                            '--m-y': `${y}px`
+                        },
+                        duration: 0.8,
+                        ease: "power2.out"
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
