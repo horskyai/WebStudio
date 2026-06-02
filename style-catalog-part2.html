@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Stylů - Část 2: H-04 až T-02</title>
+    <!-- GSAP pro pokročilé interpolace a fyzikální easingy -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & THEMES --- */
+        :root {
+            --bg-base: #020205;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #8b5cf6;
+            --color-secondary: #ec4899;
+            --color-accent: #3b82f6;
+            --text-main: #f1f5f9;
+            --text-muted: #4b5563;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Motiv: Tesla Cyber (Ostrá brutalistická geometrie) */
+        .theme-cyber {
+            --bg-base: #050505;
+            --border-color: #22c55e; /* Neonově zelená */
+            --color-primary: #22c55e;
+            --color-secondary: #ef4444;
+            --color-accent: #10b981;
+            --text-main: #ffffff;
+            --text-muted: #4b5563;
+        }
+
+        /* Motiv: Framer (Ultra-hladké skleněné plochy) */
+        .theme-framer {
+            --bg-base: #080710;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --color-primary: #ff007f;
+            --color-secondary: #00f2fe;
+            --color-accent: #7f00ff;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100%; width: 100%;
+            overflow: hidden;
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DASHBOARD CONTROL --- */
+        .dashboard-nav {
+            position: fixed;
+            top: 2rem; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 15, 0.6);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            display: flex; gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: border-color 0.5s ease;
+        }
+
+        .nav-btn {
+            background: transparent; border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem; font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+
+        /* ==========================================================
+           L-03: CIRCULAR PATH SWEEP PRELOADER
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #030408;
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            clip-path: circle(100% at 50% 50%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .loader-center {
+            position: relative;
+            width: 150px; height: 150px;
+        }
+
+        .loader-svg {
+            transform: rotate(-90deg);
+        }
+
+        .loader-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.02);
+            stroke-width: 4;
+        }
+
+        .loader-fill {
+            fill: none;
+            stroke: var(--color-primary);
+            stroke-width: 4;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transition: stroke-dashoffset 0.05s linear;
+        }
+
+        .loader-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-mono);
+            font-size: 1.3rem; font-weight: bold;
+        }
+
+
+        /* ==========================================================
+           T-02: STAGED MULTI-CURTAIN TRANSITION (Třívrstvá clona)
+           ========================================================== */
+        .curtain-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9998;
+            transform: translateY(100%);
+            pointer-events: none;
+        }
+        .cl-1 { background-color: #0c0a1a; }
+        .cl-2 { background-color: #1c143a; }
+        .cl-3 { background-color: var(--color-primary); }
+
+
+        /* ==========================================================
+           HERO PLOCHA (H-04 a H-05)
+           ========================================================== */
+        #hero-viewport {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 0 2rem;
+            z-index: 1;
+        }
+
+        /* H-04: Cyberpunk deformovaná mřížka */
+        .cyber-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(34, 197, 94, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px);
+            transform-origin: top;
+            z-index: -1;
+            display: none;
+        }
+
+        /* H-05: Framer floatující skleněné karty na pozadí */
+        .framer-ambient {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            display: none;
+        }
+
+        .framer-card {
+            position: absolute;
+            width: 280px; height: 180px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        .fc-1 { top: 15%; left: 10%; transform: rotate(-10deg); }
+        .fc-2 { bottom: 15%; right: 10%; transform: rotate(15deg); }
+
+        /* HERO TEXTY */
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem; color: var(--color-primary);
+            letter-spacing: 0.3em; text-transform: uppercase;
+            margin-bottom: 1.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .title-mask {
+            overflow: hidden; margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 4.5rem; font-weight: 850;
+            letter-spacing: -0.04em; line-height: 1.05;
+            transform: translateY(110%);
+            background: linear-gradient(to bottom, #ffffff 40%, var(--text-muted) 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.15rem; color: var(--text-muted);
+            max-width: 580px; line-height: 1.6;
+            margin-bottom: 3.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+        /* INTERAKTIVNÍ CTA */
+        .cta-btn {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff; border: 1px solid var(--border-color);
+            padding: 1rem 2.2rem; font-size: 0.85rem;
+            font-weight: 600; letter-spacing: 0.08em;
+            border-radius: 8px; cursor: pointer;
+            backdrop-filter: blur(10px); opacity: 0;
+            transform: translateY(15px);
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
+
+        .cta-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="theme-cyber">
+
+    <!-- NAVIGATION SWITCHER -->
+    <div class="dashboard-nav" id="dash-nav">
+        <button class="nav-btn active" onclick="switchTheme('cyber')">H-04: TESLA CYBER</button>
+        <button class="nav-btn" onclick="switchTheme('framer')">H-05: FRAMER ELASTIC</button>
+    </div>
+
+    <!-- T-02: STAGED MULTI-CURTAIN OVERLAYS -->
+    <div class="curtain-layer cl-1" id="curtain-1"></div>
+    <div class="curtain-layer cl-2" id="curtain-2"></div>
+    <div class="curtain-layer cl-3" id="curtain-3"></div>
+
+    <!-- L-03: CIRCULAR PATH PRELOADER -->
+    <div id="preloader">
+        <div class="loader-center">
+            <svg class="loader-svg" width="150" height="150" viewBox="0 0 150 150">
+                <circle class="loader-track" cx="75" cy="75" r="70"></circle>
+                <circle class="loader-fill" id="loader-circle" cx="75" cy="75" r="70"></circle>
+            </svg>
+            <div class="loader-text" id="load-num">0%</div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="hero-viewport">
+        <!-- Pozadí na základě motivu -->
+        <div class="cyber-grid" id="cyber-grid-el"></div>
+        <div class="framer-ambient" id="framer-ambient-el">
+            <div class="framer-card fc-1" id="framer-card-1"></div>
+            <div class="framer-card fc-2" id="framer-card-2"></div>
+        </div>
+
+        <span class="hero-tag" id="tag-el">INITIALIZING NEURAL NET</span>
+
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Brutalistická čistota kódu.</h1>
+        </div>
+
+        <p class="hero-desc" id="desc-el">Vysoce optimalizované řezané rozvržení navržené pro maximální výkon a vizuální ostrost v ultra rozlišení.</p>
+
+        <button class="cta-btn" id="btn-el">EXECUTE COMMAND</button>
+    </main>
+
+    <!-- --- SCRIPTS & STAGING CONTROL --- -->
+    <script>
+        let currentTheme = 'cyber';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializace výchozího stavu
+            document.getElementById('cyber-grid-el').style.display = 'block';
+            runPreloader();
+        });
+
+        // --- L-03: CIRCULAR SWEEP PRELOADER ---
+        function runPreloader() {
+            const loadNum = document.getElementById('load-num');
+            const loaderCircle = document.getElementById('loader-circle');
+            let progress = 0;
+
+            // Obvod kruhu o poloměru 70 (2 * pi * r) je přibližně 440
+            const maxOffset = 440;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    revealPage(); // Dokončení načítání
+                }
+                loadNum.innerText = progress + '%';
+
+                // Přepočet a plynulá změna SVG stroke-dashoffset
+                const offset = maxOffset - (progress / 100) * maxOffset;
+                loaderCircle.style.strokeDashoffset = offset;
+            }, 35);
+        }
+
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            // Kruhový výjezd preloaderu ze středu
+            preloader.style.clipPath = 'circle(0% at 50% 50%)';
+            animateHero();
+        }
+
+        // --- GSAP HERO STAGING ANIMATION ---
+        function animateHero() {
+            const tl = gsap.timeline();
+
+            // Reset poloh
+            gsap.set(["#tag-el", "#desc-el", "#btn-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7")
+              .to("#btn-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5");
+        }
+
+        // --- T-02: STAGED MULTI-CURTAIN TRANSITION ---
+        function switchTheme(themeName) {
+            if (themeName === currentTheme) return;
+
+            const c1 = document.getElementById('curtain-1');
+            const c2 = document.getElementById('curtain-2');
+            const c3 = document.getElementById('curtain-3');
+            const btns = document.querySelectorAll('.nav-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(themeName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Spuštění kaskádového přejezdu clon (Multi-curtain)
+            gsap.timeline()
+                .to([c1, c2, c3], {
+                    translateY: "0%",
+                    duration: 0.6,
+                    ease: "power4.in",
+                    stagger: 0.1 // Časový odstup mezi clonami
+                })
+                .call(() => {
+                    // Bod zakrytí obrazovky - změna stylu
+                    applyThemeChanges(themeName);
+                })
+                .to([c3, c2, c1], {
+                    translateY: "-100%",
+                    duration: 0.6,
+                    ease: "power4.out",
+                    stagger: 0.08,
+                    delay: 0.1
+                })
+                .set([c1, c2, c3], { translateY: "100%" }); // Reset polohy pro příští klik
+        }
+
+        function applyThemeChanges(theme) {
+            const body = document.body;
+            const cyberGrid = document.getElementById('cyber-grid-el');
+            const framerAmbient = document.getElementById('framer-ambient-el');
+            const nav = document.getElementById('dash-nav');
+
+            const tag = document.getElementById('tag-el');
+            const title = document.getElementById('title-el');
+            const desc = document.getElementById('desc-el');
+            const btn = document.getElementById('btn-el');
+
+            // Reset zobrazení pozadí
+            cyberGrid.style.display = 'none';
+            framerAmbient.style.display = 'none';
+            body.className = '';
+
+            if (theme === 'cyber') {
+                body.className = 'theme-cyber';
+                cyberGrid.style.display = 'block';
+                nav.style.borderColor = '#22c55e';
+
+                tag.innerText = "INITIALIZING NEURAL NET";
+                title.innerText = "Brutalistická čistota kódu.";
+                desc.innerText = "Vysoce optimalizované řezané rozvržení navržené pro maximální výkon a vizuální ostrost v ultra rozlišení.";
+                btn.innerText = "EXECUTE COMMAND";
+
+            } else if (theme === 'framer') {
+                body.className = 'theme-framer';
+                framerAmbient.style.display = 'block';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+
+                tag.innerText = "FRAMER MOTION ENGINE";
+                title.innerText = "Hladká interaktivní hloubka.";
+                desc.innerText = "Jemné fyzikální interpolace simulující reálnou hmotnost a setrvačnost skleněných ploch na pozadí.";
+                btn.innerText = "Explore Layers";
+            }
+
+            currentTheme = theme;
+            animateHero();
+        }
+
+        // --- H-05: FRAMER INERTIA MOUSE PARALLAX ---
+        const viewport = document.getElementById('hero-viewport');
+        const card1 = document.getElementById('framer-card-1');
+        const card2 = document.getElementById('framer-card-2');
+
+        if (viewport && card1 && card2) {
+            viewport.addEventListener('mousemove', (e) => {
+                if (currentTheme !== 'framer') return; // Aktivní pouze pro Framer motiv
+
+                const rect = viewport.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+
+                // GSAP plynule tlumí pohyb obou karet s rozdílnou rychlostí (paralaxní setrvačnost)
+                gsap.to(card1, {
+                    x: x * 0.15,
+                    y: y * 0.15,
+                    rotate: -10 + (x * 0.01),
+                    duration: 1.2,
+                    ease: "power2.out"
+                });
+
+                gsap.to(card2, {
+                    x: -x * 0.1,
+                    y: -y * 0.1,
+                    rotate: 15 + (-x * 0.01),
+                    duration: 1.5,
+                    ease: "power2.out"
+                });
+            });
+        }
+    </script>
+</body>
+</html>
