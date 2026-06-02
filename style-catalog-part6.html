@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Stylů - Část 6: H-10 až T-02</title>
+    <!-- GSAP pro pokročilé fázování a kaskádové animace -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & THEMES --- */
+        :root {
+            --bg-base: #030303;
+            --bg-card: #0a0a0a;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --color-primary: #d4af37; /* Gold */
+            --color-secondary: #f3e5ab; /* Soft Gold */
+            --text-main: #ffffff;
+            --text-muted: #555555;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Motiv: Cyberpunk Terminal */
+        .theme-terminal {
+            --bg-base: #010302;
+            --bg-card: #040805;
+            --border-color: rgba(16, 185, 129, 0.1);
+            --color-primary: #10b981; /* Emerald */
+            --color-secondary: #34d399;
+            --text-main: #ffffff;
+            --text-muted: #1e291b;
+        }
+
+        /* Motiv: Minimalist Gold */
+        .theme-gold {
+            --bg-base: #000000;
+            --bg-card: #050505;
+            --border-color: rgba(212, 175, 55, 0.08);
+            --color-primary: #d4af37;
+            --color-secondary: #ffffff;
+            --text-main: #ffffff;
+            --text-muted: #444444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100%; width: 100%;
+            overflow: hidden;
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DASHBOARD CONTROL --- */
+        .dashboard-nav {
+            position: fixed;
+            top: 2rem; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(5, 5, 5, 0.6);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            display: flex; gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            transition: border-color 0.5s ease;
+        }
+
+        .nav-btn {
+            background: transparent; border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem; font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+
+        /* ==========================================================
+           L-09: TERMINAL BOOT LOADER (Rychlý výpis logů)
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #010302;
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: flex-start; align-items: flex-start;
+            padding: 3rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem; color: #10b981;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .console-line {
+            opacity: 0;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+
+
+        /* ==========================================================
+           T-02: SEQUENTIAL SKEW WIPE TRANSITION (Zkosený střih)
+           ========================================================== */
+        .skew-curtain {
+            position: fixed;
+            top: 0; left: -50%; width: 200%; height: 100%;
+            z-index: 9998;
+            transform: translateX(-100%) skewX(-15deg);
+            pointer-events: none;
+        }
+        .sc-1 { background-color: #080808; }
+        .sc-2 { background-color: #111111; }
+        .sc-3 { background-color: var(--color-primary); }
+
+
+        /* ==========================================================
+           HERO PLOCHA (H-10 a H-06)
+           ========================================================== */
+        #hero-viewport {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+        }
+
+        /* H-10: Cyberpunk Terminal (Systémová mřížka a logy) */
+        .terminal-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #010201;
+            z-index: -1;
+            display: none;
+        }
+
+        .terminal-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        .terminal-logs {
+            position: absolute;
+            bottom: 2rem; left: 2rem;
+            text-align: left;
+            font-family: var(--font-mono);
+            font-size: 0.75rem; color: #1e291b;
+            user-select: none;
+        }
+
+        /* H-06: Minimalist Gold (Zlatý třpyt) */
+        .gold-shimmer-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: -2;
+            display: none;
+        }
+
+        .gold-foil-text {
+            font-family: var(--font-serif);
+            font-size: 3.5rem; font-weight: bold;
+            color: #d4af37;
+            background: linear-gradient(45deg, #9f7a2a 20%, #f3e5ab 40%, #9f7a2a 60%, #f3e5ab 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: background-position 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .gold-foil-text:hover {
+            background-position: right center;
+        }
+
+        /* TYPOGRAFIE */
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem; color: var(--color-primary);
+            letter-spacing: 0.35em; text-transform: uppercase;
+            margin-bottom: 1.5rem; display: block;
+            opacity: 0; transform: translateY(15px);
+        }
+
+        .title-mask {
+            overflow: hidden; margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 4rem; font-weight: 850;
+            letter-spacing: -0.04em; line-height: 1.1;
+            transform: translateY(110%);
+        }
+
+        .hero-desc {
+            font-size: 1.15rem; color: var(--text-muted);
+            max-width: 580px; line-height: 1.6;
+            margin-bottom: 3.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+    </style>
+</head>
+<body class="theme-terminal">
+
+    <!-- NAVIGATION SWITCHER -->
+    <div class="dashboard-nav" id="dash-nav">
+        <button class="nav-btn active" onclick="switchTheme('terminal')">H-10: TERMINAL</button>
+        <button class="nav-btn" onclick="switchTheme('gold')">H-06: ROYAL GOLD</button>
+    </div>
+
+    <!-- T-02: SEQUENTIAL SKEW TRANSITION CURTAINS -->
+    <div class="skew-curtain sc-1" id="curtain-1"></div>
+    <div class="skew-curtain sc-2" id="curtain-2"></div>
+    <div class="skew-curtain sc-3" id="curtain-3"></div>
+
+    <!-- L-09: TERMINAL BOOT PRELOADER -->
+    <div id="preloader">
+        <div class="console-line">SYS_INIT: Spouštění jádra... OK</div>
+        <div class="console-line">CORE_LOAD: Načítání síťových protokolů... OK</div>
+        <div class="console-line">MEM_SYNC: Kontrola integrity paměti... OK</div>
+        <div class="console-line">GRAPH_DRV: Inicializace vykreslovacího motoru... OK</div>
+        <div class="console-line">SYS_BOOT: Systém je připraven. Vstupuji do rozhraní.</div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="hero-viewport">
+        <!-- Pozadí na základě motivu -->
+        <div class="terminal-bg" id="terminal-bg-el">
+            <div class="terminal-grid"></div>
+            <div class="terminal-logs">
+                <p>> SYS_STABLE_UPTIME: 100%</p>
+                <p>> PORT: 8080 // SECURE CONNECTION</p>
+            </div>
+        </div>
+
+        <div class="gold-shimmer-bg" id="gold-bg-el"></div>
+
+        <span class="hero-tag" id="tag-el">SECURE CONSOLE TERMINAL</span>
+
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Kryptografický dekodér.</h1>
+        </div>
+
+        <p class="hero-desc" id="desc-el">Vysoce sofistikovaná mikro-geometrie navržená pro absolutní čitelnost a okamžitou interaktivní zpětnou vazbu.</p>
+    </main>
+
+    <!-- --- SCRIPTS & STAGING CONTROL --- -->
+    <script>
+        let activeTheme = 'terminal';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializace výchozího stavu (Terminal)
+            document.getElementById('terminal-bg-el').style.display = 'block';
+            runTerminalPreloader();
+        });
+
+        // --- L-09: TERMINAL BOOT LOADER ---
+        function runTerminalPreloader() {
+            const lines = document.querySelectorAll('.console-line');
+            const tl = gsap.timeline();
+
+            // Kaskádové zobrazení konzolových řádků
+            tl.to(lines, {
+                opacity: 1,
+                duration: 0.1,
+                stagger: 0.25, // Časový odstup řádků
+                ease: "power1.out"
+            })
+            .call(() => {
+                revealPage(); // Dokončení bootu
+            }, null, "+=0.3");
+        }
+
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            animateHero();
+        }
+
+        // --- GSAP STAGING TIMELINE ---
+        function animateHero() {
+            const tl = gsap.timeline();
+
+            gsap.set(["#tag-el", "#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.0, ease: "power4.out" }, "-=0.4")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, "-=0.6");
+        }
+
+        // --- T-02: SEQUENTIAL SKEW WIPE TRANSITION ---
+        function switchTheme(themeName) {
+            if (themeName === activeTheme) return;
+
+            const c1 = document.getElementById('curtain-1');
+            const c2 = document.getElementById('curtain-2');
+            const c3 = document.getElementById('curtain-3');
+            const btns = document.querySelectorAll('.nav-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(themeName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Spuštění kaskádového diagonálního stírání (Skew transition)
+            gsap.timeline()
+                .to([c1, c2, c3], {
+                    transform: "translateX(0%) skewX(-15deg)",
+                    duration: 0.6,
+                    ease: "power4.in",
+                    stagger: 0.08
+                })
+                .call(() => {
+                    // Bod zakrytí obrazovky - změna motivu
+                    applyThemeChanges(themeName);
+                })
+                .to([c3, c2, c1], {
+                    transform: "translateX(120%) skewX(-15deg)",
+                    duration: 0.6,
+                    ease: "power4.out",
+                    stagger: 0.08,
+                    delay: 0.1
+                })
+                // Reset pozic clon na levou stranu pro příští použití
+                .set([c1, c2, c3], { transform: "translateX(-100%) skewX(-15deg)" });
+        }
+
+        function applyThemeChanges(theme) {
+            const body = document.body;
+            const terminalBg = document.getElementById('terminal-bg-el');
+            const goldBg = document.getElementById('gold-bg-el');
+            const nav = document.getElementById('dash-nav');
+
+            const tag = document.getElementById('tag-el');
+            const title = document.getElementById('title-el');
+            const desc = document.getElementById('desc-el');
+
+            terminalBg.style.display = 'none';
+            goldBg.style.display = 'none';
+            body.className = '';
+
+            if (theme === 'terminal') {
+                body.className = 'theme-terminal';
+                terminalBg.style.display = 'block';
+                nav.style.borderColor = 'rgba(16, 185, 129, 0.1)';
+
+                tag.innerText = "SECURE CONSOLE TERMINAL";
+                title.innerHTML = "Kryptografický dekodér.";
+                title.className = "hero-title";
+                desc.innerText = "Vysoce sofistikovaná mikro-geometrie navržená pro absolutní čitelnost a okamžitou interaktivní zpětnou vazbu.";
+                title.style.fontFamily = "var(--font-sans)";
+
+            } else if (theme === 'gold') {
+                body.className = 'theme-gold';
+                goldBg.style.display = 'block';
+                nav.style.borderColor = 'rgba(212, 175, 55, 0.08)';
+
+                tag.innerText = "ROYAL GOLD EDITORIAL";
+                title.innerHTML = '<span class="gold-foil-text">Zlatá ražba.</span>';
+                desc.innerText = "Hluboké stíny, vysoká redakční estetika a patková typografie doplněná o plynulé kovové odlesky.";
+                title.style.fontFamily = "var(--font-serif)";
+            }
+
+            activeTheme = theme;
+            animateHero();
+        }
+    </script>
+</body>
+</html>
