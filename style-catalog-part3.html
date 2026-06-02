@@ -187,13 +187,19 @@
         }
 
         /* H-07: Bento Tech Hub (Asymetrický Grid) */
+        .bento-wrapper {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
         .bento-grid {
-            max-width: 900px; width: 100%;
+            width: 100%;
             display: grid; grid-template-columns: repeat(3, 1fr);
             grid-auto-rows: 120px; gap: 1rem;
-            padding: 0 2rem;
-            z-index: -2;
-            display: none;
         }
 
         .bento-cell {
@@ -264,13 +270,14 @@
             <div class="noir-reveal-text" id="noir-text-el" data-text="NOIR CONTEXT">NOIR CONTEXT</div>
         </div>
 
-        <div class="bento-grid" id="bento-grid-el">
+        <div class="bento-wrapper" id="bento-grid-el">
             <div class="hero-info-wrap">
                 <span class="hero-tag" id="tag-el">BENTO MODULE INTEGRATION</span>
                 <div class="title-mask">
                     <h1 class="hero-title" id="title-el">Asymetrický systém.</h1>
                 </div>
             </div>
+            <div class="bento-grid">
             <!-- Bento buňky -->
             <div class="bento-cell bc-large">
                 <div>
@@ -290,7 +297,8 @@
                     <p class="bc-desc">Zabezpečeno.</p>
                 </div>
             </div>
-        </div>
+            </div><!-- /bento-grid -->
+        </div><!-- /bento-wrapper -->
     </main>
 
     <!-- --- SCRIPTS & STAGING CONTROL --- -->
@@ -425,7 +433,7 @@
 
             } else if (theme === 'bento') {
                 body.className = 'theme-bento';
-                bentoGrid.style.display = 'grid';
+                bentoGrid.style.display = 'flex';
                 nav.style.borderColor = 'rgba(99, 102, 241, 0.1)';
             }
 
