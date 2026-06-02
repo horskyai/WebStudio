@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Stylů - Část 7: H-11 až T-09</title>
+    <!-- GSAP pro plynulé prostorové interpolace a easingy -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* --- DESIGN SYSTEM & THEMES --- */
+        :root {
+            --bg-base: #020306;
+            --bg-card: #070910;
+            --border-color: rgba(255, 255, 255, 0.04);
+            --color-primary: #3b82f6; /* Blue */
+            --color-secondary: #8b5cf6; /* Purple */
+            --text-main: #f8fafc;
+            --text-muted: #4b5563;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Motiv: Condensed Kinetic (Masivní typografie) */
+        .theme-condensed {
+            --bg-base: #030303;
+            --bg-card: #080808;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --color-primary: #ffffff;
+            --color-secondary: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #555555;
+        }
+
+        /* Motiv: Spatial Layers (Paralaxní hloubka) */
+        .theme-spatial {
+            --bg-base: #05060b;
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --color-primary: #6366f1;
+            --color-secondary: #ec4899;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body, html {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            height: 100%; width: 100%;
+            overflow: hidden;
+            perspective: 1200px; /* Vyžadováno pro 3D zoom přechod */
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DASHBOARD CONTROL --- */
+        .dashboard-nav {
+            position: fixed;
+            top: 2rem; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(4, 5, 10, 0.6);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-radius: 30px;
+            display: flex; gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: border-color 0.5s ease;
+        }
+
+        .nav-btn {
+            background: transparent; border: none;
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.8rem; font-weight: 600;
+            font-family: var(--font-mono);
+            border-radius: 20px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background: var(--color-primary);
+            color: #fff;
+        }
+
+
+        /* ==========================================================
+           L-06: MINIMAL MONO COUNTER PRELOADER (Masivní číselník)
+           ========================================================== */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #030303;
+            z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: clip-path 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .huge-counter {
+            font-family: var(--font-mono);
+            font-size: 8rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: rgba(255, 255, 255, 0.02);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+            line-height: 1;
+            position: relative;
+        }
+
+        .huge-counter-fill {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            color: #fff;
+            clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+            transition: clip-path 0.1s linear;
+        }
+
+
+        /* ==========================================================
+           T-09: CINEMATIC ZOOM FADE TRANSITION (Kamera efekt)
+           ========================================================== */
+        /* Tento efekt se přímo aplikuje na hlavní element #hero-viewport */
+        .viewport-transition-target {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease, opacity 1.2s ease;
+        }
+
+
+        /* ==========================================================
+           HERO PLOCHA (H-15 a H-11)
+           ========================================================== */
+        #hero-viewport {
+            position: relative;
+            width: 100%; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            transform-style: preserve-3d;
+        }
+
+        /* H-15: Condensed Kinetic (Masivní typografie) */
+        .kinetic-text-wrap {
+            width: 100%;
+            overflow: hidden;
+            display: none;
+            user-select: none;
+        }
+
+        .kinetic-display-title {
+            font-size: 8rem; font-weight: 900;
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            transition: letter-spacing 0.1s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+
+        /* H-11: Spatial Layers (Paralaxní prostor) */
+        .spatial-scene {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            display: none;
+        }
+
+        .spatial-layer {
+            position: absolute;
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        .sl-card-1 {
+            width: 320px; height: 180px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            top: 15%; left: 15%;
+        }
+
+        .sl-card-2 {
+            width: 240px; height: 140px;
+            background: rgba(99, 102, 241, 0.02);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            bottom: 20%; right: 15%;
+        }
+
+        /* TYPOGRAFIE */
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem; color: var(--color-primary);
+            letter-spacing: 0.3em; text-transform: uppercase;
+            margin-bottom: 1.5rem; display: block;
+            opacity: 0; transform: translateY(15px);
+        }
+
+        .title-mask {
+            overflow: hidden; margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 4rem; font-weight: 850;
+            letter-spacing: -0.04em; line-height: 1.1;
+            transform: translateY(110%);
+        }
+
+        .hero-desc {
+            font-size: 1.15rem; color: var(--text-muted);
+            max-width: 580px; line-height: 1.6;
+            margin-bottom: 3.5rem; opacity: 0;
+            transform: translateY(15px);
+        }
+
+    </style>
+</head>
+<body class="theme-condensed">
+
+    <!-- NAVIGATION SWITCHER -->
+    <div class="dashboard-nav" id="dash-nav">
+        <button class="nav-btn active" onclick="switchTheme('condensed')">H-15: KINETIC TYPE</button>
+        <button class="nav-btn" onclick="switchTheme('spatial')">H-11: SPATIAL LAYERS</button>
+    </div>
+
+    <!-- L-06: MINIMAL MONO COUNTER PRELOADER -->
+    <div id="preloader">
+        <div class="huge-counter" id="loader-parent">
+            00
+            <div class="huge-counter-fill" id="loader-fill-el">00</div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEWPORT -->
+    <main id="hero-viewport" class="viewport-transition-target">
+        <!-- Pozadí na základě motivu -->
+        <div class="kinetic-text-wrap" id="kinetic-el">
+            <h1 class="kinetic-display-title" id="kinetic-title-js">EXPANSION</h1>
+        </div>
+
+        <div class="spatial-scene" id="spatial-el">
+            <div class="spatial-layer sl-card-1" id="sl-c1"></div>
+            <div class="spatial-layer sl-card-2" id="sl-c2"></div>
+        </div>
+
+        <span class="hero-tag" id="tag-el">VARIABLE MOTION DYNAMICS</span>
+
+        <div class="title-mask" id="standard-title-wrap">
+            <h1 class="hero-title" id="title-el">Kinetické měřítko písma.</h1>
+        </div>
+
+        <p class="hero-desc" id="desc-el">Vysoce kondenzovaná typografie měnící šířku a rozteč na základě interaktivní souřadnicové mřížky.</p>
+    </main>
+
+    <!-- --- SCRIPTS & STAGING CONTROL --- -->
+    <script>
+        let currentTheme = 'condensed';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializace výchozího stavu
+            document.getElementById('kinetic-el').style.display = 'block';
+            runMonoPreloader();
+        });
+
+        // --- L-06: MINIMAL MONO COUNTER PRELOADER ---
+        function runMonoPreloader() {
+            const fillEl = document.getElementById('loader-fill-el');
+            const parentEl = document.getElementById('loader-parent');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 6) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    revealPage(); // Dokončení načítání
+                }
+
+                // Formátování na dvoumístné číslo (např. 07, 45)
+                const formatted = progress < 10 ? '0' + progress : progress;
+
+                parentEl.childNodes[0].nodeValue = formatted;
+                fillEl.innerText = formatted;
+
+                // Odhalování barevné výplně zleva doprava přes clip-path
+                fillEl.style.clipPath = `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0% 100%)`;
+            }, 35);
+        }
+
+        function revealPage() {
+            const preloader = document.getElementById('preloader');
+            preloader.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+            animateHero();
+        }
+
+        // --- GSAP HERO STAGING ANIMATION ---
+        function animateHero() {
+            const tl = gsap.timeline();
+
+            // Reset poloh
+            gsap.set(["#tag-el", "#desc-el"], { opacity: 0, y: 15 });
+            gsap.set("#title-el", { y: "110%" });
+
+            tl.to("#tag-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" })
+              .to("#title-el", { y: 0, duration: 1.1, ease: "power4.out" }, "-=0.5")
+              .to("#desc-el", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.7");
+        }
+
+        // --- T-09: CINEMATIC ZOOM FADE TRANSITION ---
+        function switchTheme(themeName) {
+            if (themeName === currentTheme) return;
+
+            const viewport = document.getElementById('hero-viewport');
+            const btns = document.querySelectorAll('.nav-btn');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(themeName)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // T-09: Kamera přechod (Zoom out & blur -> Zoom in & focus)
+            gsap.timeline()
+                .to(viewport, {
+                    transform: "scale(0.85) translateZ(-100px)",
+                    filter: "blur(15px)",
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: "power2.in"
+                })
+                .call(() => {
+                    // Bod změny motivu
+                    applyThemeChanges(themeName);
+                })
+                .set(viewport, { transform: "scale(1.15) translateZ(100px)" }) // Nová scéna se vynoří z popředí
+                .to(viewport, {
+                    transform: "scale(1) translateZ(0px)",
+                    filter: "blur(0px)",
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+        }
+
+        function applyThemeChanges(theme) {
+            const body = document.body;
+            const kineticEl = document.getElementById('kinetic-el');
+            const spatialEl = document.getElementById('spatial-el');
+            const standardTitle = document.getElementById('standard-title-wrap');
+            const nav = document.getElementById('dash-nav');
+
+            const tag = document.getElementById('tag-el');
+            const title = document.getElementById('title-el');
+            const desc = document.getElementById('desc-el');
+
+            kineticEl.style.display = 'none';
+            spatialEl.style.display = 'none';
+            standardTitle.style.display = 'block';
+            body.className = '';
+
+            if (theme === 'condensed') {
+                body.className = 'theme-condensed';
+                kineticEl.style.display = 'block';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+
+                tag.innerText = "VARIABLE MOTION DYNAMICS";
+                title.innerText = "Kinetické měřítko písma.";
+                desc.innerText = "Vysoce kondenzovaná typografie měnící šířku a rozteč na základě interaktivní souřadnicové mřížky.";
+
+            } else if (theme === 'spatial') {
+                body.className = 'theme-spatial';
+                spatialEl.style.display = 'block';
+                standardTitle.style.display = 'none'; // Skryjeme standardní nadpis
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+
+                tag.innerText = "SPATIAL COORDINATE LAYERS";
+                desc.innerText = "Mléčné skleněné plochy a typografické roviny rozdělené do hloubkových vrstev s asynchronním posunem.";
+            }
+
+            currentTheme = theme;
+            animateHero();
+        }
+
+        // --- INTERAKTIVNÍ DYNAMIKA PRO OBA MOTIVY ---
+        const heroViewport = document.getElementById('hero-viewport');
+        const kineticTitle = document.getElementById('kinetic-title-js');
+        const slC1 = document.getElementById('sl-c1');
+        const slC2 = document.getElementById('sl-c2');
+
+        if (heroViewport) {
+            heroViewport.addEventListener('mousemove', (e) => {
+                const rect = heroViewport.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+
+                // 1. H-15: Kinetické protažení textu (Condensed)
+                if (currentTheme === 'condensed' && kineticTitle) {
+                    const factorX = Math.abs(x) / (rect.width / 2);
+                    const letterSpacing = -0.05 + (factorX * 0.15); // Dynamický rozptyl písmen
+                    const scaleY = 1 + (Math.abs(y) / (rect.height / 2) * 0.3); // Výšková deformace
+
+                    gsap.to(kineticTitle, {
+                        letterSpacing: `${letterSpacing}em`,
+                        scaleY: scaleY,
+                        duration: 0.6,
+                        ease: "power2.out"
+                    });
+                }
+
+                // 2. H-11: Prostorový paralax vrstev (Spatial)
+                if (currentTheme === 'spatial' && slC1 && slC2) {
+                    gsap.to(slC1, {
+                        x: x * 0.12,
+                        y: y * 0.12,
+                        rotate: (x * 0.01),
+                        duration: 1,
+                        ease: "power2.out"
+                    });
+
+                    gsap.to(slC2, {
+                        x: -x * 0.08,
+                        y: -y * 0.08,
+                        rotate: (-x * 0.01),
+                        duration: 1.4,
+                        ease: "power2.out"
+                    });
+                }
+            });
+
+            // Reset typografie při odjetí myši
+            heroViewport.addEventListener('mouseleave', () => {
+                if (currentTheme === 'condensed' && kineticTitle) {
+                    gsap.to(kineticTitle, {
+                        letterSpacing: "-0.04em",
+                        scaleY: 1,
+                        duration: 0.8,
+                        ease: "elastic.out(1, 0.5)"
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
