@@ -51,6 +51,9 @@
         .loader-center {
             text-align: center;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* Neonový rotující prstenec */
@@ -61,19 +64,23 @@
             border-top-color: var(--color-primary);
             border-bottom-color: var(--color-secondary);
             animation: spin 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-            margin-bottom: 2rem;
             box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
         }
 
         /* Procentuální ukazatel */
         .loader-percentage {
             position: absolute;
-            top: 45px; left: 50%;
-            transform: translateX(-50%);
+            top: 0; left: 0;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: var(--font-mono);
             font-size: 1.2rem;
             font-weight: bold;
             letter-spacing: -0.05em;
+            pointer-events: none;
         }
 
         .loader-status {
@@ -203,8 +210,10 @@
     <!-- 1. PRELOADER -->
     <div id="preloader">
         <div class="loader-center">
-            <div class="loader-ring"></div>
-            <div class="loader-percentage" id="load-val">0%</div>
+            <div style="position: relative; width: 120px; height: 120px; margin-bottom: 2rem;">
+                <div class="loader-ring"></div>
+                <div class="loader-percentage" id="load-val">0%</div>
+            </div>
             <div class="loader-status">Inicilizace systému</div>
         </div>
     </div>
