@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Husté Mikrointerakce</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* 1. MAGNETICKÉ TLAČÍTKO S ODLESKEM */
+        .btn-container {
+            position: relative;
+        }
+
+        .cool-button {
+            position: relative;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .cool-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .cool-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cool-button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .cool-button:active {
+            transform: translateY(1px);
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 2. GLASSMORPHIC KARTA S REVEAL EFEKTEM */
+        .card {
+            width: 300px;
+            height: 200px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card:hover {
+            height: 260px;
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 24px;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .hidden-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            margin-top: 20px;
+        }
+
+        .card:hover .hidden-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            color: white;
+        }
+
+        /* 3. SMART INPUT S ANIMACÍ */
+        .input-group {
+            position: relative;
+            width: 300px;
+        }
+
+        .cool-input {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #334155;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .label {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            color: #64748b;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .cool-input:focus ~ .label,
+        .cool-input:not(:placeholder-shown) ~ .label {
+            top: -12px;
+            left: 0;
+            font-size: 12px;
+            color: var(--primary);
+        }
+
+        .input-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+
+        .cool-input:focus ~ .input-bar {
+            width: 100%;
+        }
+
+        .cool-input:valid:not(:placeholder-shown) {
+            border-bottom-color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <button class="cool-button">
+            <span class="btn-text">Prozkoumat vesmír</span>
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="badge">Nové</div>
+        <h3>Deep Space</h3>
+        <p>Interaktivní karta s plynulým odhalením detailů při najetí myší.</p>
+        <div class="hidden-content">
+            <button style="background: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                Více informací
+            </button>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <input type="email" class="cool-input" placeholder=" " required>
+        <label class="label">Tvůj e-mail</label>
+        <div class="input-bar"></div>
+    </div>
+
+    <script>
+        const btn = document.querySelector('.cool-button');
+
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const xc = rect.width / 2;
+            const yc = rect.height / 2;
+            const dx = (x - xc) / 4;
+            const dy = (y - yc) / 4;
+            btn.querySelector('.btn-text').style.transform = `translate(${dx}px, ${dy}px)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.querySelector('.btn-text').style.transform = `translate(0px, 0px)`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DENT STUDIO | Prémiová Zubní Péče</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #ffffff;
+            --off-white: #f9f7f4;
+            --black: #0a0a0a;
+            --charcoal: #1a1a1a;
+            --grey-light: #f0eeeb;
+            --grey-muted: #999;
+            --accent: #b8a99a;
+            --accent-dark: #8c7b6e;
+            --blue: #2d4a6b;
+            --blue-light: #e8eef5;
+            --transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--white);
+            color: var(--black);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            padding: 36px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            padding: 18px 60px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 0.5px solid #e8e4de;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo span { color: var(--accent-dark); }
+
+        .nav-links {
+            display: flex;
+            gap: 44px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--charcoal);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.4s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 0;
+            width: 100%; height: 0.5px;
+            background: var(--accent-dark);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.6s cubic-bezier(0.19,1,0.22,1);
+        }
+
+        .nav-links a:hover { color: var(--accent-dark); }
+        .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        .nav-cta {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+            background: var(--blue);
+            padding: 12px 24px;
+            text-decoration: none;
+            transition: background 0.4s;
+        }
+        .nav-cta:hover { background: var(--accent-dark); }
+
+        /* ── HERO ── */
+        .hero {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 140px 60px 80px;
+            background: var(--off-white);
+        }
+
+        .hero-tag {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s ease forwards 0.3s;
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1.2s ease forwards 0.5s;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent-dark);
+        }
+
+        .hero-desc {
+            font-size: 13px;
+            line-height: 1.9;
+            color: var(--grey-muted);
+            max-width: 380px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeUp 1.2s ease forwards 0.8s;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            opacity: 0;
+            animation: fadeUp 1.2s ease forwards 1s;
+        }
+
+        .btn-primary {
+            padding: 16px 36px;
+            background: var(--blue);
+            color: var(--white);
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .btn-primary:hover { background: var(--charcoal); }
+
+        .btn-secondary {
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--charcoal);
+            text-decoration: none;
+            border-bottom: 0.5px solid var(--charcoal);
+            padding-bottom: 4px;
+            transition: var(--transition);
+        }
+        .btn-secondary:hover { color: var(--accent-dark); border-color: var(--accent-dark); }
+
+        .hero-right {
+            position: relative;
+            overflow: hidden;
+            background: var(--grey-light)
+                url('https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=1200')
+                center/cover no-repeat;
+            filter: grayscale(20%);
+            transition: var(--transition);
+        }
+        .hero-right:hover { filter: grayscale(0%); }
+
+        .hero-right::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(45,74,107,0.15) 0%, transparent 60%);
+        }
+
+        .hero-stats {
+            position: absolute;
+            bottom: 50px;
+            left: 40px;
+            z-index: 2;
+            display: flex;
+            gap: 40px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            padding: 18px 24px;
+        }
+
+        .stat-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--blue);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--grey-muted);
+            margin-top: 4px;
+        }
+
+        /* ── SERVICES ── */
+        .services {
+            padding: 130px 60px;
+            background: var(--white);
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            align-items: end;
+        }
+
+        .section-tag {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 300;
+            line-height: 1.15;
+        }
+
+        .section-title em { font-style: italic; color: var(--blue); }
+
+        .section-desc {
+            font-size: 13px;
+            line-height: 1.9;
+            color: var(--grey-muted);
+            align-self: end;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+        }
+
+        .service-item {
+            padding: 50px 40px;
+            background: var(--off-white);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: var(--transition);
+        }
+
+        .service-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: var(--blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s cubic-bezier(0.19,1,0.22,1);
+        }
+
+        .service-item:hover { background: var(--blue-light); }
+        .service-item:hover::before { transform: scaleX(1); }
+
+        .service-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 44px;
+            color: rgba(45,74,107,0.12);
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 24px;
+        }
+
+        .service-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 14px;
+        }
+
+        .service-desc {
+            font-size: 12px;
+            line-height: 1.8;
+            color: var(--grey-muted);
+        }
+
+        /* ── ABOUT ── */
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .about-image {
+            background: var(--grey-light)
+                url('https://images.unsplash.com/photo-1588776814546-1ffbb172c8e2?auto=format&fit=crop&q=80&w=1200')
+                center/cover no-repeat;
+            filter: grayscale(30%);
+            transition: var(--transition);
+        }
+        .about-image:hover { filter: grayscale(0%); }
+
+        .about-content {
+            padding: 100px 80px;
+            background: var(--charcoal);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .about-content .section-tag { color: var(--accent); }
+
+        .about-content .section-title {
+            color: var(--white);
+            margin-bottom: 28px;
+        }
+
+        .about-content .section-title em { color: var(--accent); }
+
+        .about-content p {
+            font-size: 13px;
+            line-height: 1.9;
+            color: rgba(255,255,255,0.55);
+            margin-bottom: 16px;
+        }
+
+        .about-list {
+            list-style: none;
+            margin-top: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .about-list li {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .about-list li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 50%;
+            width: 8px; height: 0.5px;
+            background: var(--accent);
+        }
+
+        /* ── TEAM ── */
+        .team {
+            padding: 130px 60px;
+            background: var(--off-white);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 70px;
+        }
+
+        .team-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-photo {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: var(--grey-light);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: var(--transition);
+        }
+
+        .team-card:hover .team-photo img {
+            filter: grayscale(0%);
+            transform: scale(1.04);
+        }
+
+        .team-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .team-role {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+        }
+
+        /* ── TESTIMONIALS ── */
+        .testimonials {
+            padding: 130px 60px;
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .testimonials .section-tag { color: var(--accent); }
+        .testimonials .section-title { color: var(--white); }
+        .testimonials .section-title em { color: var(--accent); }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 70px;
+        }
+
+        .testimonial-card {
+            padding: 40px;
+            background: rgba(255,255,255,0.06);
+            border: 0.5px solid rgba(255,255,255,0.12);
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--accent);
+        }
+
+        .testimonial-stars {
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            font-style: italic;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 28px;
+        }
+
+        .testimonial-author {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* ── CONTACT ── */
+        .contact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .contact-info {
+            padding: 120px 80px;
+            background: var(--off-white);
+        }
+
+        .contact-info .section-tag { margin-bottom: 16px; }
+
+        .contact-info .section-title {
+            margin-bottom: 40px;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            margin-bottom: 50px;
+        }
+
+        .contact-item-label {
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-dark);
+            margin-bottom: 6px;
+        }
+
+        .contact-item-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            color: var(--charcoal);
+        }
+
+        .contact-form {
+            padding: 120px 80px;
+            background: var(--white);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--grey-muted);
+            margin-bottom: 10px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 0.5px solid #ddd;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--charcoal);
+            outline: none;
+            transition: border-color 0.4s;
+            appearance: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-bottom-color: var(--blue);
+        }
+
+        .form-textarea { resize: none; height: 80px; }
+
+        .form-underline {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: var(--blue);
+            transition: width 0.4s cubic-bezier(0.19,1,0.22,1);
+        }
+
+        .form-input:focus ~ .form-underline,
+        .form-select:focus ~ .form-underline,
+        .form-textarea:focus ~ .form-underline {
+            width: 100%;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 18px;
+            background: var(--blue);
+            color: var(--white);
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.4s;
+            margin-top: 10px;
+        }
+        .form-submit:hover { background: var(--charcoal); }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 60px;
+            background: var(--black);
+            color: rgba(255,255,255,0.4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 0.5px solid rgba(255,255,255,0.06);
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-copy {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+        }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease, transform 1.2s cubic-bezier(0.19,1,0.22,1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── KEYFRAMES ── */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            nav { padding: 24px 30px; }
+            nav.scrolled { padding: 14px 30px; }
+            .nav-links { display: none; }
+            .hero, .about, .contact { grid-template-columns: 1fr; }
+            .hero-right { height: 60vw; }
+            .about-image { height: 60vw; }
+            .services-grid, .team-grid, .testimonials-grid { grid-template-columns: 1fr; }
+            .hero-left, .about-content, .contact-info, .contact-form { padding: 80px 30px; }
+            .services, .team, .testimonials { padding: 80px 30px; }
+            .section-header { grid-template-columns: 1fr; gap: 20px; }
+            footer { flex-direction: column; gap: 16px; text-align: center; padding: 40px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav id="navbar">
+        <a href="#" class="logo">Dent<span>.</span>Studio</a>
+        <ul class="nav-links">
+            <li><a href="#services">Služby</a></li>
+            <li><a href="#about">O nás</a></li>
+            <li><a href="#team">Tým</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+        </ul>
+        <a href="#contact" class="nav-cta">Objednat se</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-left">
+            <p class="hero-tag">Prémiová zubní péče — Praha</p>
+            <h1 class="hero-title">
+                Váš úsměv<br>
+                zasluhuje<br>
+                <em>dokonalost.</em>
+            </h1>
+            <p class="hero-desc">
+                Moderní zubní ordinace spojující nejnovější technologie s osobním přístupem. Každé ošetření navrhujeme s precizností a péčí o váš komfort.
+            </p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn-primary">Objednat se</a>
+                <a href="#services" class="btn-secondary">Naše služby</a>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-num">15+</span>
+                    <span class="stat-label">Let praxe</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">4 800</span>
+                    <span class="stat-label">Spokojených pacientů</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-num">98%</span>
+                    <span class="stat-label">Spokojenost</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="section-header reveal">
+            <div>
+                <p class="section-tag">Co nabízíme</p>
+                <h2 class="section-title">Komplexní péče<br>o váš <em>úsměv.</em></h2>
+            </div>
+            <p class="section-desc">
+                Nabízíme plný rozsah zubních služeb — od preventivní péče přes estetickou stomatologii až po implantologii. Vše pod jednou střechou s maximálním komfortem.
+            </p>
+        </div>
+        <div class="services-grid">
+            <div class="service-item reveal">
+                <div class="service-num">01</div>
+                <h3 class="service-name">Preventivní péče</h3>
+                <p class="service-desc">Pravidelné prohlídky, profesionální čištění a odborné poradenství pro dlouhodobé zdraví vašich zubů.</p>
+            </div>
+            <div class="service-item reveal">
+                <div class="service-num">02</div>
+                <h3 class="service-name">Estetická stomatologie</h3>
+                <p class="service-desc">Bělení zubů, keramické fazety a kompozitní rekonstrukce pro dokonalý estetický výsledek.</p>
+            </div>
+            <div class="service-item reveal">
+                <div class="service-num">03</div>
+                <h3 class="service-name">Implantologie</h3>
+                <p class="service-desc">Zubní implantáty jako trvalé řešení ztráty zubu. Přirozený vzhled i funkčnost.</p>
+            </div>
+            <div class="service-item reveal">
+                <div class="service-num">04</div>
+                <h3 class="service-name">Ortodoncie</h3>
+                <p class="service-desc">Neviditelné rovnátka Invisalign i klasické aparáty pro krásně rovné zuby v každém věku.</p>
+            </div>
+            <div class="service-item reveal">
+                <div class="service-num">05</div>
+                <h3 class="service-name">Dětská stomatologie</h3>
+                <p class="service-desc">Přátelský přístup k nejmenším pacientům s důrazem na prevenci a bezbolestné ošetření.</p>
+            </div>
+            <div class="service-item reveal">
+                <div class="service-num">06</div>
+                <h3 class="service-name">Urgentní péče</h3>
+                <p class="service-desc">Akutní ošetření bolesti a úrazů. Dostupnost i mimo standardní ordinační hodiny.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="about-image"></div>
+        <div class="about-content reveal">
+            <p class="section-tag">Kdo jsme</p>
+            <h2 class="section-title">Tradice setkává<br>se s <em>modernou.</em></h2>
+            <p>Jsme tým zkušených zubních lékařů a specialistů, kteří věří, že kvalitní péče o zuby je investicí do zdraví i sebevědomí.</p>
+            <p>Naše ordinace využívá nejmodernější digitální technologie — od 3D RTG diagnostiky přes CAD/CAM výrobu korunek až po laserové ošetření.</p>
+            <ul class="about-list">
+                <li>Digitální RTG s minimální radiací</li>
+                <li>CAD/CAM korunky za jeden den</li>
+                <li>Laserová stomatologie</li>
+                <li>Sedace pro úzkostné pacienty</li>
+                <li>Bezbariérový přístup</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="team" id="team">
+        <div class="section-header reveal">
+            <div>
+                <p class="section-tag">Náš tým</p>
+                <h2 class="section-title">Odborníci,<br>kterým <em>důvěřujete.</em></h2>
+            </div>
+            <p class="section-desc">
+                Každý člen našeho týmu prošel specializovaným vzděláním a pravidelně se vzdělává na mezinárodních kongresech.
+            </p>
+        </div>
+        <div class="team-grid">
+            <div class="team-card reveal">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=600" alt="MUDr. Jana Nováková">
+                </div>
+                <h3 class="team-name">MUDr. Jana Nováková</h3>
+                <p class="team-role">Hlavní lékařka — Implantologie</p>
+            </div>
+            <div class="team-card reveal">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=600" alt="MUDr. Tomáš Beneš">
+                </div>
+                <h3 class="team-name">MUDr. Tomáš Beneš</h3>
+                <p class="team-role">Ortodontista — Invisalign Expert</p>
+            </div>
+            <div class="team-card reveal">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=600" alt="MUDr. Klára Horáčková">
+                </div>
+                <h3 class="team-name">MUDr. Klára Horáčková</h3>
+                <p class="team-role">Estetická stomatologie</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="section-header reveal">
+            <div>
+                <p class="section-tag">Recenze pacientů</p>
+                <h2 class="section-title">Co říkají<br>naši <em>pacienti.</em></h2>
+            </div>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card reveal">
+                <p class="testimonial-stars">★★★★★</p>
+                <p class="testimonial-text">„Konečně ordinace, kde se necítím nervózně. Přístup celého týmu je naprosto profesionální a lidský zároveň."</p>
+                <p class="testimonial-author">— Markéta V., Praha 2</p>
+            </div>
+            <div class="testimonial-card reveal">
+                <p class="testimonial-stars">★★★★★</p>
+                <p class="testimonial-text">„Implantát jsem dlouho odkládal. Dnes lituju, že jsem nepřišel dříve. Výsledek je naprosto přirozený."</p>
+                <p class="testimonial-author">— Ondřej K., Praha 6</p>
+            </div>
+            <div class="testimonial-card reveal">
+                <p class="testimonial-stars">★★★★★</p>
+                <p class="testimonial-text">„Invisalign u doktora Beneše byl skvělý zážitek. Za rok rovné zuby bez bolesti a bez drátů."</p>
+                <p class="testimonial-author">— Petra M., Roztoky</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="contact-info reveal">
+            <p class="section-tag">Kontakt</p>
+            <h2 class="section-title">Objednejte se<br>ještě <em>dnes.</em></h2>
+            <div class="contact-details">
+                <div>
+                    <p class="contact-item-label">Adresa</p>
+                    <p class="contact-item-value">Václavské náměstí 12,<br>110 00 Praha 1</p>
+                </div>
+                <div>
+                    <p class="contact-item-label">Telefon</p>
+                    <p class="contact-item-value">+420 222 333 444</p>
+                </div>
+                <div>
+                    <p class="contact-item-label">Email</p>
+                    <p class="contact-item-value">info@dentstudio.cz</p>
+                </div>
+                <div>
+                    <p class="contact-item-label">Ordinační hodiny</p>
+                    <p class="contact-item-value">Po–Pá: 8:00–19:00<br>So: 9:00–13:00</p>
+                </div>
+            </div>
+        </div>
+        <div class="contact-form reveal">
+            <form onsubmit="return false;">
+                <div class="form-group">
+                    <label class="form-label">Jméno a příjmení</label>
+                    <input type="text" class="form-input" placeholder="Jana Nováková">
+                    <div class="form-underline"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" placeholder="jana@email.cz">
+                    <div class="form-underline"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefon</label>
+                    <input type="tel" class="form-input" placeholder="+420 000 000 000">
+                    <div class="form-underline"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Služba</label>
+                    <select class="form-select">
+                        <option value="">Vyberte službu</option>
+                        <option>Preventivní prohlídka</option>
+                        <option>Estetická stomatologie</option>
+                        <option>Implantát</option>
+                        <option>Ortodoncie / Invisalign</option>
+                        <option>Dětská stomatologie</option>
+                        <option>Urgentní ošetření</option>
+                    </select>
+                    <div class="form-underline"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Zpráva</label>
+                    <textarea class="form-textarea" placeholder="Váš dotaz nebo poznámka..."></textarea>
+                    <div class="form-underline"></div>
+                </div>
+                <button type="submit" class="form-submit">Odeslat žádost o termín</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">Dent.Studio</div>
+        <p class="footer-copy">© 2025 Dent Studio s.r.o. — Všechna práva vyhrazena</p>
+        <p class="footer-copy">Praha 1 — Václavské náměstí</p>
+    </footer>
+
+    <script>
+        // Nav scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transitionDelay = `${(i % 3) * 0.1}s`;
+            observer.observe(el);
+        });
+
+        // Hero parallax on mouse
+        document.querySelector('.hero-right').addEventListener('mousemove', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            e.currentTarget.style.backgroundPosition = `${50 + x * 4}% ${50 + y * 4}%`;
+        });
+        document.querySelector('.hero-right').addEventListener('mouseleave', (e) => {
+            e.currentTarget.style.backgroundPosition = 'center';
+        });
+    </script>
+</body>
+</html>

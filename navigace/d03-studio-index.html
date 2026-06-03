@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDIO | Creative Agency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #111111;
+            --text-muted: #888888;
+            --border: #eeeeee;
+            --accent: #000000;
+            --nav-height: 100px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+            --transition: 0.6s var(--ease);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --text-muted: #aaaaaa;
+            --border: #222222;
+            --accent: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: background-color var(--transition), color var(--transition);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1000;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            transition: background-color var(--transition), border-color var(--transition);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.03em;
+            text-decoration: none;
+            color: var(--text);
+            text-transform: uppercase;
+            transition: color var(--transition);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            position: relative;
+            padding: 10px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--text);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.5s var(--ease);
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .nav-link:hover {
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            background: none;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text);
+            border-radius: 20px;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .theme-toggle:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .hero {
+            padding: 250px 4vw 100px;
+            max-width: 1200px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--text-muted);
+        }
+
+        .catalog {
+            padding: 0 4vw 100px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+        }
+
+        .work-item {
+            grid-column: span 6;
+            margin-bottom: 60px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .work-item.large { grid-column: span 8; }
+        .work-item.small { grid-column: span 4; margin-top: 100px; }
+
+        .img-container {
+            width: 100%;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .img-container { background-color: #1a1a1a; }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.2s var(--ease);
+        }
+
+        .work-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .work-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .work-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .work-category {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .mobile-burger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .mobile-burger span {
+            width: 24px;
+            height: 1px;
+            background-color: var(--text);
+        }
+
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .mobile-burger { display: flex; }
+            .work-item, .work-item.large, .work-item.small {
+                grid-column: span 12;
+                margin-top: 0;
+            }
+            .hero { padding-top: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="#" class="logo">Studio.Index</a>
+
+        <div class="nav-inner">
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link">Work</a></li>
+                <li><a href="#" class="nav-link">Portfolio</a></li>
+                <li><a href="#" class="nav-link">Services</a></li>
+                <li><a href="#" class="nav-link">Studio</a></li>
+                <li><a href="#" class="nav-link">Blog</a></li>
+                <li><a href="#" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeSwitcher">Dark Mode</button>
+            <div class="mobile-burger">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>We craft digital <span>experiences for brands</span> that define culture.</h1>
+        </section>
+
+        <section class="catalog">
+            <a href="#" class="work-item large">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1400" alt="Minimal Lamp">
+                </div>
+                <div class="work-meta">
+                    <div>
+                        <div class="work-title">Lumina Concept</div>
+                        <div class="work-category">Branding / Creative Direction</div>
+                    </div>
+                    <div class="work-year">2024</div>
+                </div>
+            </a>
+
+            <a href="#" class="work-item small">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" alt="Watch">
+                </div>
+                <div class="work-meta">
+                    <div>
+                        <div class="work-title">Chronos</div>
+                        <div class="work-category">Digital Product</div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#" class="work-item">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&q=80&w=1200" alt="Architecture">
+                </div>
+                <div class="work-meta">
+                    <div>
+                        <div class="work-title">Urban Form</div>
+                        <div class="work-category">Web Experience</div>
+                    </div>
+                </div>
+            </a>
+        </section>
+    </main>
+
+    <script>
+        const themeBtn = document.getElementById('themeSwitcher');
+        const body = document.body;
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                themeBtn.textContent = 'Dark Mode';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = 'Light Mode';
+            }
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.work-item').forEach(item => {
+            item.style.opacity = "0";
+            item.style.transform = "translateY(30px)";
+            item.style.transition = "all 0.8s cubic-bezier(0.23, 1, 0.32, 1)";
+            observer.observe(item);
+        });
+    </script>
+</body>
+</html>

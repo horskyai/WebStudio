@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        /* ── Zdroje z katalogu ──────────────────────────────────────
+           Navigace:  d08-structure-studio.html
+           Hero:      hero-chronicle.html
+           Karty:     d08-structure-studio.html (project-card styl)
+           Tlačítka:  button-minimal.html
+        ─────────────────────────────────────────────────────────── */
+
+        :root {
+            --bg: #ffffff;
+            --text: #0e0e0e;
+            --text-muted: #888888;
+            --line: rgba(14, 14, 14, 0.1);
+            --accent: #8b5cf6;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-mono: 'Fira Code', monospace;
+            --transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── GRID GUIDE (z d08) ── */
+        .grid-guide {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1001;
+        }
+        .guide-line {
+            width: 1px;
+            height: 100%;
+            background: var(--line);
+        }
+
+        /* ── HEADER / NAV (z d08) ── */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1000;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+            transition: var(--transition);
+        }
+        .header.scrolled { height: 60px; }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .logo em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 36px;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+            position: relative;
+            padding: 8px 0;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 1px;
+            background: var(--text);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+        .nav-link.active::after { transform: scaleX(1); background: var(--accent); }
+
+        /* ── HERO (z hero-chronicle) ── */
+        #hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            background: #080808;
+        }
+
+        .chronicle-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .chronicle-layer {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            position: absolute;
+            user-select: none;
+            font-family: var(--font-sans);
+        }
+        .cl-top    { color: rgba(255,255,255,0.05); -webkit-text-stroke: 1px rgba(255,255,255,0.15); transform: translateY(-45px) translateX(-45px); }
+        .cl-middle { color: #fff; z-index: 2; text-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+        .cl-bottom { color: var(--accent); opacity: 0.25; transform: translateY(45px) translateX(45px); }
+
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0;
+        }
+        .title-mask { overflow: hidden; margin-bottom: 1rem; }
+        .hero-title {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 300;
+            font-style: italic;
+            font-family: var(--font-serif);
+            color: #f1f5f9;
+            transform: translateY(110%);
+        }
+        .hero-desc {
+            font-size: 1rem;
+            color: #475569;
+            max-width: 520px;
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            opacity: 0;
+        }
+
+        /* Scroll hint */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+        }
+        .scroll-hint span {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: #475569;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, #475569, transparent);
+            animation: scrollAnim 2s ease infinite;
+        }
+        @keyframes scrollAnim {
+            0%   { transform: scaleY(0); transform-origin: top; }
+            50%  { transform: scaleY(1); transform-origin: top; }
+            51%  { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        /* ── BLOG SEKCE ── */
+        .blog-section {
+            padding: 120px 4vw 80px;
+            background: #fff;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 80px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 30px;
+        }
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1;
+        }
+        .section-title em { color: var(--accent); }
+
+        /* ── FEATURED POST (velká karta) ── */
+        .featured-post {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+        .featured-img {
+            grid-column: 1 / 8;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+        .featured-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+        }
+        .featured-post:hover .featured-img img {
+            transform: scale(1.04);
+            filter: grayscale(0%);
+        }
+        .featured-content {
+            grid-column: 8 / 13;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 20px;
+        }
+        .post-category {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--accent);
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .post-title-large {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3vw, 2.6rem);
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+        .post-excerpt {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .post-meta {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
+        }
+
+        /* ── MŘÍŽKA ČLÁNKŮ (z d08 project-card) ── */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            column-gap: 30px;
+            row-gap: 70px;
+        }
+        .post-card {
+            grid-column: span 4;
+            cursor: pointer;
+        }
+        .post-img-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: #f5f5f5;
+            aspect-ratio: 3/2;
+            margin-bottom: 22px;
+        }
+        .post-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+        }
+        .post-card:hover .post-img-wrap img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+        .post-card-info {
+            border-top: 1px solid var(--line);
+            padding-top: 18px;
+        }
+        .post-card-cat {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .post-card-title {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+        .post-card-meta {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        /* ── LOAD MORE TLAČÍTKO (z button-minimal) ── */
+        .load-more-wrap {
+            display: flex;
+            justify-content: center;
+            margin-top: 90px;
+        }
+        .btn-minimal {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.3s ease;
+        }
+        .btn-minimal:hover { transform: scale(1.03); }
+        .btn-minimal:hover .underline-expand { transform: scaleX(1.15); }
+        .btn-minimal:active { transform: scale(0.98); }
+        @keyframes underlinePulse {
+            0%, 100% { opacity: 0.5; }
+            50%       { opacity: 1; }
+        }
+        .underline-expand {
+            transition: transform 0.4s ease;
+            transform-origin: center;
+            animation: underlinePulse 3s ease infinite;
+        }
+
+        /* ── NEWSLETTER PRUH ── */
+        .newsletter {
+            padding: 100px 4vw;
+            background: #080808;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+            align-items: center;
+        }
+        .newsletter-text { grid-column: 1 / 7; }
+        .newsletter-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            display: block;
+        }
+        .newsletter-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 3.2rem);
+            font-weight: 400;
+            color: #f1f5f9;
+            line-height: 1.1;
+        }
+        .newsletter-form {
+            grid-column: 8 / 13;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .newsletter-input {
+            background: none;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 14px 0;
+            color: #f1f5f9;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .newsletter-input::placeholder { color: #475569; }
+        .newsletter-input:focus { border-color: var(--accent); }
+        .newsletter-submit {
+            align-self: flex-start;
+            background: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #f1f5f9;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .newsletter-submit:hover { background: var(--accent); border-color: var(--accent); }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 40px 4vw;
+            background: #080808;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        footer .logo { color: #f1f5f9; }
+        footer span {
+            font-size: 0.7rem;
+            color: #475569;
+            letter-spacing: 0.1em;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .featured-img, .featured-content { grid-column: 1 / 13; }
+            .featured-content { padding-left: 0; }
+            .post-card { grid-column: span 6; }
+            .newsletter-text, .newsletter-form { grid-column: 1 / 13; }
+        }
+        @media (max-width: 640px) {
+            .post-card { grid-column: span 12; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Grid guide (d08) -->
+    <div class="grid-guide">
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+    </div>
+
+    <!-- Header (d08) -->
+    <header class="header" id="header">
+        <a href="#" class="logo">THE <em>·</em> JOURNAL</a>
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link active">Blog</a></li>
+            <li><a href="#" class="nav-link">Design</a></li>
+            <li><a href="#" class="nav-link">Technologie</a></li>
+            <li><a href="#" class="nav-link">O nás</a></li>
+            <li><a href="#" class="nav-link">Newsletter</a></li>
+        </ul>
+    </header>
+
+    <!-- Hero (hero-chronicle) -->
+    <section id="hero">
+        <div class="chronicle-container">
+            <div class="chronicle-layer cl-top"    id="ch-top">THE JOURNAL</div>
+            <div class="chronicle-layer cl-middle" id="ch-mid">THE JOURNAL</div>
+            <div class="chronicle-layer cl-bottom" id="ch-bot">THE JOURNAL</div>
+        </div>
+        <span class="hero-tag" id="tag-el">Myšlenky · Forma · Obsah</span>
+        <div class="title-mask">
+            <h1 class="hero-title" id="title-el">Kde design potkává <i>příběh</i>.</h1>
+        </div>
+        <p class="hero-desc" id="desc-el">Prozkoumejte témata z oblasti designu, typografie a digitálního řemesla. Každý článek je záměrně napsaný, vizuálně čistý.</p>
+        <div class="scroll-hint" id="scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Blog sekce -->
+    <main class="blog-section">
+
+        <!-- Section header -->
+        <div class="section-header reveal">
+            <div>
+                <span class="section-label">// nejnovější</span>
+                <h2 class="section-title">Vybrané <em>články</em></h2>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;">
+                48 článků · 2024–2025
+            </div>
+        </div>
+
+        <!-- Featrued post -->
+        <article class="featured-post reveal">
+            <div class="featured-img">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=1600" alt="Featured article">
+            </div>
+            <div class="featured-content">
+                <span class="post-category">// Typografie</span>
+                <h2 class="post-title-large">Proč variabilní fonty mění způsob, jak myslíme o písmenu</h2>
+                <p class="post-excerpt">Variabilní fonty nejsou jen technická novinka — mění samotný vztah mezi formou a obsahem. Pohled na to, jak se písmo stalo plynulým médiem.</p>
+                <div class="post-meta">
+                    <span>Jiří Novák</span> &nbsp;·&nbsp; <span>12 min čtení</span> &nbsp;·&nbsp; <span>15. května 2025</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Grid článků (d08 project-card styl) -->
+        <div class="posts-grid">
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Design systémy</span>
+                    <h3 class="post-card-title">Tokens nejsou jen barvy. Jsou to rozhodnutí.</h3>
+                    <div class="post-card-meta">8 min · 3. června 2025</div>
+                </div>
+            </article>
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Kód</span>
+                    <h3 class="post-card-title">CSS Grid není framework. Je to gramatika.</h3>
+                    <div class="post-card-meta">6 min · 28. května 2025</div>
+                </div>
+            </article>
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1516131206008-dd041a9764fd?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Pohyb</span>
+                    <h3 class="post-card-title">Animace jako jazyk: kdy mluvit, kdy mlčet</h3>
+                    <div class="post-card-meta">10 min · 20. května 2025</div>
+                </div>
+            </article>
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Proces</span>
+                    <h3 class="post-card-title">Moodboard je lhaní sobě. Kde začít jinak.</h3>
+                    <div class="post-card-meta">7 min · 10. května 2025</div>
+                </div>
+            </article>
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Přístupnost</span>
+                    <h3 class="post-card-title">Kontrast není volba. Kontrast je povinnost.</h3>
+                    <div class="post-card-meta">5 min · 2. května 2025</div>
+                </div>
+            </article>
+
+            <article class="post-card reveal">
+                <div class="post-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&q=80&w=800" alt="">
+                </div>
+                <div class="post-card-info">
+                    <span class="post-card-cat">// Nástroje</span>
+                    <h3 class="post-card-title">Figma vs. kod: proč přestávám se ptát</h3>
+                    <div class="post-card-meta">9 min · 24. dubna 2025</div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Load more (button-minimal) -->
+        <div class="load-more-wrap reveal">
+            <button class="btn-minimal">
+                <svg width="320" height="90" viewBox="0 0 320 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="minimalText" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#1a1a1a"/>
+                            <stop offset="100%" stop-color="#555555"/>
+                        </linearGradient>
+                        <linearGradient id="underlineGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%"   stop-color="rgba(139,92,246,0)"/>
+                            <stop offset="20%"  stop-color="rgba(139,92,246,0.7)"/>
+                            <stop offset="50%"  stop-color="rgba(139,92,246,1)"/>
+                            <stop offset="80%"  stop-color="rgba(139,92,246,0.7)"/>
+                            <stop offset="100%" stop-color="rgba(139,92,246,0)"/>
+                        </linearGradient>
+                    </defs>
+                    <text x="160" y="52"
+                          font-family="'Inter', system-ui, sans-serif"
+                          font-size="14" font-weight="400"
+                          letter-spacing="8"
+                          text-anchor="middle"
+                          fill="url(#minimalText)">NAČÍST DALŠÍ ČLÁNKY</text>
+                    <line x1="20" y1="64" x2="300" y2="64"
+                          stroke="url(#underlineGrad)" stroke-width="1"
+                          class="underline-expand"/>
+                </svg>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="newsletter-text reveal">
+            <span class="newsletter-label">// newsletter</span>
+            <h2 class="newsletter-title">Nové články přímo<br><i>do schránky</i>.</h2>
+        </div>
+        <div class="newsletter-form reveal">
+            <input class="newsletter-input" type="text" placeholder="Vaše jméno">
+            <input class="newsletter-input" type="email" placeholder="Email adresa">
+            <button class="newsletter-submit">Odebírat →</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <a href="#" class="logo">THE <em style="color:var(--accent)">·</em> JOURNAL</a>
+        <span>© 2025 · Všechna práva vyhrazena</span>
+    </footer>
+
+    <script>
+        // ── Preloader / reveal (z hero-chronicle) ──
+        window.addEventListener('load', () => {
+            gsap.set(['#tag-el', '#desc-el', '#scroll-hint'], { opacity: 0, y: 15 });
+            gsap.set('#title-el', { y: '110%' });
+
+            const tl = gsap.timeline({ delay: 0.3 });
+            tl.to('#tag-el',     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+              .to('#title-el',   { y: 0, duration: 1.1, ease: 'power4.out' }, '-=0.5')
+              .to('#desc-el',    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.7')
+              .to('#scroll-hint',{ opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.4');
+        });
+
+        // ── Chronicle parallax (z hero-chronicle) ──
+        const hero = document.getElementById('hero');
+        const chTop = document.getElementById('ch-top');
+        const chMid = document.getElementById('ch-mid');
+        const chBot = document.getElementById('ch-bot');
+
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            gsap.to(chTop, { x: -45 + (x * 0.09), y: -45 + (y * 0.09), duration: 0.8, ease: 'power2.out' });
+            gsap.to(chMid, { x: x * 0.025, y: y * 0.025, duration: 0.5, ease: 'power2.out' });
+            gsap.to(chBot, { x: 45 + (-x * 0.11), y: 45 + (-y * 0.11), duration: 1, ease: 'power2.out' });
+        });
+
+        // ── Header scroll (z d08) ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ── Reveal on scroll (z d08) ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -80px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

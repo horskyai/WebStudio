@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'AVENIR | Luxury Intro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-color: #c5a059; /* Muted Gold */
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --transition-speed: 2.5s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Cinematic Grain Texture Overlay */
+        .grain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3ExternalLink %3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Background Gradient Radial Pulse */
+        .bg-glow {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            z-index: -1;
+            animation: pulseBg 8s ease-in-out infinite;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+        }
+
+        /* SVG Animation Styling */
+        .logo-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .svg-logo {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 1;
+            stroke-linecap: square;
+            stroke-dasharray: 500;
+            stroke-dashoffset: 500;
+            animation: drawPath 4s cubic-bezier(0.6, 0.05, 0.01, 0.9) forwards;
+        }
+
+        /* Text Animations */
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp var(--transition-speed) ease forwards 1s;
+        }
+
+        .tagline {
+            font-size: 0.7rem;
+            letter-spacing: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            opacity: 0;
+            animation: fadeInUp var(--transition-speed) ease forwards 1.8s;
+        }
+
+        .line-reveal {
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            margin: 25px auto;
+            animation: expandLine 3s ease forwards 1.2s;
+        }
+
+        /* Keyframes */
+        @keyframes drawPath {
+            0% { stroke-dashoffset: 500; filter: drop-shadow(0 0 0px var(--accent-color)); }
+            50% { filter: drop-shadow(0 0 10px var(--accent-color)); }
+            100% { stroke-dashoffset: 0; filter: drop-shadow(0 0 2px var(--accent-color)); }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 0.7rem; /* Subtle expansion for brand name */
+            }
+        }
+
+        @keyframes expandLine {
+            to { width: 180px; }
+        }
+
+        @keyframes pulseBg {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .brand-name { font-size: 1.8rem; }
+            .tagline { font-size: 0.6rem; letter-spacing: 0.4rem; }
+            .logo-wrapper { width: 90px; height: 90px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grain"></div>
+    <div class="bg-glow"></div>
+
+    <div class="container">
+        <div class="logo-wrapper">
+            <!-- Custom Geometric Luxury Monogram SVG -->
+            <svg class="svg-logo" viewBox="0 0 100 100">
+                <!-- Outer Diamond -->
+                <path d="M50 5 L95 50 L50 95 L5 50 Z" />
+                <!-- Inner Stylized 'A' -->
+                <path d="M35 70 L50 25 L65 70" />
+                <path d="M40 55 L60 55" />
+            </svg>
+        </div>
+
+        <h1 class="brand-name">L'Avenir</h1>
+        <div class="line-reveal"></div>
+        <p class="tagline">Maison de Prestige</p>
+    </div>
+
+    <script>
+        // Subtle interaction: Light mouse follow effect for background depth
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.querySelector('.bg-glow');
+            const x = (e.clientX / window.innerWidth) * 5;
+            const y = (e.clientY / window.innerHeight) * 5;
+            glow.style.transform = `translate(${-x}%, ${-y}%) scale(1.05)`;
+        });
+    </script>
+</body>
+</html>

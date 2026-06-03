@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NORDIC FORM | Architectural Intro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Scandi Neutral Palette */
+            --bg-color: #f4f2f0; /* Warm Bone/Parchment */
+            --line-color: #2c2c2c; /* Soft Charcoal */
+            --text-dim: #8e8e8e;
+            --easing: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--line-color);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Subtle background depth */
+        .ambient-light {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Architectural SVG Animation */
+        .architect-svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 40px;
+            transform: rotate(-45deg);
+        }
+
+        .line {
+            fill: none;
+            stroke: var(--line-color);
+            stroke-width: 1.5;
+            stroke-linecap: square;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: drawLine 3.5s var(--easing) forwards;
+        }
+
+        .circle {
+            fill: none;
+            stroke: var(--line-color);
+            stroke-width: 1;
+            opacity: 0;
+            transform-origin: center;
+            animation: fadeInScale 4s var(--easing) forwards 1s;
+        }
+
+        /* Typography Reveal */
+        .brand-reveal {
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 300;
+            letter-spacing: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUpFade 3s var(--easing) forwards 1.2s;
+        }
+
+        .tagline {
+            font-size: 0.7rem;
+            font-weight: 200;
+            letter-spacing: 0.4rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            opacity: 0;
+            animation: fadeIn 2s ease forwards 2.5s;
+        }
+
+        /* Decorative Grid lines (Scandinavian Modernism) */
+        .grid-line {
+            position: absolute;
+            background-color: rgba(0,0,0,0.03);
+            pointer-events: none;
+        }
+        .v-line { width: 1px; height: 100vh; top: 0; }
+        .h-line { height: 1px; width: 100vw; left: 0; }
+
+        /* Keyframes */
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 0.15; transform: scale(1.2); }
+        }
+
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 1.1rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Ambient "Breathing" for the whole scene */
+        .container {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Positioning the faint background grid */
+        .l1 { left: 25%; }
+        .l2 { left: 75%; }
+        .l3 { top: 33%; }
+        .l4 { top: 66%; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Architectural Background Elements -->
+    <div class="ambient-light"></div>
+    <div class="grid-line v-line l1"></div>
+    <div class="grid-line v-line l2"></div>
+    <div class="grid-line h-line l3"></div>
+    <div class="grid-line h-line l4"></div>
+
+    <div class="container">
+        <!-- Minimalist Architectural Glyph -->
+        <svg class="architect-svg" viewBox="0 0 100 100">
+            <!-- Intersecting Lines -->
+            <path class="line" d="M10 50 L90 50" />
+            <path class="line" style="animation-delay: 0.3s" d="M50 10 L50 90" />
+            <!-- Soft backing circle -->
+            <circle class="circle" cx="50" cy="50" r="35" />
+        </svg>
+
+        <div class="brand-reveal">
+            <h1 class="brand-name">Nordic Form</h1>
+            <p class="tagline">Architecture & Design</p>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETERNA | High-End Visual Intro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Inter:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0c0c0c;
+            --accent: #b89c7d;
+            --white: #ffffff;
+            --dim: rgba(255, 255, 255, 0.4);
+            --ease-premium: cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%; height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 20; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .glow {
+            position: absolute; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0c0c0c 100%);
+            z-index: 1;
+        }
+
+        .loader-counter {
+            position: absolute; bottom: 10vh; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem; letter-spacing: 0.3rem;
+            color: var(--dim); text-transform: uppercase; z-index: 10;
+        }
+
+        .count-num::after {
+            content: '00';
+            animation: countUp 4s var(--ease-premium) forwards;
+        }
+
+        @keyframes countUp {
+            0% { content: '04'; } 20% { content: '18'; } 40% { content: '42'; }
+            60% { content: '67'; } 80% { content: '89'; } 100% { content: '100'; }
+        }
+
+        .stage {
+            position: relative; z-index: 5;
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            animation: dollyOut 12s var(--ease-premium) forwards,
+                       floatStage 8s ease-in-out infinite 4.5s;
+        }
+
+        .logo-svg { width: 160px; height: 160px; margin-bottom: 60px; }
+
+        .path-structural {
+            fill: none; stroke: var(--accent); stroke-width: 0.75;
+            stroke-dasharray: 600; stroke-dashoffset: 600;
+            animation: drawLine 4.5s var(--ease-premium) forwards;
+        }
+
+        .path-detail {
+            fill: none; stroke: var(--white); stroke-width: 0.5;
+            stroke-dasharray: 300; stroke-dashoffset: 300;
+            opacity: 0.2;
+            animation: drawLine 3.5s var(--ease-premium) forwards 1s;
+        }
+
+        .reveal-mask { overflow: hidden; padding-bottom: 10px; }
+
+        .brand-name {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            color: var(--white); text-transform: uppercase;
+            font-weight: 400; letter-spacing: 0.3rem;
+            filter: blur(15px); opacity: 0; transform: translateY(100%);
+            animation: focusReveal 4s var(--ease-premium) forwards 1.5s;
+        }
+
+        .brand-name span { font-style: italic; color: var(--accent); }
+
+        .tagline {
+            font-size: 0.6rem; letter-spacing: 0.8rem;
+            color: var(--dim); text-transform: uppercase;
+            margin-top: 20px; opacity: 0;
+            animation: fadeIn 3s ease forwards 3s;
+        }
+
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+        @keyframes focusReveal { to { opacity: 1; filter: blur(0px); transform: translateY(0); letter-spacing: 1.5rem; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes dollyOut { from { transform: scale(1.15); } to { transform: scale(0.95); } }
+        @keyframes floatStage {
+            0%, 100% { transform: scale(0.95) translateY(0); }
+            50% { transform: scale(0.97) translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .logo-svg { width: 100px; height: 100px; }
+            .brand-name { font-size: 2.2rem; letter-spacing: 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grain"></div>
+    <div class="glow"></div>
+    <div class="loader-counter">Loading <span class="count-num"></span>%</div>
+    <div class="stage">
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <circle class="path-structural" cx="50" cy="50" r="45" />
+            <path class="path-structural" d="M50 5 L50 95 M5 50 L95 50" style="animation-delay: 0.5s;" />
+            <path class="path-detail" d="M30 30 L70 30 L70 70 L30 70 Z" />
+            <path class="path-detail" d="M50 30 L50 70 M30 50 L70 50" />
+            <circle cx="50" cy="50" r="1.5" fill="var(--accent)" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" dur="1.5s" begin="3s" fill="freeze" />
+            </circle>
+        </svg>
+        <div class="reveal-mask">
+            <h1 class="brand-name">Aet<span>erna</span></h1>
+        </div>
+        <p class="tagline">Creative Legacy</p>
+    </div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const stage = document.querySelector('.stage');
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            stage.style.transform += ` rotateY(${x}deg) rotateX(${-y}deg)`;
+        });
+    </script>
+</body>
+</html>

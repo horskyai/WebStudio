@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Loaders</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    background:#0a0a0a;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:40px;
+}
+
+h1 { margin-bottom:40px; font-size:36px; }
+
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
+}
+
+.card {
+    border-radius:24px;
+    padding:30px 20px;
+    min-height:220px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+    transition:transform 0.3s ease;
+}
+.card:hover { transform:translateY(-8px) scale(1.02); }
+.card h2 { margin-top:20px; font-size:14px; letter-spacing:1px; }
+.card p { color:#777; font-size:12px; margin-top:6px; text-align:center; }
+
+/* BACKGROUNDS */
+.c9 {background:linear-gradient(135deg,#001a1a,#003333);}
+.c10{background:linear-gradient(135deg,#1a001a,#3d003d);}
+.c12{background:linear-gradient(135deg,#001433,#002966);}
+.c15{background:linear-gradient(135deg,#1a0a00,#3d1f00);}
+.c21{background:linear-gradient(135deg,#000a00,#001900);}
+.c24{background:linear-gradient(135deg,#001a0a,#003319);}
+.c26{background:linear-gradient(135deg,#00001a,#000033);}
+.c27{background:linear-gradient(135deg,#1a1000,#332000);}
+.c31{background:linear-gradient(135deg,#101010,#1e1e1e);}
+.c37{background:linear-gradient(135deg,#0f1400,#1e2900);}
+.c42{background:linear-gradient(135deg,#0f0014,#1e0029);}
+.c45{background:linear-gradient(135deg,#000a14,#001429);}
+.c48{background:linear-gradient(135deg,#0a1400,#142900);}
+.c49{background:linear-gradient(135deg,#14100a,#291f14);}
+.c50{background:linear-gradient(135deg,#0a0a14,#14142a);}
+
+/* 09 — Glow pulse */
+.l9 { width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:glowPulse 1.5s infinite; }
+
+/* 10 — Orbit dot */
+.l10 { width:70px;height:70px;border:2px solid rgba(255,255,255,.2);border-radius:50%;position:relative;animation:spin 3s linear infinite; }
+.l10 span { position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:-7px;left:28px; }
+
+/* 12 — Expanding rings */
+.l12 { position:relative;width:70px;height:70px; }
+.l12::before,.l12::after { content:'';position:absolute;border:2px solid #fff;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%); }
+.l12::before { animation:expandRing 1.8s infinite ease-out; }
+.l12::after { animation:expandRing 1.8s .6s infinite ease-out; }
+
+/* 15 — Pendulum */
+.l15 { position:relative;width:6px;height:60px;background:#fff;border-radius:3px;transform-origin:top center;animation:pendulum 1.2s infinite ease-in-out; }
+.l15::after { content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:20px;height:20px;background:#fff;border-radius:50%; }
+
+/* 21 — Circular progress */
+.l21 { position:relative;width:65px;height:65px; }
+.l21 svg { transform:rotate(-90deg); }
+.l21 circle { fill:none;stroke:rgba(255,255,255,.15);stroke-width:5; }
+.l21 .progress { stroke:#fff;stroke-dasharray:160;stroke-dashoffset:160;animation:circProg 2s infinite ease-in-out; }
+
+/* 24 — Jelly blob */
+.l24 { width:60px;height:60px;background:#fff;border-radius:50%;animation:jelly 1.2s infinite ease-in-out; }
+
+/* 26 — Shooting star */
+.l26 { position:relative;width:80px;height:4px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden; }
+.l26::after { content:'';position:absolute;width:30px;height:100%;background:linear-gradient(90deg,transparent,#fff,transparent);animation:shoot 1s infinite linear; }
+
+/* 27 — Radar sweep */
+.l27 { width:70px;height:70px;border:2px solid rgba(255,255,255,.3);border-radius:50%;position:relative;overflow:hidden; }
+.l27::after { content:'';position:absolute;top:0;left:50%;width:50%;height:50%;background:conic-gradient(rgba(255,255,255,.6),transparent);transform-origin:left bottom;animation:radar 1.5s linear infinite; }
+
+/* 31 — Morphing blob */
+.l31 { width:60px;height:60px;background:#fff;animation:blob 3s infinite ease-in-out; }
+
+/* 37 — Neon trace */
+.l37 { width:60px;height:60px;border:3px solid transparent;border-radius:50%;box-shadow:0 0 10px #fff inset;animation:neonTrace 1.5s infinite linear; }
+
+/* 42 — Concentric squares */
+.l42 { position:relative;width:60px;height:60px;display:flex;align-items:center;justify-content:center; }
+.l42::before,.l42::after,.l42 i { content:'';position:absolute;border:2px solid #fff; }
+.l42::before { width:60px;height:60px;animation:concentric 2s infinite linear; }
+.l42::after { width:40px;height:40px;animation:concentric 2s .3s infinite linear; }
+.l42 i { display:block;width:20px;height:20px;animation:concentric 2s .6s infinite linear; }
+
+/* 45 — Dual counter-rotate */
+.l45 { position:relative;width:65px;height:65px; }
+.l45::before { content:'';position:absolute;width:100%;height:100%;border:4px solid transparent;border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite; }
+.l45::after { content:'';position:absolute;width:70%;height:70%;top:15%;left:15%;border:4px solid transparent;border-bottom-color:rgba(255,255,255,.5);border-radius:50%;animation:spinR 1.5s linear infinite; }
+
+/* 48 — Matrix rain */
+.l48 { display:flex;gap:3px; }
+.l48 span { width:4px;background:linear-gradient(#fff,transparent);border-radius:2px;animation:matrixRain 1.5s infinite ease-in; }
+.l48 span:nth-child(1){height:60px;animation-delay:0s;}
+.l48 span:nth-child(2){height:40px;animation-delay:.2s;}
+.l48 span:nth-child(3){height:70px;animation-delay:.1s;}
+.l48 span:nth-child(4){height:30px;animation-delay:.3s;}
+.l48 span:nth-child(5){height:55px;animation-delay:.15s;}
+
+/* 49 — Kaleidoscope */
+.l49 { width:60px;height:60px;background:conic-gradient(#fff,rgba(255,255,255,.1),#fff,rgba(255,255,255,.1),#fff);border-radius:50%;animation:kaleido 3s linear infinite; }
+
+/* 50 — Nuclear atom */
+.l50 { position:relative;width:70px;height:70px; }
+.l50::before,.l50::after,.l50 i { content:'';position:absolute;top:50%;left:50%;width:60px;height:20px;margin:-10px -30px;border:3px solid #fff;border-radius:50%; }
+.l50::before { animation:spin 1.5s linear infinite; }
+.l50::after { animation:spin 2s .2s linear infinite; }
+.l50 i { display:block;animation:spinR 2.5s linear infinite; }
+.l50 em { position:absolute;width:10px;height:10px;background:#fff;border-radius:50%;top:50%;left:50%;margin:-5px; }
+
+/* KEYFRAMES */
+@keyframes spin      { to{transform:rotate(360deg);} }
+@keyframes spinR     { to{transform:rotate(-360deg);} }
+@keyframes glowPulse { 0%{box-shadow:0 0 0 0 rgba(255,255,255,.7);} 70%{box-shadow:0 0 0 25px rgba(255,255,255,0);} 100%{box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+@keyframes expandRing{ 0%{width:0;height:0;opacity:1;} 100%{width:70px;height:70px;opacity:0;} }
+@keyframes pendulum  { 0%,100%{transform:rotate(-30deg);} 50%{transform:rotate(30deg);} }
+@keyframes circProg  { 0%{stroke-dashoffset:160;} 60%{stroke-dashoffset:0;} 100%{stroke-dashoffset:0;opacity:0;} }
+@keyframes jelly     { 0%,100%{border-radius:50%;transform:scale(1);} 25%{border-radius:60% 40% 60% 40%;transform:scale(1.05,.95);} 50%{border-radius:40% 60% 40% 60%;transform:scale(.95,1.05);} 75%{border-radius:60% 40% 60% 40%;transform:scale(1.05,.95);} }
+@keyframes shoot     { from{left:-30px;} to{left:100%;} }
+@keyframes radar     { to{transform:rotate(360deg);} }
+@keyframes blob      { 0%,100%{border-radius:50%;} 25%{border-radius:60% 40% 70% 30%;} 50%{border-radius:30% 70% 40% 60%;} 75%{border-radius:70% 30% 60% 40%;} }
+@keyframes neonTrace { 0%{box-shadow:0 -4px 8px #fff;border-top-color:#fff;} 25%{box-shadow:4px 0 8px #fff;border-right-color:#fff;border-top-color:transparent;} 50%{box-shadow:0 4px 8px #fff;border-bottom-color:#fff;border-right-color:transparent;} 75%{box-shadow:-4px 0 8px #fff;border-left-color:#fff;border-bottom-color:transparent;} 100%{box-shadow:0 -4px 8px #fff;border-top-color:#fff;border-left-color:transparent;} }
+@keyframes concentric{ to{transform:rotate(360deg);} }
+@keyframes matrixRain{ 0%{opacity:1;transform:translateY(-100%);} 100%{opacity:0;transform:translateY(100%);} }
+@keyframes kaleido   { to{transform:rotate(360deg);} }
+</style>
+</head>
+<body>
+
+<h1>Best Loaders</h1>
+
+<div class="grid">
+    <div class="card c9"><div class="l9"></div><h2>Glow Pulse</h2><p>Ripple expand effect</p></div>
+    <div class="card c10"><div class="l10"><span></span></div><h2>Orbit Dot</h2><p>Planet orbiting ring</p></div>
+    <div class="card c12"><div class="l12"></div><h2>Expanding Rings</h2><p>Double wave ripple</p></div>
+    <div class="card c15"><div class="l15"></div><h2>Pendulum</h2><p>Physics swing</p></div>
+    <div class="card c21"><div class="l21"><svg width="65" height="65"><circle cx="32.5" cy="32.5" r="27"/><circle class="progress" cx="32.5" cy="32.5" r="27"/></svg></div><h2>Circular Progress</h2><p>SVG stroke animation</p></div>
+    <div class="card c24"><div class="l24"></div><h2>Jelly Blob</h2><p>Organic morph</p></div>
+    <div class="card c26"><div class="l26"></div><h2>Shooting Star</h2><p>Light streak</p></div>
+    <div class="card c27"><div class="l27"></div><h2>Radar Sweep</h2><p>Conic gradient spin</p></div>
+    <div class="card c31"><div class="l31"></div><h2>Morphing Blob</h2><p>Amorphic shape shift</p></div>
+    <div class="card c37"><div class="l37"></div><h2>Neon Trace</h2><p>Light orbiting border</p></div>
+    <div class="card c42"><div class="l42"><i></i></div><h2>Concentric Squares</h2><p>Three rotating frames</p></div>
+    <div class="card c45"><div class="l45"></div><h2>Dual Counter-Rotate</h2><p>Two opposing rings</p></div>
+    <div class="card c48"><div class="l48"><span></span><span></span><span></span><span></span><span></span></div><h2>Matrix Rain</h2><p>Falling columns</p></div>
+    <div class="card c49"><div class="l49"></div><h2>Kaleidoscope</h2><p>Conic gradient spin</p></div>
+    <div class="card c50"><div class="l50"><i></i><em></em></div><h2>Nuclear Atom</h2><p>Three axis orbits</p></div>
+</div>
+
+</body>
+</html>

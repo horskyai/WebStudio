@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRUCTURE | Architectural Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #0e0e0e;
+            --text-muted: #888888;
+            --line: rgba(14, 14, 14, 0.1);
+            --transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .grid-guide {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1001;
+        }
+
+        .guide-line {
+            width: 1px;
+            height: 100%;
+            background-color: var(--line);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1000;
+            background: var(--bg);
+            border-bottom: 1px solid var(--line);
+            transition: var(--transition);
+        }
+
+        .header.scrolled { height: 70px; }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+            position: relative;
+            padding: 10px 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--text);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .hero {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            padding: 100px 4vw 0;
+            align-items: center;
+        }
+
+        .hero-text { grid-column: 1 / 7; padding-right: 50px; }
+
+        .hero-text span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 400;
+            line-height: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .hero-img {
+            grid-column: 7 / 13;
+            height: 70vh;
+            background: #f0f0f0 url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600') center/cover;
+            overflow: hidden;
+        }
+
+        .projects {
+            padding: 120px 4vw;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+        }
+
+        .project-card {
+            grid-column: span 6;
+            margin-bottom: 80px;
+            cursor: pointer;
+        }
+
+        .project-card.narrow { grid-column: 2 / 6; }
+        .project-card.wide { grid-column: 7 / 13; margin-top: 150px; }
+
+        .img-wrapper {
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 25px;
+            background: #f5f5f5;
+            aspect-ratio: 4/5;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .project-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+        }
+
+        .project-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+        }
+
+        .project-meta {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 1px;
+            background: var(--text);
+        }
+
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .burger { display: flex; }
+            .hero-text, .hero-img { grid-column: 1 / 13; }
+            .hero-img { height: 50vh; margin-top: 40px; }
+            .project-card, .project-card.narrow, .project-card.wide {
+                grid-column: 1 / 13;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-guide">
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+        <div class="guide-line"></div>
+    </div>
+
+    <header class="header" id="header">
+        <a href="#" class="logo">Structure Studio</a>
+
+        <ul class="nav-links">
+            <li><a href="#" class="nav-link">Home</a></li>
+            <li><a href="#" class="nav-link">Projects</a></li>
+            <li><a href="#" class="nav-link">Studio</a></li>
+            <li><a href="#" class="nav-link">Process</a></li>
+            <li><a href="#" class="nav-link">Gallery</a></li>
+            <li><a href="#" class="nav-link">About</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="burger">
+            <div></div>
+            <div></div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <span>Architectural Excellence</span>
+                <h1>Redefining Modern Living <i>Spaces</i>.</h1>
+                <p style="color:var(--text-muted);font-size:14px;max-width:400px;margin-top:20px;">We create monolithic structures that dialogue with nature, utilizing raw materials and geometric precision.</p>
+            </div>
+            <div class="hero-img"></div>
+        </section>
+
+        <section class="projects">
+            <div class="project-card narrow reveal">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&q=80&w=1000" alt="Minimal House">
+                </div>
+                <div class="project-info">
+                    <div class="project-title">The Glass Pavilion</div>
+                    <div class="project-meta">Berlin, DE<br>2023</div>
+                </div>
+            </div>
+
+            <div class="project-card wide reveal">
+                <div class="img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600" alt="Concrete Office">
+                </div>
+                <div class="project-info">
+                    <div class="project-title">Monolith Corporate</div>
+                    <div class="project-meta">Tokyo, JP<br>2024</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -100px 0px" });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(60px)";
+            el.style.transition = "all 1.2s cubic-bezier(0.16, 1, 0.3, 1)";
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

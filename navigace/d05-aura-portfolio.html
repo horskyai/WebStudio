@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISUAL ARCHIVE | Professional Photography Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --white: #ffffff;
+            --black: #0a0a0a;
+            --charcoal: #1a1a1a;
+            --soft-grey: #f4f4f4;
+            --transition-main: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            --nav-height: 100px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4vw;
+            z-index: 1000;
+            transition: var(--transition-main);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%);
+        }
+
+        .header.scrolled {
+            height: 80px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--white);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 300;
+            position: relative;
+            padding: 10px 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: var(--transition-main);
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover { opacity: 0.7; }
+        .nav-link:hover::after { width: 100%; }
+
+        .hero {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat;
+            filter: brightness(0.6);
+            transform: scale(1.1);
+            animation: zoomOut 10s forwards;
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            line-height: 0.9;
+            margin-bottom: 20px;
+            font-weight: 400;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1.5s forwards 0.5s;
+        }
+
+        .hero-content p {
+            font-size: 12px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1.5s forwards 0.8s;
+        }
+
+        .gallery-container {
+            padding: 120px 4vw;
+            background-color: var(--black);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            background: var(--charcoal);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 2s cubic-bezier(0.19, 1, 0.22, 1);
+            display: block;
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .span-8  { grid-column: span 8;  height: 600px; }
+        .span-4  { grid-column: span 4;  height: 600px; }
+        .span-6  { grid-column: span 6;  height: 800px; }
+        .span-12 { grid-column: span 12; height: 500px; }
+
+        @keyframes zoomOut { to { transform: scale(1); } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 1px;
+            background: var(--white);
+        }
+
+        @media (max-width: 900px) {
+            .nav-menu { display: none; }
+            .mobile-toggle { display: flex; }
+            .span-8, .span-4, .span-6 { grid-column: span 12; height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header" id="mainHeader">
+        <a href="#" class="logo">Aura.</a>
+
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link">Photos</a></li>
+            <li><a href="#" class="nav-link">Stories</a></li>
+            <li><a href="#" class="nav-link">Portfolio</a></li>
+            <li><a href="#" class="nav-link">Journal</a></li>
+            <li><a href="#" class="nav-link">About</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="mobile-toggle">
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <p>Est. 2014 — London</p>
+                <h1>Capturing the <i>Silence</i></h1>
+            </div>
+        </section>
+
+        <section class="gallery-container">
+            <div class="gallery-grid">
+                <div class="gallery-item span-8 reveal">
+                    <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80&w=1400" alt="Landscape">
+                </div>
+                <div class="gallery-item span-4 reveal">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=800" alt="Portrait">
+                </div>
+                <div class="gallery-item span-6 reveal">
+                    <img src="https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&q=80&w=1000" alt="Architecture">
+                </div>
+                <div class="gallery-item span-6 reveal">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1000" alt="Nature">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
+</body>
+</html>

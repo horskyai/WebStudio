@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARQUESS | Cinematic Intro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --line-color: rgba(255, 255, 255, 0.4);
+            --text-color: #fdfdfd;
+            --easing: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Cinematic Grain & Vignette */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 11;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* Stage Styling - Dolly In Effect */
+        .stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            animation: dollyIn 12s var(--easing) forwards;
+        }
+
+        /* SVG Frame Animation */
+        .frame-svg {
+            position: absolute;
+            width: 400px;
+            height: 200px;
+            z-index: 2;
+        }
+
+        .frame-rect {
+            fill: none;
+            stroke: var(--line-color);
+            stroke-width: 1;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            animation: drawFrame 4s var(--easing) forwards 0.5s;
+        }
+
+        /* Typography Reveal */
+        .content-wrap {
+            text-align: center;
+            z-index: 3;
+        }
+
+        .title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            /* Light shimmer sweep effect */
+            background: linear-gradient(90deg, #555, #fff, #555);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation:
+                fadeIn 3s var(--easing) forwards 1.5s,
+                shimmer 6s linear infinite;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.8rem;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            animation: fadeIn 3s var(--easing) forwards 2.5s;
+        }
+
+        /* Decorative Light Streak */
+        .light-streak {
+            position: absolute;
+            width: 1px;
+            height: 0;
+            background: linear-gradient(to bottom, transparent, var(--line-color), transparent);
+            left: 50%;
+            animation: streakMove 5s var(--easing) forwards 0.2s;
+        }
+
+        /* Keyframes */
+        @keyframes drawFrame {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes dollyIn {
+            from { transform: scale(0.95); }
+            to { transform: scale(1.08); }
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes streakMove {
+            0% { top: 0; height: 0; opacity: 0; }
+            50% { top: 20%; height: 30vh; opacity: 1; }
+            100% { top: 100%; height: 0; opacity: 0; }
+        }
+
+        /* Responsive scaling */
+        @media (max-width: 768px) {
+            .frame-svg { width: 280px; height: 160px; }
+            .title { font-size: 1.8rem; letter-spacing: 0.8rem; }
+            .subtitle { font-size: 0.5rem; letter-spacing: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div>
+    <div class="grain"></div>
+    <div class="light-streak"></div>
+
+    <div class="stage">
+        <!-- Structural Frame -->
+        <svg class="frame-svg" viewBox="0 0 400 200">
+            <rect class="frame-rect" x="10" y="10" width="380" height="180" />
+        </svg>
+
+        <div class="content-wrap">
+            <h1 class="title">Marquess</h1>
+            <p class="subtitle">Fine Art & Perspective</p>
+        </div>
+    </div>
+
+</body>
+</html>

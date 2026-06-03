@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR | Executive Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Inter:wght@200;300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-matte: #121212;
+            --bg-card: #1a1a1a;
+            --text-main: #e0e0e0;
+            --text-muted: #808080;
+            --border: rgba(255, 255, 255, 0.07);
+            --glow: rgba(255, 255, 255, 0.3);
+            --transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-matte);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5vw;
+            z-index: 1000;
+            background: transparent;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            height: 70px;
+            background: rgba(18, 18, 18, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px var(--glow);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 1px;
+            background: var(--text-main);
+            transition: var(--transition);
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+        }
+
+        .hero span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 5.5rem);
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.1;
+            max-width: 900px;
+        }
+
+        .section-padding {
+            padding: 120px 5vw;
+            border-top: 1px solid var(--border);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 30px;
+        }
+
+        .card {
+            grid-column: span 4;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 40px;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+            background: #222222;
+        }
+
+        .card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .card-number {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-menu { display: none; }
+            .card { grid-column: span 6; }
+        }
+
+        @media (max-width: 600px) {
+            .card { grid-column: span 12; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header" id="header">
+        <a href="#" class="logo">Noir</a>
+
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link">Home</a></li>
+            <li><a href="#" class="nav-link">About</a></li>
+            <li><a href="#" class="nav-link">Services</a></li>
+            <li><a href="#" class="nav-link">Projects</a></li>
+            <li><a href="#" class="nav-link">Blog</a></li>
+            <li><a href="#" class="nav-link">Contact</a></li>
+        </ul>
+
+        <div class="header-cta">
+            <a href="#" class="nav-link" style="color:var(--text-main);">Enquire</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <span>The Art of Precision</span>
+            <h1>Bespoke Digital Solutions for the Modern Enterprise.</h1>
+        </section>
+
+        <section class="section-padding">
+            <div class="grid-container">
+                <div class="card reveal">
+                    <span class="card-number">01</span>
+                    <h3>Strategic Consulting</h3>
+                    <p>Aligning vision with market dynamics through rigorous analysis and executive-level planning.</p>
+                </div>
+                <div class="card reveal">
+                    <span class="card-number">02</span>
+                    <h3>Brand Identity</h3>
+                    <p>Crafting timeless visual languages that resonate with high-net-worth audiences across the globe.</p>
+                </div>
+                <div class="card reveal">
+                    <span class="card-number">03</span>
+                    <h3>Digital Platforms</h3>
+                    <p>Developing high-performance ecosystems that bridge the gap between aesthetics and function.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(40px)";
+            el.style.transition = "all 1s cubic-bezier(0.19, 1, 0.22, 1)";
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>

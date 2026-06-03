@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="220" viewBox="0 0 480 220">
+  <defs>
+    <!-- Normal state: glassmorphism -->
+    <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#f0f0f0" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="shadow1" x="-10%" y="-20%" width="120%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#00000022"/>
+    </filter>
+    <!-- Hover state: solid white -->
+    <linearGradient id="solidGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8f8f8"/>
+    </linearGradient>
+    <filter id="shadow2" x="-10%" y="-20%" width="120%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#00000030"/>
+    </filter>
+  </defs>
+
+  <!-- === NORMAL STATE === -->
+  <rect x="20" y="10" width="440" height="90" rx="18" ry="18"
+        fill="url(#glassGrad)" filter="url(#shadow1)"
+        stroke="#ffffff" stroke-width="1.5"/>
+  <!-- BLOG text -->
+  <text x="240" y="58" font-family="Georgia, 'Times New Roman', serif"
+        font-size="32" font-weight="700" letter-spacing="6"
+        fill="#2a2a2a" text-anchor="middle" dominant-baseline="middle">BLOG</text>
+  <!-- ARTCRITQ.COM text -->
+  <text x="240" y="84" font-family="'Helvetica Neue', Arial, sans-serif"
+        font-size="11" letter-spacing="3" fill="#888888"
+        text-anchor="middle" dominant-baseline="middle">ARTCRITQ.COM</text>
+
+  <!-- === HOVER STATE === -->
+  <rect x="20" y="118" width="440" height="90" rx="18" ry="18"
+        fill="url(#solidGrad)" filter="url(#shadow2)"
+        stroke="#e8e8e8" stroke-width="1"/>
+  <!-- BLOG text -->
+  <text x="240" y="158" font-family="Georgia, 'Times New Roman', serif"
+        font-size="32" font-weight="700" letter-spacing="6"
+        fill="#1a1a1a" text-anchor="middle" dominant-baseline="middle">BLOG</text>
+  <!-- ARTCRITQ.COM text with underline -->
+  <text x="240" y="184" font-family="'Helvetica Neue', Arial, sans-serif"
+        font-size="11" letter-spacing="3" fill="#666666"
+        text-anchor="middle" dominant-baseline="middle"
+        text-decoration="underline">ARTCRITQ.COM</text>
+  <!-- Cursor icon -->
+  <g transform="translate(358, 188)" fill="white" stroke="#555" stroke-width="1.2">
+    <polygon points="0,0 0,18 5,13 9,20 11,19 7,12 14,12" stroke-linejoin="round"/>
+  </g>
+</svg>
