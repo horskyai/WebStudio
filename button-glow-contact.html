@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-26: Glow Contact Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #4a4a4a;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-glow-c {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .btn-glow-c:hover {
+            transform: scale(1.04);
+            filter: brightness(1.1);
+        }
+        .btn-glow-c:active { transform: scale(0.97); }
+
+        @keyframes glowPulseC {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .glow-anim { animation: glowPulseC 3s ease infinite; }
+    </style>
+</head>
+<body>
+
+<button class="btn-glow-c">
+    <svg width="340" height="130" viewBox="0 0 340 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Ambient bílý glow kolem buttonu -->
+            <filter id="outerGlowC" x="-20%" y="-30%" width="140%" height="160%">
+                <feGaussianBlur stdDeviation="14" result="blur"/>
+                <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="blur"/>
+                </feMerge>
+            </filter>
+
+            <!-- Hlavní fill — krémová bílá s warm tónem -->
+            <linearGradient id="glowFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#f5f0e8"/>
+                <stop offset="40%"  stop-color="#f0ece4"/>
+                <stop offset="100%" stop-color="#e8e2d8"/>
+            </linearGradient>
+
+            <!-- Horní lesk -->
+            <linearGradient id="glowShine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="rgba(255,255,255,0.9)"/>
+                <stop offset="35%"  stop-color="rgba(255,255,255,0.45)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+
+            <!-- Drop shadow pod buttonem -->
+            <filter id="btnShadowC" x="-8%" y="-12%" width="120%" height="130%">
+                <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(30,30,30,0.4)"/>
+            </filter>
+
+            <clipPath id="glowClip">
+                <rect x="20" y="18" width="300" height="94" rx="20"/>
+            </clipPath>
+        </defs>
+
+        <!-- Vnější white glow blur (ambient light) -->
+        <rect x="20" y="18" width="300" height="94" rx="20"
+              fill="rgba(255,255,255,0.9)"
+              filter="url(#outerGlowC)"
+              class="glow-anim"/>
+
+        <!-- Shadow -->
+        <rect x="20" y="18" width="300" height="94" rx="20"
+              fill="url(#glowFill)" filter="url(#btnShadowC)"/>
+
+        <!-- Hlavní tělo -->
+        <rect x="20" y="18" width="300" height="94" rx="20"
+              fill="url(#glowFill)"/>
+
+        <!-- Horní lesk -->
+        <rect x="20" y="18" width="300" height="47" rx="20"
+              fill="url(#glowShine)" clip-path="url(#glowClip)"/>
+
+        <!-- Border -->
+        <rect x="20" y="18" width="300" height="94" rx="20"
+              fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+
+        <!-- Text CONTACT -->
+        <text x="170" y="73"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="32" font-weight="300"
+              letter-spacing="6"
+              text-anchor="middle"
+              fill="#555555">CONTACT</text>
+    </svg>
+</button>
+
+</body>
+</html>

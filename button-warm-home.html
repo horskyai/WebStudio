@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-24: Warm Neumorphic Home Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #b8ae9e;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-warm {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease;
+        }
+        .btn-warm:hover { transform: scale(1.03); }
+        .btn-warm:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+
+<button class="btn-warm">
+    <svg width="360" height="110" viewBox="0 0 360 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Warm fill — beige/cream s teplým přechodem vlevo -->
+            <linearGradient id="warmFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stop-color="#ede5d8"/>
+                <stop offset="40%"  stop-color="#f5f0ea"/>
+                <stop offset="100%" stop-color="#f8f5f0"/>
+            </linearGradient>
+
+            <!-- Horní bílý lesk -->
+            <linearGradient id="warmShine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="rgba(255,255,255,0.85)"/>
+                <stop offset="35%"  stop-color="rgba(255,255,255,0.4)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+
+            <!-- Neumorphic shadow — teplý -->
+            <filter id="warmShadow" x="-12%" y="-18%" width="132%" height="148%">
+                <feDropShadow dx="-5" dy="6" stdDeviation="10" flood-color="rgba(100,80,60,0.35)" result="dark"/>
+                <feDropShadow dx="5" dy="-5" stdDeviation="10" flood-color="rgba(255,255,250,0.85)"/>
+            </filter>
+
+            <clipPath id="warmClip">
+                <rect x="8" y="8" width="344" height="94" rx="36"/>
+            </clipPath>
+        </defs>
+
+        <!-- Shadow + hlavní tělo -->
+        <rect x="8" y="8" width="344" height="94" rx="36"
+              fill="url(#warmFill)" filter="url(#warmShadow)"/>
+
+        <!-- Hlavní tělo -->
+        <rect x="8" y="8" width="344" height="94" rx="36"
+              fill="url(#warmFill)"/>
+
+        <!-- Horní lesk -->
+        <rect x="8" y="8" width="344" height="47" rx="36"
+              fill="url(#warmShine)" clip-path="url(#warmClip)"/>
+
+        <!-- Jemný border -->
+        <rect x="8" y="8" width="344" height="94" rx="36"
+              fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1"/>
+
+        <!-- Text HOME -->
+        <text x="200" y="56"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="28" font-weight="300"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="rgba(140,120,100,0.85)">HOME</text>
+
+        <!-- Underline pod textem -->
+        <line x1="148" y1="66" x2="250" y2="66"
+              stroke="rgba(160,140,120,0.45)" stroke-width="0.8"/>
+    </svg>
+</button>
+
+</body>
+</html>

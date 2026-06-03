@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-25: Pill Soft Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eeebe6;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-pill {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease;
+        }
+        .btn-pill:hover { transform: scale(1.04) translateY(-2px); }
+        .btn-pill:active { transform: scale(0.97) translateY(1px); }
+    </style>
+</head>
+<body>
+
+<button class="btn-pill">
+    <svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Pill fill — teplá růžová/béžová -->
+            <radialGradient id="pillFill" cx="35%" cy="35%" r="70%">
+                <stop offset="0%"   stop-color="#e8d4cc"/>
+                <stop offset="50%"  stop-color="#ddc8bf"/>
+                <stop offset="100%" stop-color="#cdb8ae"/>
+            </radialGradient>
+
+            <!-- Horní lesk -->
+            <linearGradient id="pillShine" x1="0.2" y1="0" x2="0.8" y2="1">
+                <stop offset="0%"   stop-color="rgba(255,255,255,0.6)"/>
+                <stop offset="40%"  stop-color="rgba(255,255,255,0.2)"/>
+                <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+
+            <!-- Shadow měkký -->
+            <filter id="pillShadow" x="-10%" y="-15%" width="128%" height="145%">
+                <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(150,120,110,0.35)"/>
+                <feDropShadow dx="0" dy="-2" stdDeviation="4" flood-color="rgba(255,255,255,0.6)"/>
+            </filter>
+
+            <clipPath id="pillClip">
+                <rect x="8" y="8" width="284" height="84" rx="42"/>
+            </clipPath>
+        </defs>
+
+        <!-- Shadow -->
+        <rect x="8" y="8" width="284" height="84" rx="42"
+              fill="url(#pillFill)" filter="url(#pillShadow)"/>
+
+        <!-- Hlavní pill tělo -->
+        <rect x="8" y="8" width="284" height="84" rx="42"
+              fill="url(#pillFill)"/>
+
+        <!-- Horní lesk -->
+        <rect x="8" y="8" width="284" height="42" rx="42"
+              fill="url(#pillShine)" clip-path="url(#pillClip)"/>
+
+        <!-- Jemný vnitřní border -->
+        <rect x="8" y="8" width="284" height="84" rx="42"
+              fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+
+        <!-- Text SERVICES -->
+        <text x="150" y="58"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="26" font-weight="400"
+              letter-spacing="4"
+              text-anchor="middle"
+              fill="#606060">SERVICES</text>
+    </svg>
+</button>
+
+</body>
+</html>
