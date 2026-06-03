@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-XX: Premium Access Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(ellipse at 20% 40%, rgba(100, 180, 220, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(120, 100, 180, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 80%, rgba(200, 150, 120, 0.3) 0%, transparent 50%),
+                #7a90b0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Wrapper pro glow efekt zvenku */
+        .btn-wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        /* Vnější neonový glow (rozmazaný duplicate) */
+        .btn-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 60px;
+            background: linear-gradient(110deg, #00e5ff 0%, #cc44ff 100%);
+            filter: blur(14px);
+            opacity: 0.7;
+            z-index: 0;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .btn-wrap:hover::before {
+            opacity: 1;
+            filter: blur(20px);
+        }
+
+        /* Hlavní button */
+        .btn-premium {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.1rem 3rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            outline: none;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-premium:hover { transform: scale(1.03); }
+        .btn-premium:active { transform: scale(0.98); }
+
+        /* SVG uvnitř buttonu — tvoří celý vizuál */
+        .btn-premium svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Text nad SVG */
+        .btn-label {
+            position: relative;
+            z-index: 2;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.4);
+            white-space: nowrap;
+            padding: 0 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-wrap">
+        <button class="btn-premium">
+
+            <!-- SVG: border gradient + inner glass + diagonal shine -->
+            <svg viewBox="0 0 340 72" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <defs>
+                    <!-- Gradient okraje: cyan vlevo → pink vpravo -->
+                    <linearGradient id="borderGrad" x1="0" y1="0" x2="340" y2="72" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#00e5ff"/>
+                        <stop offset="100%" stop-color="#dd44ff"/>
+                    </linearGradient>
+
+                    <!-- Glassmorphic fill -->
+                    <linearGradient id="glassGrad" x1="0" y1="0" x2="340" y2="72" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0.04)"/>
+                    </linearGradient>
+
+                    <!-- Diagonální odlesk -->
+                    <linearGradient id="shineGrad" x1="80" y1="0" x2="200" y2="72" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                        <stop offset="45%" stop-color="rgba(255,255,255,0.13)" />
+                        <stop offset="55%" stop-color="rgba(255,255,255,0.18)" />
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                    </linearGradient>
+
+                    <!-- Clip pro vnitřní plochu -->
+                    <clipPath id="innerClip">
+                        <rect x="3" y="3" width="334" height="66" rx="33"/>
+                    </clipPath>
+
+                    <!-- Blur filtr pro glow okraj -->
+                    <filter id="glowFilter" x="-5%" y="-20%" width="110%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Glassmorphic fill pozadí -->
+                <rect x="3" y="3" width="334" height="66" rx="33" fill="url(#glassGrad)"/>
+
+                <!-- Diagonální odlesk uvnitř -->
+                <rect x="3" y="3" width="334" height="66" rx="33" fill="url(#shineGrad)" clip-path="url(#innerClip)"/>
+
+                <!-- Tenká vnitřní bílá linka (inner border) -->
+                <rect x="5" y="5" width="330" height="62" rx="31"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.35)"
+                      stroke-width="1"/>
+
+                <!-- Hlavní neonový border s gradientem -->
+                <rect x="1.5" y="1.5" width="337" height="69" rx="34.5"
+                      fill="none"
+                      stroke="url(#borderGrad)"
+                      stroke-width="3"
+                      filter="url(#glowFilter)"/>
+            </svg>
+
+            <span class="btn-label">Premium Access</span>
+        </button>
+    </div>
+
+</body>
+</html>
