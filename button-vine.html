@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-19: Enchanted Vine Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 40%, #041a1a 0%, #020e10 50%, #010608 100%);
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        .btn-vine {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        .btn-vine:hover {
+            transform: scale(1.04);
+            filter: brightness(1.3) saturate(1.3);
+        }
+        .btn-vine:active { transform: scale(0.97); }
+
+        @keyframes vinePulse {
+            0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 8px rgba(0,220,200,0.5)); }
+            50% { opacity: 0.65; filter: drop-shadow(0 0 4px rgba(0,200,180,0.3)); }
+        }
+        @keyframes sparkleVine {
+            0%, 100% { opacity: 0; r: 1; }
+            30%, 70% { opacity: 0.9; r: 2.5; }
+            50% { opacity: 0.5; r: 3; }
+        }
+        @keyframes sparkleVine2 {
+            0%, 100% { opacity: 0; r: 1.5; }
+            40%, 60% { opacity: 0.8; r: 3; }
+        }
+        @keyframes bgGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+
+        .vine-path { animation: vinePulse 3s ease infinite; }
+        .sv1 { animation: sparkleVine 3s ease infinite var(--d, 0s); }
+        .sv2 { animation: sparkleVine2 3.5s ease infinite var(--d, 0.5s); }
+        .bg-glow { animation: bgGlow 4s ease infinite; }
+    </style>
+</head>
+<body>
+
+<button class="btn-vine">
+    <svg width="460" height="360" viewBox="0 0 460 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Glow filter pro popínavé rostliny -->
+            <filter id="vineGlow" x="-15%" y="-15%" width="130%" height="130%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Silnější glow pro hlavní větve -->
+            <filter id="vineBrightGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Ambient pozadí glow -->
+            <filter id="bgGlowF" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="25"/>
+            </filter>
+
+            <!-- Text glow -->
+            <filter id="textGlowV" x="-20%" y="-50%" width="140%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Sparkle glow -->
+            <filter id="spGlowV" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+        </defs>
+
+        <!-- Ambient background glow (zelená mlha) -->
+        <ellipse cx="230" cy="180" rx="180" ry="130"
+                 fill="rgba(0,160,140,0.18)" filter="url(#bgGlowF)"
+                 class="bg-glow"/>
+
+        <!-- ====== MAIN VINE FRAME ====== -->
+        <!-- Barva vinek: #40e0d0 (turquoise) s různými opacitami -->
+
+        <!-- === HORNÍ VĚTEV (vlnitá) === -->
+        <!-- Hlavní kmen horní -->
+        <path d="M 80 85 C 100 70, 130 60, 160 65 C 190 70, 210 55, 240 58 C 270 61, 295 52, 320 60 C 345 68, 365 58, 385 72"
+              stroke="#40e0d0" stroke-width="3.5" fill="none"
+              filter="url(#vineBrightGlow)" class="vine-path"/>
+
+        <!-- Druhá vrstva horní větve (volnější) -->
+        <path d="M 82 90 C 102 76, 132 68, 158 72 C 185 76, 208 62, 238 65 C 268 68, 293 60, 318 67 C 343 74, 363 66, 383 78"
+              stroke="rgba(64,224,208,0.5)" stroke-width="2" fill="none"
+              filter="url(#vineGlow)"/>
+
+        <!-- === LEVÁ VĚTEV (svislá) === -->
+        <path d="M 75 88 C 60 110, 55 135, 62 160 C 68 182, 58 205, 65 228 C 72 250, 62 268, 72 285"
+              stroke="#40e0d0" stroke-width="3.5" fill="none"
+              filter="url(#vineBrightGlow)" class="vine-path"/>
+        <path d="M 80 92 C 66 114, 62 138, 68 162 C 74 184, 65 207, 72 229 C 78 251, 68 270, 78 286"
+              stroke="rgba(64,224,208,0.5)" stroke-width="2" fill="none"
+              filter="url(#vineGlow)"/>
+
+        <!-- === PRAVÁ VĚTEV (svislá) === -->
+        <path d="M 385 75 C 398 98, 402 122, 395 148 C 388 172, 400 196, 392 218 C 384 240, 396 262, 386 280"
+              stroke="#40e0d0" stroke-width="3.5" fill="none"
+              filter="url(#vineBrightGlow)" class="vine-path"/>
+        <path d="M 380 79 C 393 102, 396 126, 389 151 C 382 174, 394 198, 386 220 C 378 242, 390 263, 380 281"
+              stroke="rgba(64,224,208,0.5)" stroke-width="2" fill="none"
+              filter="url(#vineGlow)"/>
+
+        <!-- === DOLNÍ VĚTEV (vlnitá) === -->
+        <path d="M 72 285 C 95 298, 125 308, 158 305 C 188 302, 212 315, 240 312 C 268 309, 292 320, 322 315 C 350 310, 368 300, 388 282"
+              stroke="#40e0d0" stroke-width="3.5" fill="none"
+              filter="url(#vineBrightGlow)" class="vine-path"/>
+        <path d="M 74 290 C 97 303, 127 312, 160 309 C 190 306, 214 318, 242 316 C 270 313, 294 323, 324 318 C 352 313, 370 304, 390 286"
+              stroke="rgba(64,224,208,0.5)" stroke-width="2" fill="none"
+              filter="url(#vineGlow)"/>
+
+        <!-- ====== LÍSTKY ====== -->
+        <!-- Horní větev lístky -->
+        <ellipse cx="108" cy="64" rx="8" ry="5" transform="rotate(-30 108 64)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="140" cy="58" rx="7" ry="4.5" transform="rotate(-10 140 58)" fill="rgba(64,224,208,0.75)" filter="url(#vineGlow)"/>
+        <ellipse cx="175" cy="62" rx="9" ry="5" transform="rotate(15 175 62)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="212" cy="55" rx="7" ry="4" transform="rotate(-20 212 55)" fill="rgba(64,224,208,0.7)" filter="url(#vineGlow)"/>
+        <ellipse cx="248" cy="57" rx="8" ry="5" transform="rotate(5 248 57)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="285" cy="53" rx="7" ry="4.5" transform="rotate(-15 285 53)" fill="rgba(64,224,208,0.72)" filter="url(#vineGlow)"/>
+        <ellipse cx="320" cy="58" rx="8" ry="5" transform="rotate(20 320 58)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+        <ellipse cx="355" cy="63" rx="7" ry="4" transform="rotate(-5 355 63)" fill="rgba(64,224,208,0.7)" filter="url(#vineGlow)"/>
+
+        <!-- Levá větev lístky -->
+        <ellipse cx="54" cy="112" rx="5" ry="8" transform="rotate(80 54 112)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+        <ellipse cx="52" cy="148" rx="5" ry="7" transform="rotate(-80 52 148)" fill="rgba(64,224,208,0.75)" filter="url(#vineGlow)"/>
+        <ellipse cx="58" cy="182" rx="5" ry="8" transform="rotate(85 58 182)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="54" cy="218" rx="5" ry="7" transform="rotate(-75 54 218)" fill="rgba(64,224,208,0.72)" filter="url(#vineGlow)"/>
+        <ellipse cx="60" cy="252" rx="5" ry="8" transform="rotate(82 60 252)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+
+        <!-- Pravá větev lístky -->
+        <ellipse cx="404" cy="108" rx="5" ry="8" transform="rotate(-80 404 108)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+        <ellipse cx="406" cy="145" rx="5" ry="7" transform="rotate(80 406 145)" fill="rgba(64,224,208,0.75)" filter="url(#vineGlow)"/>
+        <ellipse cx="400" cy="180" rx="5" ry="8" transform="rotate(-82 400 180)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="405" cy="215" rx="5" ry="7" transform="rotate(78 405 215)" fill="rgba(64,224,208,0.72)" filter="url(#vineGlow)"/>
+        <ellipse cx="400" cy="250" rx="5" ry="8" transform="rotate(-80 400 250)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+
+        <!-- Dolní větev lístky -->
+        <ellipse cx="108" cy="308" rx="8" ry="5" transform="rotate(20 108 308)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="145" cy="315" rx="7" ry="4.5" transform="rotate(5 145 315)" fill="rgba(64,224,208,0.75)" filter="url(#vineGlow)"/>
+        <ellipse cx="182" cy="308" rx="8" ry="5" transform="rotate(-15 182 308)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+        <ellipse cx="220" cy="316" rx="7" ry="4" transform="rotate(10 220 316)" fill="rgba(64,224,208,0.72)" filter="url(#vineGlow)"/>
+        <ellipse cx="258" cy="312" rx="8" ry="5" transform="rotate(-8 258 312)" fill="rgba(64,224,208,0.8)" filter="url(#vineGlow)"/>
+        <ellipse cx="295" cy="318" rx="7" ry="4.5" transform="rotate(18 295 318)" fill="rgba(64,224,208,0.75)" filter="url(#vineGlow)"/>
+        <ellipse cx="332" cy="312" rx="8" ry="5" transform="rotate(-12 332 312)" fill="rgba(64,224,208,0.78)" filter="url(#vineGlow)"/>
+        <ellipse cx="364" cy="306" rx="7" ry="4" transform="rotate(8 364 306)" fill="rgba(64,224,208,0.7)" filter="url(#vineGlow)"/>
+
+        <!-- Rohové uzly (knot detail) -->
+        <circle cx="80" cy="87" r="5" fill="rgba(64,224,208,0.9)" filter="url(#vineGlow)"/>
+        <circle cx="384" cy="75" r="5" fill="rgba(64,224,208,0.9)" filter="url(#vineGlow)"/>
+        <circle cx="73" cy="285" r="5" fill="rgba(64,224,208,0.9)" filter="url(#vineGlow)"/>
+        <circle cx="388" cy="281" r="5" fill="rgba(64,224,208,0.9)" filter="url(#vineGlow)"/>
+
+        <!-- Malé květy v rozích -->
+        <!-- Levý horní -->
+        <circle cx="80" cy="87" r="3" fill="#40e0d0" filter="url(#vineBrightGlow)"/>
+        <circle cx="68" cy="80" r="2" fill="rgba(64,224,208,0.7)"/>
+        <circle cx="90" cy="78" r="2" fill="rgba(64,224,208,0.65)"/>
+
+        <!-- Dolní střed (květ) -->
+        <circle cx="230" cy="312" r="4" fill="rgba(64,224,208,0.9)" filter="url(#vineBrightGlow)"/>
+        <circle cx="218" cy="320" r="2.5" fill="rgba(64,224,208,0.6)"/>
+        <circle cx="242" cy="320" r="2.5" fill="rgba(64,224,208,0.6)"/>
+
+        <!-- ====== SPARKLE TEČKY ====== -->
+        <circle cx="160" cy="52" r="2" fill="rgba(160,240,230,0.9)" class="sv1" style="--d:0s" filter="url(#spGlowV)"/>
+        <circle cx="240" cy="48" r="1.8" fill="white" class="sv2" style="--d:0.8s" filter="url(#spGlowV)"/>
+        <circle cx="320" cy="55" r="2" fill="rgba(160,240,230,0.9)" class="sv1" style="--d:1.6s" filter="url(#spGlowV)"/>
+        <circle cx="50" cy="160" r="1.8" fill="white" class="sv2" style="--d:0.4s" filter="url(#spGlowV)"/>
+        <circle cx="48" cy="220" r="2" fill="rgba(160,240,230,0.8)" class="sv1" style="--d:1.2s" filter="url(#spGlowV)"/>
+        <circle cx="408" cy="150" r="1.8" fill="white" class="sv2" style="--d:2s" filter="url(#spGlowV)"/>
+        <circle cx="406" cy="210" r="2" fill="rgba(160,240,230,0.8)" class="sv1" style="--d:0.6s" filter="url(#spGlowV)"/>
+        <circle cx="145" cy="322" r="1.8" fill="white" class="sv2" style="--d:1.4s" filter="url(#spGlowV)"/>
+        <circle cx="310" cy="320" r="2" fill="rgba(160,240,230,0.9)" class="sv1" style="--d:0.2s" filter="url(#spGlowV)"/>
+
+        <!-- ====== TEXT MENU ====== -->
+        <!-- Glow layer -->
+        <text x="230" y="205"
+              font-family="'Georgia', 'Times New Roman', serif"
+              font-size="52" font-weight="400"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="rgba(64,224,208,0.5)"
+              filter="url(#textGlowV)">MENU</text>
+
+        <!-- Hlavní text -->
+        <text x="230" y="205"
+              font-family="'Georgia', 'Times New Roman', serif"
+              font-size="52" font-weight="400"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="#40e0d0">MENU</text>
+
+    </svg>
+</button>
+
+</body>
+</html>

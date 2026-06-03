@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-22: Portfolio Blob Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 30% 40%, rgba(50,60,80,0.7) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 60%, rgba(60,50,40,0.5) 0%, transparent 50%),
+                        #141820;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-portfolio {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+        .btn-portfolio:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1) saturate(1.15);
+        }
+        .btn-portfolio:active { transform: scale(0.97); }
+
+        @keyframes blobFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.02); }
+        }
+        @keyframes blobFloat2 {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(5px) scale(0.98); }
+        }
+        @keyframes dotPulseP {
+            0%, 100% { opacity: 0.8; r: 4; }
+            50% { opacity: 0.3; r: 6; }
+        }
+        @keyframes orbitLine {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -400; }
+        }
+        @keyframes bgBlur {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.9; }
+        }
+
+        .blob1 { animation: blobFloat 5s ease-in-out infinite; transform-origin: center; }
+        .blob2 { animation: blobFloat2 6s ease-in-out infinite 1s; transform-origin: center; }
+        .blob3 { animation: blobFloat 7s ease-in-out infinite 2s; transform-origin: center; }
+        .dp-p { animation: dotPulseP 3s ease infinite; }
+        .dp-p2 { animation: dotPulseP 3s ease infinite 1s; }
+        .orbit { animation: orbitLine 8s linear infinite; }
+        .bg-b { animation: bgBlur 5s ease infinite; }
+    </style>
+</head>
+<body>
+
+<button class="btn-portfolio">
+    <svg width="460" height="380" viewBox="0 0 460 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Pastelové blob gradienty -->
+            <!-- Teal/modrý blob (tmavý - hlavní pozadí) -->
+            <radialGradient id="blobTeal" cx="45%" cy="45%" r="60%">
+                <stop offset="0%"   stop-color="rgba(40,90,90,0.95)"/>
+                <stop offset="50%"  stop-color="rgba(30,70,75,0.85)"/>
+                <stop offset="100%" stop-color="rgba(20,50,55,0.7)"/>
+            </radialGradient>
+
+            <!-- Fialový blob (vlevo) -->
+            <radialGradient id="blobPurple" cx="40%" cy="50%" r="60%">
+                <stop offset="0%"   stop-color="rgba(140,110,170,0.75)"/>
+                <stop offset="50%"  stop-color="rgba(110,80,140,0.55)"/>
+                <stop offset="100%" stop-color="rgba(80,55,110,0.3)"/>
+            </radialGradient>
+
+            <!-- Peach/oranžový blob (vpravo) -->
+            <radialGradient id="blobPeach" cx="60%" cy="55%" r="60%">
+                <stop offset="0%"   stop-color="rgba(200,160,120,0.7)"/>
+                <stop offset="50%"  stop-color="rgba(170,130,90,0.5)"/>
+                <stop offset="100%" stop-color="rgba(140,100,70,0.25)"/>
+            </radialGradient>
+
+            <!-- Malý teal satelitní blob -->
+            <radialGradient id="blobTealSmall" cx="50%" cy="50%" r="60%">
+                <stop offset="0%"   stop-color="rgba(40,120,110,0.8)"/>
+                <stop offset="100%" stop-color="rgba(25,80,75,0.4)"/>
+            </radialGradient>
+
+            <!-- Hlavní button fill (teal hluboký) -->
+            <linearGradient id="btnFillP" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#2d5e60"/>
+                <stop offset="100%" stop-color="#1e4145"/>
+            </linearGradient>
+
+            <!-- Jemná orbitální linka -->
+            <linearGradient id="orbitGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stop-color="rgba(200,180,150,0)"/>
+                <stop offset="30%"  stop-color="rgba(200,180,150,0.5)"/>
+                <stop offset="70%"  stop-color="rgba(200,180,150,0.4)"/>
+                <stop offset="100%" stop-color="rgba(200,180,150,0)"/>
+            </linearGradient>
+
+            <!-- Blur pro bloby -->
+            <filter id="blobBlurP" x="-15%" y="-15%" width="130%" height="130%">
+                <feGaussianBlur stdDeviation="16"/>
+            </filter>
+            <filter id="blobBlurS" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="10"/>
+            </filter>
+
+            <!-- Button shadow -->
+            <filter id="btnShadowP" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="rgba(0,0,0,0.5)"/>
+            </filter>
+
+            <!-- Dot glow -->
+            <filter id="dotGlowP" x="-80%" y="-80%" width="260%" height="260%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <clipPath id="btnClipP">
+                <rect x="100" y="130" width="260" height="120" rx="24"/>
+            </clipPath>
+        </defs>
+
+        <!-- Ambient pozadí blobs (unsharped) -->
+        <!-- Fialový blob vlevo -->
+        <ellipse cx="160" cy="190" rx="160" ry="120"
+                 fill="url(#blobPurple)" filter="url(#blobBlurP)"
+                 class="blob2 bg-b"/>
+
+        <!-- Peach blob vpravo -->
+        <ellipse cx="320" cy="210" rx="145" ry="110"
+                 fill="url(#blobPeach)" filter="url(#blobBlurP)"
+                 class="blob3 bg-b"/>
+
+        <!-- Teal blob střed-vlevo -->
+        <ellipse cx="185" cy="200" rx="130" ry="100"
+                 fill="url(#blobTeal)" filter="url(#blobBlurP)"
+                 class="blob1"/>
+
+        <!-- Malé satelitní blobíky -->
+        <ellipse cx="142" cy="138" rx="32" ry="24"
+                 fill="rgba(140,110,170,0.7)" filter="url(#blobBlurS)"
+                 class="blob2"/>
+        <ellipse cx="118" cy="210" rx="24" ry="30"
+                 fill="rgba(40,100,90,0.75)" filter="url(#blobBlurS)"
+                 class="blob3"/>
+        <ellipse cx="145" cy="272" rx="20" ry="16"
+                 fill="rgba(40,100,90,0.7)" filter="url(#blobBlurS)"
+                 class="blob1"/>
+        <ellipse cx="315" cy="280" rx="28" ry="20"
+                 fill="rgba(200,160,120,0.65)" filter="url(#blobBlurS)"
+                 class="blob2"/>
+        <ellipse cx="348" cy="148" rx="18" ry="22"
+                 fill="rgba(140,110,170,0.6)" filter="url(#blobBlurS)"
+                 class="blob3"/>
+
+        <!-- Orbitální elipsa (dekorativní) -->
+        <ellipse cx="230" cy="195" rx="175" ry="120"
+                 fill="none" stroke="url(#orbitGrad)" stroke-width="0.8"
+                 stroke-dasharray="8 12"
+                 class="orbit" opacity="0.6"/>
+
+        <!-- Tečky na orbitě -->
+        <circle cx="145" cy="135" r="4" fill="rgba(220,200,170,0.9)"
+                class="dp-p" filter="url(#dotGlowP)"/>
+        <circle cx="348" cy="145" r="3.5" fill="rgba(220,200,170,0.8)"
+                class="dp-p2" filter="url(#dotGlowP)"/>
+        <circle cx="135" cy="258" r="4" fill="rgba(220,200,170,0.85)"
+                class="dp-p" filter="url(#dotGlowP)"/>
+        <circle cx="340" cy="275" r="3.5" fill="rgba(220,200,170,0.75)"
+                class="dp-p2" filter="url(#dotGlowP)"/>
+
+        <!-- Malé scatter tečky -->
+        <circle cx="180" cy="118" r="2" fill="rgba(220,200,170,0.7)" class="dp-p"/>
+        <circle cx="295" cy="112" r="2.5" fill="rgba(200,180,255,0.7)" class="dp-p2"/>
+        <circle cx="355" cy="220" r="2" fill="rgba(220,200,170,0.6)" class="dp-p"/>
+        <circle cx="105" cy="225" r="2" fill="rgba(200,180,255,0.6)" class="dp-p2"/>
+        <circle cx="218" cy="295" r="2.5" fill="rgba(220,200,170,0.7)" class="dp-p"/>
+        <circle cx="290" cy="300" r="2" fill="rgba(200,180,255,0.65)" class="dp-p2"/>
+
+        <!-- Hlavní button -->
+        <rect x="100" y="130" width="260" height="120" rx="24"
+              fill="url(#btnFillP)" filter="url(#btnShadowP)"/>
+
+        <!-- Jemný top shine -->
+        <rect x="100" y="130" width="260" height="50" rx="24"
+              fill="rgba(255,255,255,0.06)" clip-path="url(#btnClipP)"/>
+
+        <!-- Vnitřní jemný border -->
+        <rect x="100" y="130" width="260" height="120" rx="24"
+              fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+        <!-- Text PORTFOLIO -->
+        <text x="230" y="202"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="32" font-weight="500"
+              letter-spacing="5"
+              text-anchor="middle"
+              fill="white">PORTFOLIO</text>
+
+        <!-- Jemný white overlay na text -->
+        <text x="230" y="202"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="32" font-weight="500"
+              letter-spacing="5"
+              text-anchor="middle"
+              fill="rgba(255,255,255,0.12)">PORTFOLIO</text>
+    </svg>
+</button>
+
+</body>
+</html>

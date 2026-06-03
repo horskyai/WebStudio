@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-20: Minimal Underline Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #3d3d3d;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-minimal {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.3s ease;
+        }
+        .btn-minimal:hover { transform: scale(1.03); }
+        .btn-minimal:hover .underline-expand {
+            transform: scaleX(1.15);
+        }
+        .btn-minimal:active { transform: scale(0.98); }
+
+        @keyframes underlinePulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        .underline-expand {
+            transition: transform 0.4s ease;
+            transform-origin: center;
+            animation: underlinePulse 3s ease infinite;
+        }
+    </style>
+</head>
+<body>
+
+<button class="btn-minimal">
+    <svg width="420" height="120" viewBox="0 0 420 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Text gradient — světle šedá -->
+            <linearGradient id="minimalText" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#d8d8d8"/>
+                <stop offset="100%" stop-color="#a8a8a8"/>
+            </linearGradient>
+
+            <!-- Underline gradient -->
+            <linearGradient id="underlineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stop-color="rgba(200,200,200,0)"/>
+                <stop offset="20%"  stop-color="rgba(200,200,200,0.8)"/>
+                <stop offset="50%"  stop-color="rgba(220,220,220,1)"/>
+                <stop offset="80%"  stop-color="rgba(200,200,200,0.8)"/>
+                <stop offset="100%" stop-color="rgba(200,200,200,0)"/>
+            </linearGradient>
+        </defs>
+
+        <!-- Text NAVIGATION -->
+        <text x="210" y="68"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="42" font-weight="300"
+              letter-spacing="10"
+              text-anchor="middle"
+              fill="url(#minimalText)">NAVIGATION</text>
+
+        <!-- Underline -->
+        <line x1="30" y1="84" x2="390" y2="84"
+              stroke="url(#underlineGrad)" stroke-width="1"
+              class="underline-expand"/>
+    </svg>
+</button>
+
+</body>
+</html>

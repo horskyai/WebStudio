@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-17: Galaxy Navigate Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 30% 40%, #0d1b3e 0%, #080c1a 60%, #030508 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Hvězdičky na pozadí */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .btn-galaxy {
+            position: relative;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .btn-galaxy:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2) saturate(1.3);
+        }
+        .btn-galaxy:active { transform: scale(0.97); }
+
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.2; }
+        }
+        @keyframes borderFlow {
+            0%   { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -1400; }
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .star { animation: starTwinkle var(--d, 2s) ease infinite var(--delay, 0s); }
+        .border-flow { animation: borderFlow 6s linear infinite; }
+        .glow-pulse { animation: glowPulse 3s ease infinite; }
+    </style>
+</head>
+<body>
+
+<svg class="stars" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+    <!-- Hvězdičky scatter -->
+    <circle cx="80" cy="60" r="1.2" fill="white" class="star" style="--d:2.3s;--delay:0s"/>
+    <circle cx="150" cy="120" r="0.8" fill="white" class="star" style="--d:1.8s;--delay:0.5s"/>
+    <circle cx="220" cy="45" r="1.5" fill="rgba(180,200,255,0.9)" class="star" style="--d:2.8s;--delay:0.3s"/>
+    <circle cx="350" cy="80" r="1" fill="rgba(255,220,180,0.9)" class="star" style="--d:3.2s;--delay:1s"/>
+    <circle cx="500" cy="50" r="1.3" fill="white" class="star" style="--d:2s;--delay:0.7s"/>
+    <circle cx="620" cy="100" r="0.9" fill="white" class="star" style="--d:2.5s;--delay:0.2s"/>
+    <circle cx="700" cy="60" r="1.6" fill="rgba(200,180,255,0.9)" class="star" style="--d:1.9s;--delay:1.2s"/>
+    <circle cx="750" cy="150" r="1" fill="white" class="star" style="--d:3s;--delay:0.4s"/>
+    <circle cx="60" cy="200" r="1.4" fill="rgba(255,220,150,0.8)" class="star" style="--d:2.2s;--delay:0.8s"/>
+    <circle cx="120" cy="350" r="1.1" fill="white" class="star" style="--d:2.7s;--delay:0.1s"/>
+    <circle cx="680" cy="300" r="1.3" fill="rgba(180,220,255,0.9)" class="star" style="--d:2.1s;--delay:0.6s"/>
+    <circle cx="740" cy="420" r="0.8" fill="white" class="star" style="--d:3.1s;--delay:1.4s"/>
+    <circle cx="90" cy="450" r="1.5" fill="rgba(255,200,180,0.8)" class="star" style="--d:2.4s;--delay:0.9s"/>
+    <circle cx="200" cy="500" r="1" fill="white" class="star" style="--d:2s;--delay:0.3s"/>
+    <circle cx="580" cy="520" r="1.2" fill="rgba(200,255,220,0.8)" class="star" style="--d:2.6s;--delay:1.1s"/>
+    <circle cx="660" cy="560" r="0.9" fill="white" class="star" style="--d:1.7s;--delay:0.5s"/>
+    <!-- Větší hvězdy (bokeh efekt) -->
+    <circle cx="320" cy="150" r="3" fill="rgba(255,255,255,0.15)" class="star" style="--d:4s;--delay:0.5s"/>
+    <circle cx="480" cy="420" r="4" fill="rgba(255,220,180,0.12)" class="star" style="--d:5s;--delay:1.5s"/>
+    <circle cx="100" cy="300" r="3.5" fill="rgba(180,200,255,0.1)" class="star" style="--d:4.5s;--delay:2s"/>
+    <circle cx="700" cy="200" r="3" fill="rgba(255,255,255,0.1)" class="star" style="--d:3.8s;--delay:0.8s"/>
+</svg>
+
+<button class="btn-galaxy">
+    <svg width="480" height="160" viewBox="0 0 480 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Nebula galaxy fill uvnitř buttonu -->
+            <radialGradient id="nebula1" cx="30%" cy="60%" r="60%">
+                <stop offset="0%"   stop-color="rgba(100,60,180,0.8)"/>
+                <stop offset="50%"  stop-color="rgba(40,30,100,0.6)"/>
+                <stop offset="100%" stop-color="rgba(5,10,30,0.5)"/>
+            </radialGradient>
+            <radialGradient id="nebula2" cx="70%" cy="35%" r="55%">
+                <stop offset="0%"   stop-color="rgba(30,80,180,0.7)"/>
+                <stop offset="50%"  stop-color="rgba(20,50,120,0.5)"/>
+                <stop offset="100%" stop-color="rgba(5,10,30,0.4)"/>
+            </radialGradient>
+
+            <!-- RGB border gradient - cyan→pink→yellow -->
+            <linearGradient id="borderGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stop-color="#00e5ff"/>
+                <stop offset="35%"  stop-color="#00ccff"/>
+                <stop offset="60%"  stop-color="#dd44ff"/>
+                <stop offset="80%"  stop-color="#ff44cc"/>
+                <stop offset="100%" stop-color="#ffaa22"/>
+            </linearGradient>
+
+            <!-- Inner softer border -->
+            <linearGradient id="innerBorder" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%"   stop-color="rgba(0,200,255,0.5)"/>
+                <stop offset="50%"  stop-color="rgba(200,80,255,0.4)"/>
+                <stop offset="100%" stop-color="rgba(255,180,50,0.3)"/>
+            </linearGradient>
+
+            <!-- Glow blur -->
+            <filter id="borderGlow" x="-6%" y="-20%" width="112%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Text glow -->
+            <filter id="textGlowG" x="-15%" y="-40%" width="130%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Star inside button -->
+            <filter id="starGlow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <clipPath id="galaxyClip">
+                <rect x="6" y="6" width="468" height="148" rx="28"/>
+            </clipPath>
+        </defs>
+
+        <!-- Hlavní tmavé pozadí -->
+        <rect x="6" y="6" width="468" height="148" rx="28"
+              fill="#05080f"/>
+
+        <!-- Nebula vrstva 1 -->
+        <rect x="6" y="6" width="468" height="148" rx="28"
+              fill="url(#nebula1)" clip-path="url(#galaxyClip)"/>
+
+        <!-- Nebula vrstva 2 -->
+        <rect x="6" y="6" width="468" height="148" rx="28"
+              fill="url(#nebula2)" clip-path="url(#galaxyClip)"/>
+
+        <!-- Hvězdičky uvnitř buttonu -->
+        <circle cx="40" cy="35" r="1" fill="white" opacity="0.6" filter="url(#starGlow)"/>
+        <circle cx="90" cy="55" r="0.8" fill="white" opacity="0.5"/>
+        <circle cx="55" cy="110" r="1.2" fill="rgba(180,220,255,0.7)" filter="url(#starGlow)"/>
+        <circle cx="380" cy="30" r="1" fill="white" opacity="0.7" filter="url(#starGlow)"/>
+        <circle cx="420" cy="60" r="0.8" fill="rgba(255,200,150,0.6)"/>
+        <circle cx="440" cy="120" r="1" fill="white" opacity="0.5"/>
+        <circle cx="360" cy="130" r="0.7" fill="rgba(200,180,255,0.6)"/>
+        <circle cx="120" cy="130" r="0.9" fill="rgba(255,220,150,0.5)"/>
+        <circle cx="200" cy="25" r="0.8" fill="white" opacity="0.4"/>
+        <circle cx="330" cy="140" r="1" fill="white" opacity="0.5"/>
+        <!-- Jasné hvězdy -->
+        <circle cx="350" cy="45" r="2" fill="white" opacity="0.9" filter="url(#starGlow)"/>
+        <circle cx="70" cy="80" r="1.8" fill="rgba(180,220,255,0.9)" filter="url(#starGlow)"/>
+
+        <!-- Vnější glow border (rainbow) -->
+        <rect x="4" y="4" width="472" height="152" rx="30"
+              fill="none" stroke="url(#borderGrad)" stroke-width="3"
+              filter="url(#borderGlow)" class="glow-pulse"/>
+
+        <!-- Hlavní border -->
+        <rect x="4" y="4" width="472" height="152" rx="30"
+              fill="none" stroke="url(#borderGrad)" stroke-width="2"/>
+
+        <!-- Inner softer border -->
+        <rect x="10" y="10" width="460" height="140" rx="25"
+              fill="none" stroke="url(#innerBorder)" stroke-width="1"/>
+
+        <!-- Text NAVIGATE - glow layer -->
+        <text x="240" y="96"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="44" font-weight="700"
+              letter-spacing="6"
+              text-anchor="middle"
+              fill="rgba(255,255,255,0.4)"
+              filter="url(#textGlowG)">NAVIGATE</text>
+
+        <!-- Text NAVIGATE - hlavní -->
+        <text x="240" y="96"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="44" font-weight="700"
+              letter-spacing="6"
+              text-anchor="middle"
+              fill="white">NAVIGATE</text>
+    </svg>
+</button>
+
+</body>
+</html>

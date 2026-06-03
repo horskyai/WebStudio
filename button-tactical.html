@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-21: Tactical HUD Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a0a;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-tactical {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .btn-tactical:hover {
+            transform: scale(1.03);
+            filter: brightness(1.3) saturate(1.2);
+        }
+        .btn-tactical:active { transform: scale(0.97); }
+
+        @keyframes tacBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        @keyframes tacScan {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.2; }
+        }
+        @keyframes orangeFlash {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes dashAnim {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -60; }
+        }
+
+        .tb { animation: tacBlink 2s ease infinite; }
+        .tb2 { animation: tacBlink 2s ease infinite 0.7s; }
+        .ts { animation: tacScan 3s ease infinite; }
+        .of { animation: orangeFlash 2.5s ease infinite; }
+        .da { animation: dashAnim 4s linear infinite; }
+        .da2 { animation: dashAnim 4s linear infinite 2s; }
+    </style>
+</head>
+<body>
+
+<button class="btn-tactical">
+    <svg width="560" height="240" viewBox="0 0 560 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Tmavý fill -->
+            <linearGradient id="tacFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#0d1518"/>
+                <stop offset="100%" stop-color="#060c0e"/>
+            </linearGradient>
+
+            <!-- Cyan glow -->
+            <filter id="cyanTac" x="-10%" y="-20%" width="120%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Orange glow -->
+            <filter id="orangeTac" x="-10%" y="-20%" width="120%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Strong glow pro outer border -->
+            <filter id="strongGlow" x="-8%" y="-15%" width="116%" height="130%">
+                <feGaussianBlur stdDeviation="7" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Text glow -->
+            <filter id="textGlowT" x="-10%" y="-30%" width="120%" height="160%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+        </defs>
+
+        <!-- === OUTER FRAME (zaoblený hexagon tvar) === -->
+        <!-- Vnější velký cyan border s glow -->
+        <path d="M 60 30 L 500 30 L 530 60 L 540 80 L 540 160 L 530 180 L 500 210 L 60 210 L 30 180 L 20 160 L 20 80 L 30 60 Z"
+              fill="url(#tacFill)" stroke="#00d4ff" stroke-width="2.5"
+              filter="url(#strongGlow)"/>
+
+        <!-- Druhý vnitřní border cyan -->
+        <path d="M 68 40 L 492 40 L 520 68 L 528 85 L 528 155 L 520 172 L 492 200 L 68 200 L 40 172 L 32 155 L 32 85 L 40 68 Z"
+              fill="none" stroke="#00d4ff" stroke-width="1.5"
+              filter="url(#cyanTac)" opacity="0.7"/>
+
+        <!-- Třetí ještě vnitřnější border -->
+        <path d="M 78 52 L 482 52 L 506 76 L 514 92 L 514 148 L 506 164 L 482 188 L 78 188 L 54 164 L 46 148 L 46 92 L 54 76 Z"
+              fill="none" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+
+        <!-- === ORANGE AKCENTY === -->
+        <!-- Horní střed oranžová dash čára -->
+        <line x1="180" y1="30" x2="380" y2="30"
+              stroke="#ff8800" stroke-width="2" opacity="0.8" class="da"
+              stroke-dasharray="12 6" filter="url(#orangeTac)"/>
+
+        <!-- Spodní střed oranžová dash čára -->
+        <line x1="180" y1="210" x2="380" y2="210"
+              stroke="#ff8800" stroke-width="2" opacity="0.8" class="da2"
+              stroke-dasharray="12 6" filter="url(#orangeTac)"/>
+
+        <!-- Oranžové rohové akcenty -->
+        <!-- Levý horní -->
+        <line x1="60" y1="30" x2="100" y2="30" stroke="#ff8800" stroke-width="3" class="of" filter="url(#orangeTac)"/>
+        <line x1="20" y1="80" x2="20" y2="120" stroke="#ff8800" stroke-width="3" class="of" filter="url(#orangeTac)"/>
+        <!-- Pravý horní -->
+        <line x1="460" y1="30" x2="500" y2="30" stroke="#ff8800" stroke-width="3" class="of" filter="url(#orangeTac)"/>
+        <line x1="540" y1="80" x2="540" y2="120" stroke="#ff8800" stroke-width="3" class="of" filter="url(#orangeTac)"/>
+        <!-- Levý dolní -->
+        <line x1="60" y1="210" x2="100" y2="210" stroke="#ff8800" stroke-width="3" class="tb2" filter="url(#orangeTac)"/>
+        <line x1="20" y1="160" x2="20" y2="120" stroke="#ff8800" stroke-width="3" class="tb2" filter="url(#orangeTac)"/>
+        <!-- Pravý dolní -->
+        <line x1="460" y1="210" x2="500" y2="210" stroke="#ff8800" stroke-width="3" class="tb2" filter="url(#orangeTac)"/>
+        <line x1="540" y1="160" x2="540" y2="120" stroke="#ff8800" stroke-width="3" class="tb2" filter="url(#orangeTac)"/>
+
+        <!-- === CIRCUIT DETAIL LINKY === -->
+        <!-- Horní sekce drobné detaily -->
+        <!-- Levá strana horní -->
+        <line x1="40" y1="68" x2="68" y2="40" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+        <line x1="32" y1="85" x2="46" y2="92" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+
+        <!-- Pravá strana horní -->
+        <line x1="492" y1="40" x2="520" y2="68" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+        <line x1="514" y1="92" x2="528" y2="85" stroke="#00d4ff" stroke-width="1" opacity="0.4"/>
+
+        <!-- Šrafované panely (malé čtverečky) nahoře -->
+        <rect x="120" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.6"/>
+        <rect x="132" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+        <rect x="144" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.45"/>
+        <!-- Vpravo -->
+        <rect x="412" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.45"/>
+        <rect x="424" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+        <rect x="436" y="34" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.6"/>
+
+        <!-- Šrafované panely dole -->
+        <rect x="120" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.6"/>
+        <rect x="132" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+        <rect x="144" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.45"/>
+        <rect x="412" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.45"/>
+        <rect x="424" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+        <rect x="436" y="200" width="8" height="6" fill="none" stroke="#00d4ff" stroke-width="0.8" opacity="0.6"/>
+
+        <!-- Trojúhelníkové indikátory -->
+        <polygon points="112,32 118,22 124,32" fill="#ff8800" opacity="0.85" filter="url(#orangeTac)"/>
+        <polygon points="436,32 442,22 448,32" fill="#ff8800" opacity="0.85" filter="url(#orangeTac)"/>
+        <polygon points="112,208 118,218 124,208" fill="#ff8800" opacity="0.85" filter="url(#orangeTac)"/>
+        <polygon points="436,208 442,218 448,208" fill="#ff8800" opacity="0.85" filter="url(#orangeTac)"/>
+
+        <!-- Malé tečky-markery -->
+        <circle cx="60" cy="30" r="3.5" fill="#00d4ff" filter="url(#cyanTac)" class="tb"/>
+        <circle cx="500" cy="30" r="3.5" fill="#00d4ff" filter="url(#cyanTac)" class="tb2"/>
+        <circle cx="60" cy="210" r="3.5" fill="#00d4ff" filter="url(#cyanTac)" class="tb2"/>
+        <circle cx="500" cy="210" r="3.5" fill="#00d4ff" filter="url(#cyanTac)" class="tb"/>
+        <circle cx="20" cy="80" r="3" fill="#ff8800" filter="url(#orangeTac)" class="of"/>
+        <circle cx="540" cy="80" r="3" fill="#ff8800" filter="url(#orangeTac)" class="of"/>
+        <circle cx="20" cy="160" r="3" fill="#ff8800" filter="url(#orangeTac)" class="tb2"/>
+        <circle cx="540" cy="160" r="3" fill="#ff8800" filter="url(#orangeTac)" class="tb2"/>
+
+        <!-- Crosshair středový indikátor (spodní) -->
+        <line x1="270" y1="195" x2="280" y2="188" stroke="#ff8800" stroke-width="1.5" opacity="0.7"/>
+        <line x1="290" y1="195" x2="280" y2="188" stroke="#ff8800" stroke-width="1.5" opacity="0.7"/>
+        <circle cx="280" cy="210" r="2.5" fill="#ff8800" opacity="0.8"/>
+
+        <!-- Levá dekorativní závorka -->
+        <path d="M 80 108 L 70 120 L 80 132" stroke="#00d4ff" stroke-width="2.5" fill="none" filter="url(#cyanTac)"/>
+
+        <!-- Pravá dekorativní závorka -->
+        <path d="M 480 108 L 490 120 L 480 132" stroke="#00d4ff" stroke-width="2.5" fill="none" filter="url(#cyanTac)"/>
+
+        <!-- === SCAN LINE === -->
+        <line x1="46" y1="120" x2="514" y2="120"
+              stroke="#00d4ff" stroke-width="0.5" opacity="0.12" class="ts"/>
+
+        <!-- === HLAVNÍ TEXT === -->
+        <text x="280" y="132"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="38" font-weight="700"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="#00d4ff"
+              filter="url(#textGlowT)"
+              opacity="0.6">TACTICAL MAP</text>
+
+        <text x="280" y="132"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="38" font-weight="700"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="#00e8ff">TACTICAL MAP</text>
+
+    </svg>
+</button>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-18: Lightning Energy Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 50%, #0a1628 0%, #060c18 60%, #020408 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-lightning {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .btn-lightning:hover {
+            transform: scale(1.04);
+            filter: brightness(1.25) saturate(1.2);
+        }
+        .btn-lightning:active { transform: scale(0.96); }
+
+        @keyframes energyPulse {
+            0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 12px rgba(0,160,255,0.7)); }
+            50% { opacity: 0.5; filter: drop-shadow(0 0 6px rgba(0,140,255,0.4)); }
+        }
+        @keyframes lightningFlash {
+            0%, 85%, 100% { opacity: 1; }
+            86%, 88% { opacity: 0.3; }
+            87% { opacity: 0.8; }
+            89%, 91% { opacity: 0.6; }
+            90% { opacity: 0.2; }
+        }
+        @keyframes spikeAnim {
+            0%, 100% { transform: scaleY(1); opacity: 0.8; }
+            50% { transform: scaleY(0.85); opacity: 0.5; }
+        }
+        @keyframes glowBurst {
+            0%, 100% { opacity: 0.6; r: 80; }
+            50% { opacity: 0.9; r: 95; }
+        }
+
+        .energy-core { animation: energyPulse 2s ease infinite; }
+        .lightning-main { animation: lightningFlash 4s ease-in-out infinite; }
+        .spike { animation: spikeAnim 1.5s ease-in-out infinite; transform-origin: center; }
+        .spike2 { animation: spikeAnim 1.5s ease-in-out infinite 0.3s; transform-origin: center; }
+        .spike3 { animation: spikeAnim 2s ease-in-out infinite 0.6s; transform-origin: center; }
+    </style>
+</head>
+<body>
+
+<button class="btn-lightning">
+    <svg width="500" height="400" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Energetický glow za buttonem -->
+            <radialGradient id="energyGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="rgba(0,140,255,0.9)"/>
+                <stop offset="35%"  stop-color="rgba(0,100,220,0.6)"/>
+                <stop offset="65%"  stop-color="rgba(0,60,160,0.3)"/>
+                <stop offset="100%" stop-color="rgba(0,20,80,0)"/>
+            </radialGradient>
+
+            <!-- Tmavý fill buttonu -->
+            <linearGradient id="btnDark" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#0d1820"/>
+                <stop offset="100%" stop-color="#060c14"/>
+            </linearGradient>
+
+            <!-- Cyan neon border -->
+            <linearGradient id="cyanBorder" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stop-color="#00e5ff"/>
+                <stop offset="100%" stop-color="#0088ff"/>
+            </linearGradient>
+
+            <!-- Žlutý blesk -->
+            <linearGradient id="yellowBolt" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#ffee00"/>
+                <stop offset="50%"  stop-color="#ffcc00"/>
+                <stop offset="100%" stop-color="#ff8800"/>
+            </linearGradient>
+
+            <!-- Blur pro energy -->
+            <filter id="energyBlur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="18"/>
+            </filter>
+            <filter id="cyanGlowF" x="-10%" y="-20%" width="120%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="boltGlow" x="-15%" y="-15%" width="130%" height="130%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="textGlowL" x="-15%" y="-40%" width="130%" height="180%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <clipPath id="btnClipL">
+                <path d="M 120 148 L 380 148 L 392 158 L 400 170 L 400 230 L 392 242 L 380 252 L 120 252 L 108 242 L 100 230 L 100 170 L 108 158 Z"/>
+            </clipPath>
+        </defs>
+
+        <!-- Energetický glow blob za buttonem -->
+        <ellipse cx="250" cy="200" rx="180" ry="130"
+                 fill="url(#energyGlow)" filter="url(#energyBlur)"
+                 class="energy-core"/>
+
+        <!-- Modré energetické paprsky / spiky -->
+        <!-- Horní spike group -->
+        <path d="M 220 148 L 215 100 L 222 120 L 218 80 L 226 110 L 228 148"
+              fill="#00aaff" opacity="0.7" class="spike" filter="url(#cyanGlowF)"/>
+        <path d="M 250 148 L 244 85 L 252 115 L 248 60 L 257 105 L 260 148"
+              fill="#00ccff" opacity="0.8" class="spike2" filter="url(#cyanGlowF)"/>
+        <path d="M 280 148 L 275 95 L 283 118 L 279 75 L 287 112 L 290 148"
+              fill="#00aaff" opacity="0.7" class="spike3" filter="url(#cyanGlowF)"/>
+        <path d="M 200 152 L 190 108 L 198 128 L 192 90 L 204 122 L 205 152"
+              fill="#0088cc" opacity="0.55" class="spike" filter="url(#cyanGlowF)"/>
+        <path d="M 300 152 L 294 105 L 303 125 L 297 88 L 308 118 L 310 152"
+              fill="#0088cc" opacity="0.55" class="spike2" filter="url(#cyanGlowF)"/>
+
+        <!-- Dolní spike group -->
+        <path d="M 220 252 L 215 300 L 222 280 L 218 320 L 226 290 L 228 252"
+              fill="#00aaff" opacity="0.7" class="spike2" filter="url(#cyanGlowF)"/>
+        <path d="M 250 252 L 244 315 L 252 285 L 248 340 L 257 295 L 260 252"
+              fill="#00ccff" opacity="0.8" class="spike" filter="url(#cyanGlowF)"/>
+        <path d="M 280 252 L 275 305 L 283 282 L 279 325 L 287 288 L 290 252"
+              fill="#00aaff" opacity="0.7" class="spike3" filter="url(#cyanGlowF)"/>
+        <path d="M 200 248 L 190 292 L 198 272 L 192 310 L 204 278 L 205 248"
+              fill="#0088cc" opacity="0.55" class="spike3" filter="url(#cyanGlowF)"/>
+        <path d="M 300 248 L 294 295 L 303 275 L 297 312 L 308 282 L 310 248"
+              fill="#0088cc" opacity="0.55" class="spike" filter="url(#cyanGlowF)"/>
+
+        <!-- Levé spiky -->
+        <path d="M 100 185 L 52 178 L 75 183 L 35 176 L 68 185 L 100 188"
+              fill="#0099dd" opacity="0.65" class="spike2" filter="url(#cyanGlowF)"/>
+        <path d="M 100 210 L 45 205 L 72 210 L 30 205 L 65 210 L 100 213"
+              fill="#00bbff" opacity="0.75" class="spike" filter="url(#cyanGlowF)"/>
+        <path d="M 100 232 L 55 228 L 78 232 L 38 226 L 70 231 L 100 234"
+              fill="#0099dd" opacity="0.6" class="spike3" filter="url(#cyanGlowF)"/>
+
+        <!-- Pravé spiky -->
+        <path d="M 400 185 L 448 178 L 425 183 L 465 176 L 432 185 L 400 188"
+              fill="#0099dd" opacity="0.65" class="spike3" filter="url(#cyanGlowF)"/>
+        <path d="M 400 210 L 455 205 L 428 210 L 470 205 L 435 210 L 400 213"
+              fill="#00bbff" opacity="0.75" class="spike2" filter="url(#cyanGlowF)"/>
+        <path d="M 400 232 L 445 228 L 422 232 L 462 226 L 430 231 L 400 234"
+              fill="#0099dd" opacity="0.6" class="spike" filter="url(#cyanGlowF)"/>
+
+        <!-- Žluté blesky (lightning bolts) scatter -->
+        <!-- Levý horní bolt -->
+        <path d="M 148 120 L 140 138 L 148 132 L 138 155"
+              stroke="url(#yellowBolt)" stroke-width="2.5" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+        <!-- Pravý horní bolt -->
+        <path d="M 340 115 L 333 132 L 342 126 L 332 148"
+              stroke="url(#yellowBolt)" stroke-width="2.5" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+        <!-- Levý dolní bolt -->
+        <path d="M 145 245 L 138 262 L 146 256 L 136 278"
+              stroke="url(#yellowBolt)" stroke-width="2.5" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+        <!-- Pravý dolní bolt -->
+        <path d="M 348 248 L 340 265 L 350 258 L 340 280"
+              stroke="url(#yellowBolt)" stroke-width="2.5" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+        <!-- Horní střed bolt velký -->
+        <path d="M 245 68 L 235 95 L 248 85 L 236 115"
+              stroke="#ffdd00" stroke-width="3" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+        <!-- Dolní střed bolt velký -->
+        <path d="M 258 285 L 248 312 L 262 302 L 250 330"
+              stroke="#ffdd00" stroke-width="3" fill="none"
+              filter="url(#boltGlow)" class="lightning-main"/>
+
+        <!-- Malé čárkové blesky scatter -->
+        <line x1="165" y1="105" x2="172" y2="118" stroke="#ffcc00" stroke-width="1.5" opacity="0.7" class="lightning-main"/>
+        <line x1="310" y1="102" x2="318" y2="116" stroke="#ffcc00" stroke-width="1.5" opacity="0.7" class="lightning-main"/>
+        <line x1="160" y1="282" x2="168" y2="296" stroke="#ffcc00" stroke-width="1.5" opacity="0.6" class="lightning-main"/>
+        <line x1="318" y1="285" x2="326" y2="298" stroke="#ffcc00" stroke-width="1.5" opacity="0.6" class="lightning-main"/>
+
+        <!-- Bílé scatter tečky (energy sparks) -->
+        <circle cx="140" cy="155" r="3" fill="white" opacity="0.9" filter="url(#boltGlow)" class="lightning-main"/>
+        <circle cx="358" cy="148" r="2.5" fill="white" opacity="0.8" filter="url(#boltGlow)" class="lightning-main"/>
+        <circle cx="138" cy="248" r="3" fill="white" opacity="0.9" filter="url(#boltGlow)" class="lightning-main"/>
+        <circle cx="362" cy="252" r="2.5" fill="white" opacity="0.8" filter="url(#boltGlow)" class="lightning-main"/>
+        <circle cx="250" cy="120" r="2" fill="rgba(200,240,255,0.7)" opacity="0.7" class="spike"/>
+        <circle cx="250" cy="280" r="2" fill="rgba(200,240,255,0.7)" opacity="0.7" class="spike2"/>
+
+        <!-- Hlavní button tělo -->
+        <path d="M 120 148 L 380 148 L 392 158 L 400 170 L 400 230 L 392 242 L 380 252 L 120 252 L 108 242 L 100 230 L 100 170 L 108 158 Z"
+              fill="url(#btnDark)"/>
+
+        <!-- Cyan border glow -->
+        <path d="M 120 148 L 380 148 L 392 158 L 400 170 L 400 230 L 392 242 L 380 252 L 120 252 L 108 242 L 100 230 L 100 170 L 108 158 Z"
+              fill="none" stroke="url(#cyanBorder)" stroke-width="2.5"
+              filter="url(#cyanGlowF)"/>
+
+        <!-- Inner border jemný -->
+        <path d="M 124 154 L 377 154 L 388 163 L 395 174 L 395 226 L 388 237 L 377 246 L 124 246 L 113 237 L 106 226 L 106 174 L 113 163 Z"
+              fill="none" stroke="rgba(0,200,255,0.35)" stroke-width="1"/>
+
+        <!-- Text MENU -->
+        <text x="250" y="212"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="50" font-weight="900"
+              letter-spacing="4"
+              text-anchor="middle"
+              fill="rgba(0,200,255,0.3)"
+              filter="url(#textGlowL)">MENU</text>
+        <text x="250" y="212"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="50" font-weight="900"
+              letter-spacing="4"
+              text-anchor="middle"
+              fill="white">MENU</text>
+
+    </svg>
+</button>
+
+</body>
+</html>
