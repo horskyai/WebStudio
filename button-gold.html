@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-10: Gold Metal Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at 50% 50%, #2a2a2a 0%, #1a1a1a 50%, #111 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-gold {
+            position: relative;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .btn-gold:hover {
+            transform: scale(1.04);
+            filter: brightness(1.15) drop-shadow(0 0 18px rgba(255,200,80,0.5));
+        }
+        .btn-gold:active { transform: scale(0.97); }
+
+        @keyframes goldShimmer {
+            0% { opacity: 0; transform: translateX(-100%) skewX(-20deg); }
+            40% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateX(300%) skewX(-20deg); }
+        }
+        .shimmer-wrap {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .shimmer-line {
+            position: absolute;
+            top: 0; left: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            animation: goldShimmer 3s ease-in-out infinite 1s;
+        }
+    </style>
+</head>
+<body>
+
+<button class="btn-gold">
+    <svg width="320" height="110" viewBox="0 0 320 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Hlavní gold fill -->
+            <linearGradient id="goldFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#f5d060"/>
+                <stop offset="18%"  stop-color="#f0c040"/>
+                <stop offset="45%"  stop-color="#c8900a"/>
+                <stop offset="65%"  stop-color="#e8b830"/>
+                <stop offset="82%"  stop-color="#f0c840"/>
+                <stop offset="100%" stop-color="#c89020"/>
+            </linearGradient>
+
+            <!-- Horní lesk -->
+            <linearGradient id="goldShine" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="rgba(255,255,220,0.65)"/>
+                <stop offset="30%"  stop-color="rgba(255,240,180,0.25)"/>
+                <stop offset="100%" stop-color="rgba(255,200,80,0)"/>
+            </linearGradient>
+
+            <!-- Spodní teplý odraz -->
+            <linearGradient id="goldBottom" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="rgba(200,140,0,0)"/>
+                <stop offset="75%"  stop-color="rgba(220,160,20,0.15)"/>
+                <stop offset="100%" stop-color="rgba(255,180,40,0.3)"/>
+            </linearGradient>
+
+            <!-- Okraj - zlatý prstenec -->
+            <linearGradient id="goldRim" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"   stop-color="#ffe080"/>
+                <stop offset="25%"  stop-color="#c88020"/>
+                <stop offset="50%"  stop-color="#f0d060"/>
+                <stop offset="75%"  stop-color="#a06010"/>
+                <stop offset="100%" stop-color="#e8c040"/>
+            </linearGradient>
+
+            <!-- Vnější glow -->
+            <filter id="outerGlow" x="-8%" y="-15%" width="116%" height="130%">
+                <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(200,150,30,0.6)"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="rgba(255,200,60,0.25)"/>
+            </filter>
+
+            <!-- Clip pro obsah -->
+            <clipPath id="btnClipG">
+                <rect x="4" y="4" width="312" height="102" rx="18"/>
+            </clipPath>
+        </defs>
+
+        <!-- Vnější glow vrstva -->
+        <rect x="2" y="2" width="316" height="106" rx="20"
+              fill="url(#goldFill)" filter="url(#outerGlow)" opacity="0.4"/>
+
+        <!-- Hlavní tělo -->
+        <rect x="4" y="4" width="312" height="102" rx="18"
+              fill="url(#goldFill)"/>
+
+        <!-- Horní lesk -->
+        <rect x="4" y="4" width="312" height="102" rx="18"
+              fill="url(#goldShine)" clip-path="url(#btnClipG)"/>
+
+        <!-- Spodní teplý odraz -->
+        <rect x="4" y="4" width="312" height="102" rx="18"
+              fill="url(#goldBottom)" clip-path="url(#btnClipG)"/>
+
+        <!-- Okraj prstenec -->
+        <rect x="4" y="4" width="312" height="102" rx="18"
+              fill="none" stroke="url(#goldRim)" stroke-width="2.5"/>
+
+        <!-- Vnitřní jemná linka -->
+        <rect x="8" y="8" width="304" height="94" rx="15"
+              fill="none" stroke="rgba(255,240,160,0.3)" stroke-width="1"/>
+
+        <!-- Text MENU -->
+        <text x="160" y="65"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="34" font-weight="700"
+              letter-spacing="4"
+              text-anchor="middle"
+              fill="#1a0e00">MENU</text>
+
+        <!-- Text highlight -->
+        <text x="160" y="65"
+              font-family="'Inter', system-ui, sans-serif"
+              font-size="34" font-weight="700"
+              letter-spacing="4"
+              text-anchor="middle"
+              fill="rgba(255,220,100,0.15)">MENU</text>
+    </svg>
+    <div class="shimmer-wrap"><div class="shimmer-line"></div></div>
+</button>
+
+</body>
+</html>

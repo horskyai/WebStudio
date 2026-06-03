@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-13: Street Bold Navigation</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #5a5a5a;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-street {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.15s ease;
+        }
+        .btn-street:hover { transform: scale(1.03) translateY(-2px); }
+        .btn-street:active { transform: scale(0.98) translateY(2px); }
+    </style>
+</head>
+<body>
+
+<button class="btn-street">
+    <svg width="480" height="160" viewBox="0 0 480 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Shadow pod celkem -->
+            <filter id="streetShadow" x="-5%" y="-5%" width="115%" height="130%">
+                <feDropShadow dx="6" dy="6" stdDeviation="0" flood-color="#000000" flood-opacity="1"/>
+            </filter>
+
+            <!-- Inner shadow efekt -->
+            <filter id="innerShadow" x="-5%" y="-5%" width="115%" height="130%">
+                <feDropShadow dx="3" dy="3" stdDeviation="0" flood-color="#000000" flood-opacity="0.8"/>
+            </filter>
+        </defs>
+
+        <!-- Shadow layer (offset černý blok) -->
+        <rect x="10" y="10" width="430" height="105" rx="0"
+              fill="black"/>
+
+        <!-- Hlavní černý blok -->
+        <rect x="4" y="4" width="430" height="105" rx="0"
+              fill="black"/>
+
+        <!-- Bílý border -->
+        <rect x="4" y="4" width="430" height="105" rx="0"
+              fill="none" stroke="white" stroke-width="3"/>
+
+        <!-- Vnitřní bílý border (double line efekt) -->
+        <rect x="10" y="10" width="418" height="93" rx="0"
+              fill="none" stroke="white" stroke-width="1.5" opacity="0.3"/>
+
+        <!-- Levá svislá čára (bracket) -->
+        <line x1="4" y1="4" x2="4" y2="109" stroke="white" stroke-width="5"/>
+        <!-- Pravá svislá čára -->
+        <line x1="434" y1="4" x2="434" y2="109" stroke="white" stroke-width="5"/>
+
+        <!-- Diagonální šipka vpravo nahoře -->
+        <rect x="424" y="-2" width="34" height="34" rx="0" fill="white"/>
+        <line x1="426" y1="8" x2="454" y2="8" stroke="black" stroke-width="3"/>
+        <line x1="454" y1="8" x2="444" y2="0" stroke="black" stroke-width="2.5"/>
+        <line x1="454" y1="8" x2="454" y2="18" stroke="black" stroke-width="2.5"/>
+
+        <!-- NAVIGATION text - hlavní velký -->
+        <text x="22" y="75"
+              font-family="'Arial Black', 'Inter', system-ui, sans-serif"
+              font-size="54" font-weight="900"
+              letter-spacing="-1"
+              fill="white">NAVIGATION</text>
+
+        <!-- MENU sub-box vpravo dole -->
+        <rect x="290" y="80" width="118" height="36" rx="0"
+              fill="none" stroke="white" stroke-width="2"/>
+        <text x="349" y="104"
+              font-family="'Arial Black', 'Inter', system-ui, sans-serif"
+              font-size="16" font-weight="900"
+              letter-spacing="2"
+              text-anchor="middle"
+              fill="white">MENU</text>
+
+        <!-- Krátká linka vlevo nahoře (dekorativní) -->
+        <line x1="4" y1="30" x2="30" y2="4" stroke="white" stroke-width="2.5"/>
+
+    </svg>
+</button>
+
+</body>
+</html>

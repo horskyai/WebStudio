@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-16: Matrix Terminal Button</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-matrix {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.2s ease, filter 0.3s ease;
+        }
+        .btn-matrix:hover {
+            transform: scale(1.03);
+            filter: brightness(1.3) drop-shadow(0 0 15px rgba(0,200,80,0.5));
+        }
+        .btn-matrix:active { transform: scale(0.97); }
+
+        @keyframes matrixBlink {
+            0%, 100% { opacity: 1; }
+            49% { opacity: 1; }
+            50% { opacity: 0; }
+            51% { opacity: 0; }
+        }
+        @keyframes glitch {
+            0%, 94%, 100% { transform: translateX(0); opacity: 1; }
+            95% { transform: translateX(-3px); opacity: 0.8; }
+            97% { transform: translateX(3px); opacity: 0.9; }
+        }
+        @keyframes scanH {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.1; }
+            100% { opacity: 0.4; }
+        }
+        @keyframes noiseFlicker {
+            0%, 100% { opacity: 0.35; }
+            33% { opacity: 0.2; }
+            66% { opacity: 0.4; }
+        }
+
+        .cursor { animation: matrixBlink 1s step-start infinite; }
+        .glitch-text { animation: glitch 6s ease-in-out infinite; }
+        .scan-h { animation: scanH 2s ease infinite; }
+        .noise { animation: noiseFlicker 0.5s linear infinite; }
+    </style>
+</head>
+<body>
+
+<button class="btn-matrix">
+    <svg width="500" height="260" viewBox="0 0 500 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Matrix green glow filter -->
+            <filter id="matrixGlow" x="-5%" y="-10%" width="110%" height="120%">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- Hlavní green glow pro border -->
+            <filter id="borderGlow" x="-8%" y="-15%" width="116%" height="130%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+
+            <!-- CRT scanlines pattern -->
+            <pattern id="scanlines" x="0" y="0" width="2" height="4" patternUnits="userSpaceOnUse">
+                <rect x="0" y="0" width="2" height="2" fill="rgba(0,0,0,0.4)"/>
+            </pattern>
+
+            <!-- Matrix text glow -->
+            <filter id="textGlowM" x="-15%" y="-40%" width="130%" height="180%">
+                <feGaussianBlur stdDeviation="5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+        </defs>
+
+        <!-- Hlavní černé pozadí -->
+        <rect x="5" y="5" width="490" height="250" rx="0" fill="#000000"/>
+
+        <!-- Jemné matrix zelené pozadí (very subtle) -->
+        <rect x="5" y="5" width="490" height="250" rx="0"
+              fill="rgba(0,40,10,0.6)"/>
+
+        <!-- CRT scanlines -->
+        <rect x="5" y="5" width="490" height="250" rx="0"
+              fill="url(#scanlines)" opacity="0.5" class="scan-h"/>
+
+        <!-- Dashed border (terminal styl) -->
+        <rect x="80" y="72" width="340" height="116" rx="0"
+              fill="none" stroke="#00cc44" stroke-width="2"
+              stroke-dasharray="8 4"
+              filter="url(#borderGlow)"/>
+
+        <!-- Vnitřní fill záhlaví -->
+        <rect x="80" y="72" width="340" height="116" rx="0"
+              fill="rgba(0,60,20,0.4)"/>
+
+        <!-- Scanlines na button oblasti -->
+        <rect x="80" y="72" width="340" height="116" rx="0"
+              fill="url(#scanlines)" opacity="0.6"/>
+
+        <!-- Horní data řádky nad buttonem -->
+        <text x="100" y="42"
+              font-family="'Courier New', monospace"
+              font-size="10" fill="#00cc44" opacity="0.7">163713342489001B12100</text>
+        <text x="100" y="56"
+              font-family="'Courier New', monospace"
+              font-size="10" fill="#00cc44" opacity="0.7">JE0-b0  91246.882-3400  71A37)</text>
+
+        <!-- Pravé sloupce HUD dat -->
+        <text x="340" y="42"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.6">&#x25BA;&#x25BA;  &#x25C4;&#x25C4;  &#x25BA;+&#x3C;&#x3C; &gt;&gt;  &#x25BA;</text>
+
+        <!-- Spodní data řádky -->
+        <text x="80" y="210"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.65">&#x3C; ( 711F.0100$s63&amp;20002   &#x25A1;&#x25BA;  &#x25A1; 1-&#x25BA;   &#x3C; )&#x25BA;</text>
+
+        <!-- Levý HUD blok -->
+        <text x="12" y="110"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.6">E10e6160151-D3</text>
+        <text x="12" y="124"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.6">:BG-+1-1E42 OOK</text>
+
+        <!-- Pravý HUD blok -->
+        <text x="342" y="110"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.6">10040221044710011</text>
+        <text x="342" y="124"
+              font-family="'Courier New', monospace"
+              font-size="9" fill="#00cc44" opacity="0.6">T01:&gt;40</text>
+
+        <!-- Levé HUD symboly -->
+        <text x="58" y="102"
+              font-family="'Courier New', monospace"
+              font-size="11" fill="#00cc44" opacity="0.7">&#x25C4;&#x25C4;</text>
+        <text x="52" y="132"
+              font-family="'Courier New', monospace"
+              font-size="12" fill="#00cc44" opacity="0.65">&lt;</text>
+        <text x="52" y="158"
+              font-family="'Courier New', monospace"
+              font-size="11" fill="#00cc44" opacity="0.6">&#x25C7;</text>
+        <text x="55" y="178"
+              font-family="'Courier New', monospace"
+              font-size="12" fill="#00cc44" opacity="0.65">+</text>
+
+        <!-- Pravé HUD symboly -->
+        <text x="432" y="102"
+              font-family="'Courier New', monospace"
+              font-size="11" fill="#00cc44" opacity="0.7">&#x25BA;&#x25BA;</text>
+        <text x="438" y="132"
+              font-family="'Courier New', monospace"
+              font-size="12" fill="#00cc44" opacity="0.65">&gt;</text>
+        <text x="436" y="158"
+              font-family="'Courier New', monospace"
+              font-size="11" fill="#00cc44" opacity="0.6">&#x25C7;</text>
+        <text x="436" y="178"
+              font-family="'Courier New', monospace"
+              font-size="12" fill="#00cc44" opacity="0.65">+</text>
+
+        <!-- Horizontální čáry uvnitř buttonu (CRT řádky textu) -->
+        <line x1="85" y1="105" x2="415" y2="105"
+              stroke="#00cc44" stroke-width="0.5" opacity="0.15"/>
+        <line x1="85" y1="130" x2="415" y2="130"
+              stroke="#00cc44" stroke-width="0.5" opacity="0.15"/>
+        <line x1="85" y1="155" x2="415" y2="155"
+              stroke="#00cc44" stroke-width="0.5" opacity="0.15"/>
+
+        <!-- Hlavní text MENU s glow -->
+        <text x="250" y="148"
+              font-family="'Courier New', monospace"
+              font-size="50" font-weight="700"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="#00cc44"
+              filter="url(#textGlowM)"
+              opacity="0.7"
+              class="glitch-text">MENU</text>
+
+        <text x="250" y="148"
+              font-family="'Courier New', monospace"
+              font-size="50" font-weight="700"
+              letter-spacing="8"
+              text-anchor="middle"
+              fill="#00ff55"
+              class="glitch-text">MENU</text>
+
+        <!-- Cursor po textu -->
+        <rect x="338" y="110" width="8" height="38"
+              fill="#00cc44" class="cursor"/>
+
+        <!-- Kurzor myši (dekorativní) -->
+        <path d="M 248 218 L 248 228 L 251 225 L 254 232 L 256 231 L 253 224 L 257 224 Z"
+              fill="#00cc44" opacity="0.6"/>
+
+        <!-- Rohy vnějšího borderu -->
+        <line x1="5" y1="5" x2="5" y2="35" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="5" y1="5" x2="35" y2="5" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="495" y1="5" x2="495" y2="35" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="495" y1="5" x2="465" y2="5" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="5" y1="255" x2="5" y2="225" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="5" y1="255" x2="35" y2="255" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="495" y1="255" x2="495" y2="225" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+        <line x1="495" y1="255" x2="465" y2="255" stroke="#00cc44" stroke-width="2" opacity="0.6"/>
+
+        <!-- Krátké horizontal dekorativní linky -->
+        <line x1="5" y1="50" x2="70" y2="50" stroke="#00cc44" stroke-width="1" opacity="0.4"/>
+        <line x1="430" y1="50" x2="495" y2="50" stroke="#00cc44" stroke-width="1" opacity="0.4"/>
+        <line x1="5" y1="215" x2="70" y2="215" stroke="#00cc44" stroke-width="1" opacity="0.4"/>
+        <line x1="430" y1="215" x2="495" y2="215" stroke="#00cc44" stroke-width="1" opacity="0.4"/>
+
+    </svg>
+</button>
+
+</body>
+</html>
